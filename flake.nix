@@ -14,7 +14,7 @@
     };
 
     nixosConfigurations = rec {
-      githubRunnerContainerPathFn = name: (inputs.nixpkgs-github-runner.lib.nixosSystem  {
+      githubRunnerContainerPathFn = name: extraLabels: (inputs.nixpkgs-github-runner.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./nixos-containers/github-runner/configuration.nix
@@ -22,7 +22,7 @@
 
         specialArgs = {
           githubRunnerHolochainHolochainTokenFile = inputs.self.magicPaths.githubRunnerHraTokenMountPoint;
-          inherit name;
+          inherit name extraLabels;
         };
       }).config.system.build.toplevel;
 

@@ -4,12 +4,12 @@
 
 { pkgs
 , githubRunnerContainerPathFn
-# , githubRunnerContainerPath
+  # , githubRunnerContainerPath
 , githubRunnerContainerNixpkgs
 , githubRunnerHraTokenHostPath
 , githubRunnerHraTokenMountPoint
 
-# not used explicitly
+  # not used explicitly
 , lib
 , config
 , options
@@ -20,7 +20,8 @@
 {
 
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -73,7 +74,7 @@
     createHome = false;
     group = "github-runner";
   };
-  users.groups.github-runner = {};
+  users.groups.github-runner = { };
 
   users.users.sshsession = {
     uid = 1001;
@@ -122,30 +123,37 @@
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
-  containers = let
-    mkGithubRunner = name:
-      let
-        path = githubRunnerContainerPathFn (name);
-      in {
-        inherit path;
-        nixpkgs = githubRunnerContainerNixpkgs;
+  containers =
+    let
+      mkGithubRunner = name: extraLabels:
+        let
+          path = githubRunnerContainerPathFn name extraLabels;
+        in
+        {
+          inherit path;
+          nixpkgs = githubRunnerContainerNixpkgs;
 
-        autoStart = true;
-        ephemeral = false;
-        bindMounts = {
-          hraToken = {
-            hostPath = githubRunnerHraTokenHostPath;
-            mountPoint = githubRunnerHraTokenMountPoint;
-            isReadOnly = true;
+          autoStart = true;
+          ephemeral = false;
+          bindMounts = {
+            hraToken = {
+              hostPath = githubRunnerHraTokenHostPath;
+              mountPoint = githubRunnerHraTokenMountPoint;
+              isReadOnly = true;
+            };
           };
+
+          extraFlags = [
+            "--resolv-conf=bind-host"
+          ];
         };
+    in
+    {
+      githubRunner0 = mkGithubRunner "nixos-0" [ "release" ];
+      githubRunner1 = mkGithubRunner "nixos-1" [ ];
+      githubRunner2 = mkGithubRunner "nixos-2" [ ];
+      githubRunner3 = mkGithubRunner "nixos-3" [ ];
     };
-  in {
-    githubRunner0 = mkGithubRunner "nixos-0";
-    githubRunner1 = mkGithubRunner "nixos-1";
-    githubRunner2 = mkGithubRunner "nixos-2";
-    githubRunner3 = mkGithubRunner "nixos-3";
-  };
 
   services.prometheus = {
     enable = true;
@@ -186,24 +194,24 @@
   security.acme.defaults.email = "mail@noosphere.life";
 
   services.nginx = {
-      enable = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-      # other Nginx options
-      virtualHosts."vmi1034228.contaboserver.net" =  {
-        enableACME = true;
-        forceSSL = true;
-        locations."/"= {
-          proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
-          proxyWebsockets = true; # needed if you need to use WebSocket
-          extraConfig =
-            # required when the target is also TLS server with multiple hosts
-            "proxy_ssl_server_name on;" +
-            # required when the server wants to use HTTP Authentication
-            "proxy_pass_header Authorization;"
-            ;
-        };
+    enable = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    # other Nginx options
+    virtualHosts."vmi1034228.contaboserver.net" = {
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
+        proxyWebsockets = true; # needed if you need to use WebSocket
+        extraConfig =
+          # required when the target is also TLS server with multiple hosts
+          "proxy_ssl_server_name on;" +
+          # required when the server wants to use HTTP Authentication
+          "proxy_pass_header Authorization;"
+        ;
       };
+    };
   };
 
   # This value determines the NixOS release from which the default
