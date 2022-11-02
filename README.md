@@ -4,7 +4,7 @@
 2. installed nix
   ```
   sh <(curl -L https://nixos.org/nix/install) --daemon
-  # exit and relogin to activate nix
+  source /etc/profile
   nix-env -i nixos-install-tools
   ```
 3. install nixos using https://nixos.org/manual/nixos/stable/index.html#ch-installation
