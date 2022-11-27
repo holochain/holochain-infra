@@ -35,5 +35,6 @@
 ### Update and Rebuild
 
 ```
-nix flake update; nixos-rebuild --flake .#githubRunnerHost --target-host root@${IP:?} switch
+nix flake update
+nixos-rebuild --flake .#githubRunnerHost --no-build-nix --target-host root@${IP:?} --build-host root@${IP:?} switch
 ```
