@@ -5,6 +5,13 @@
     nixpkgs-unstable = { url = "github:nixos/nixpkgs/nixos-unstable"; };
     # nixpkgs-github-runner = { url = "github:nixos/nixpkgs/941c79b6207fa84612b4170ca3bc04984f3d79fc"; };
     nixpkgs-github-runner = nixpkgs-unstable;
+
+    steveejKeys = { url = "https://github.com/steveej.keys"; flake = false; };
+    jost-sKeys = { url = "https://github.com/jost-s.keys"; flake = false; };
+    maackleKeys = { url = "https://github.com/maackle.keys"; flake = false; };
+    neonphogKeys = { url = "https://github.com/neonphog.keys"; flake = false; };
+    thedavidmeisterKeys = { url = "https://github.com/thedavidmeister.keys"; flake = false; };
+    zippyKeys = { url = "https://github.com/zippy.keys"; flake = false; };
   };
 
   outputs = inputs: {
@@ -41,6 +48,15 @@
             githubRunnerHraTokenHostPath
             githubRunnerHraTokenMountPoint
             ;
+
+          extraAuthorizedKeyFiles = with inputs; [
+            steveejKeys
+            jost-sKeys
+            maackleKeys
+            neonphogKeys
+            thedavidmeisterKeys
+            zippyKeys
+          ];
         };
       };
     };

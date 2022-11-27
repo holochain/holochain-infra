@@ -15,6 +15,7 @@
 , options
 , modulesPath
 , specialArgs
+, extraAuthorizedKeyFiles
 }:
 
 {
@@ -108,9 +109,11 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   services.openssh.permitRootLogin = "prohibit-password";
-  users.users."root".openssh.authorizedKeys.keys = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAIODJoJ7Chi8jPTGmKQ5MlB7+TgNGznreeRW/K34v1ey23/FlnIxP9XyyLkzojKALTfAQYgqzrQV3HDSRwhd1rXB7YLq1/CiVWRJvDMTkJiOCV515eiUJGXu1G8e12d/USPNBMEzMJGvqBCIGYen5OxXkyIHIREfePNi5k337G5z9fiuiggxJl9ty6qZ4XIRgFQj9jAoShixP/+99I7XrGWeFQ1BmLZWzi20SQGKvogYnOszDZFqBAHGFnCFYHaTz2jOXXCtQsa27gr8D2iLRFaxvhB7XMK+VbpDcZGjmfRJ701XxFv15GFnFAV71hTaYqj/Ebpw9Vs02+gUp3+tt"
-  ];
+  users.users."root".openssh.authorizedKeys = {
+    keys = [
+    ];
+    keyFiles = extraAuthorizedKeyFiles;
+  };
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 ];
