@@ -3,7 +3,7 @@
     "jost-sKeys": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-UyiIsk9f3LHJXHziYRAPbkFX+7Oy+y5DHFJ+evLq7Rg=",
+        "narHash": "sha256-B3Er8Ek9wzun9ziCWw2GmFlfOJrzCPqBRai2p6F2kjU=",
         "type": "file",
         "url": "https://github.com/jost-s.keys"
       },
@@ -38,32 +38,32 @@
     },
     "nixpkgs-github-runner": {
       "locked": {
-        "lastModified": 1665848363,
-        "narHash": "sha256-3Jow1YxzPtQnck1bAAvbVxgRH4gNnkIdw871Vm6UtAU=",
+        "lastModified": 1671139475,
+        "narHash": "sha256-9hQgR6gLuMEvpG/RpoW7+BaeycgR+ib9O9LTENgcbj0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "83b198a2083774844962c854f811538323f9f7b1",
+        "rev": "f30da2c2622736aecdccac893666ea23cad90f2d",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "release-22.11",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1665848363,
-        "narHash": "sha256-3Jow1YxzPtQnck1bAAvbVxgRH4gNnkIdw871Vm6UtAU=",
+        "lastModified": 1671139475,
+        "narHash": "sha256-9hQgR6gLuMEvpG/RpoW7+BaeycgR+ib9O9LTENgcbj0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "83b198a2083774844962c854f811538323f9f7b1",
+        "rev": "f30da2c2622736aecdccac893666ea23cad90f2d",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "release-22.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -95,7 +95,7 @@
     "thedavidmeisterKeys": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-OqspBFsSBToFw5rxWk+ok7QJAqCU+omE3Ez2M6ps854=",
+        "narHash": "sha256-Wr1+806gPIJfBlW0j236fezHWsEtqATbLKVQ1V02phM=",
         "type": "file",
         "url": "https://github.com/thedavidmeister.keys"
       },

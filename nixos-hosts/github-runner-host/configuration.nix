@@ -18,6 +18,10 @@
 , extraAuthorizedKeyFiles
 }:
 
+let
+  grafana_http_port = 2342;
+
+in
 {
 
   imports =
@@ -187,10 +191,14 @@
   # grafana configuration
   services.grafana = {
     enable = true;
-    domain = "vmi1034228.contaboserver.net";
-    rootUrl = "https://${config.services.grafana.domain}";
-    port = 2342;
-    addr = "127.0.0.1";
+
+
+    settings.server = {
+      http_addr = "127.0.0.1";
+      http_port = grafana_http_port;
+      domain = "vmi1034228.contaboserver.net";
+      root_url = "https://${config.services.grafana.settings.server.domain}";
+    };
   };
 
   security.acme.acceptTerms = true;
@@ -205,7 +213,7 @@
       enableACME = true;
       forceSSL = true;
       locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
+        proxyPass = "http://127.0.0.1:${toString grafana_http_port}";
         proxyWebsockets = true; # needed if you need to use WebSocket
         extraConfig =
           # required when the target is also TLS server with multiple hosts
