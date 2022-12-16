@@ -19,6 +19,7 @@
 }:
 
 let
+  githubRunnersCfg = { count = 4; namePrefix = "nixos"; };
   grafana_http_port = 2342;
 
 in
@@ -33,9 +34,10 @@ in
   # FIXME: investigate if it's possible to specify these only in the github-runner containers
   nix.settings.trusted-users = [
     "root"
-    "github-runner"
     "sshsession"
-  ];
+  ] ++ (
+    builtins.genList (x: "github-runner-${githubRunnersCfg.namePrefix}-${builtins.toString x}") githubRunnersCfg.count
+  );
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -155,12 +157,18 @@ in
           ];
         };
     in
-    {
-      githubRunner0 = mkGithubRunner "nixos-0" [ "release" ];
-      githubRunner1 = mkGithubRunner "nixos-1" [ ];
-      githubRunner2 = mkGithubRunner "nixos-2" [ ];
-      githubRunner3 = mkGithubRunner "nixos-3" [ ];
-    };
+      builtins.listToAttrs
+        (
+          builtins.genList
+          (x:
+            {
+              name = "githubRunner-${builtins.toString x}";
+              value = mkGithubRunner "${githubRunnersCfg.namePrefix}-${builtins.toString x}" (if x == 0 then ["release"] else []);
+            }
+          )
+          githubRunnersCfg.count
+        )
+        ;
 
   services.prometheus = {
     enable = true;

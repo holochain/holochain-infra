@@ -42,7 +42,7 @@ in
 
   nix.settings.trusted-users = [
     "root"
-    "github-runner"
+    "github-runner-${name}"
     "sshsession"
   ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
