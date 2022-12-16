@@ -1,0 +1,122 @@
+{
+  "nodes": {
+    "jost-sKeys": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-B3Er8Ek9wzun9ziCWw2GmFlfOJrzCPqBRai2p6F2kjU=",
+        "type": "file",
+        "url": "https://github.com/jost-s.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/jost-s.keys"
+      }
+    },
+    "maackleKeys": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-T37xaWCJEz6qltgTH5c67SvQ3VCd7SJty3iWjD1C6sw=",
+        "type": "file",
+        "url": "https://github.com/maackle.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/maackle.keys"
+      }
+    },
+    "neonphogKeys": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-InV0oto4PA8gLATCZxeP80V8QPrOxdJg0Qxfn0zaTa0=",
+        "type": "file",
+        "url": "https://github.com/neonphog.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/neonphog.keys"
+      }
+    },
+    "nixpkgs-github-runner": {
+      "locked": {
+        "lastModified": 1671139475,
+        "narHash": "sha256-9hQgR6gLuMEvpG/RpoW7+BaeycgR+ib9O9LTENgcbj0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "f30da2c2622736aecdccac893666ea23cad90f2d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-22.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1671139475,
+        "narHash": "sha256-9hQgR6gLuMEvpG/RpoW7+BaeycgR+ib9O9LTENgcbj0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "f30da2c2622736aecdccac893666ea23cad90f2d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-22.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "jost-sKeys": "jost-sKeys",
+        "maackleKeys": "maackleKeys",
+        "neonphogKeys": "neonphogKeys",
+        "nixpkgs-github-runner": "nixpkgs-github-runner",
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "steveejKeys": "steveejKeys",
+        "thedavidmeisterKeys": "thedavidmeisterKeys",
+        "zippyKeys": "zippyKeys"
+      }
+    },
+    "steveejKeys": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-oWou51Fqm2fNARZ2iEyKwmnDXB85fnw8vgVxZfBZuqI=",
+        "type": "file",
+        "url": "https://github.com/steveej.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/steveej.keys"
+      }
+    },
+    "thedavidmeisterKeys": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Wr1+806gPIJfBlW0j236fezHWsEtqATbLKVQ1V02phM=",
+        "type": "file",
+        "url": "https://github.com/thedavidmeister.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/thedavidmeister.keys"
+      }
+    },
+    "zippyKeys": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-aO9Vws3uxsX9DfuBwtOs1fJ9CwUoz1aVodjkE+qWgh0=",
+        "type": "file",
+        "url": "https://github.com/zippy.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/zippy.keys"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
