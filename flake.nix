@@ -30,7 +30,11 @@
       imports = map (m: "${./modules}/${m}")
         (builtins.attrNames (builtins.readDir ./modules));
 
-      systems = [ "x86_64-linux" ];
+      systems = [
+        "aarch64-darwin"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
 
       perSystem = { config, self', inputs', ... }: {
         # Per-system attributes can be defined here. The self' and inputs'
