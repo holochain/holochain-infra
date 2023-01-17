@@ -10,27 +10,7 @@
 , config
 , options
 , modulesPath
-}:
-
-let
-  githubRunnerProvidedPackages = with pkgs; [
-    coreutils
-    libressl.nc
-    procps
-    cachix
-    xz
-    zstd
-    openssh
-    tree
-    tmux
-    upterm
-    gawk
-    gitFull
-    vim
-  ];
-in
-
-{
+}: {
   boot.isContainer = true;
 
   # disabledModules = [ "services/continuous-integration/github-runner.nix" ];
@@ -61,7 +41,21 @@ in
     max-free = ${toString (5 * 1024 * 1024 * 1024)}
   '';
 
-  environment.systemPackages = githubRunnerProvidedPackages;
+  environment.systemPackages = with pkgs; [
+    coreutils
+    libressl.nc
+    procps
+    cachix
+    xz
+    zstd
+    openssh
+    tree
+    tmux
+    upterm
+    gawk
+    gitFull
+    vim
+  ];
 
   services.github-runner =
     let
@@ -91,7 +85,7 @@ in
               "apt"
             ]
           ++
-          githubRunnerProvidedPackages
+          config.environment.systemPackages
           );
 
         inherit extraLabels;
@@ -181,7 +175,7 @@ in
     wants = [ "network-online.target" ];
     after = [ "network.target" "network-online.target" ];
 
-    path = githubRunnerProvidedPackages;
+    path = config.environment.systemPackages;
 
     environment = {
       HOME = "%t/sshsession";

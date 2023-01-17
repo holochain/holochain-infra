@@ -1,6 +1,77 @@
 {
   "nodes": {
-    "jost-sKeys": {
+    "darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1673295039,
+        "narHash": "sha256-AsdYgE8/GPwcelGgrntlijMg4t3hLFJFCRF3tL5WVjA=",
+        "owner": "lnl7",
+        "repo": "nix-darwin",
+        "rev": "87b9d090ad39b25b2400029c64825fc2a8868943",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lnl7",
+        "ref": "master",
+        "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
+    "flake-parts": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 1673362319,
+        "narHash": "sha256-Pjp45Vnj7S/b3BRpZEVfdu8sqqA6nvVjvYu59okhOyI=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "82c16f1682cf50c01cb0280b38a1eed202b3fe9f",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-parts",
+        "type": "indirect"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1673343300,
+        "narHash": "sha256-5Xdj6kpXYMie0MlnGwqK5FaMdsedxvyuakWtyKB3zaQ=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "176e455371a8371586e8a3ff0d56ee9f3ca2324e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "keys_davhau": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-0fd0gyrCTIDOPdmbPIKj7CD6696tiEumLZPoXqDd8dc=",
+        "type": "file",
+        "url": "https://github.com/davhau.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/davhau.keys"
+      }
+    },
+    "keys_jost-s": {
       "flake": false,
       "locked": {
         "narHash": "sha256-B3Er8Ek9wzun9ziCWw2GmFlfOJrzCPqBRai2p6F2kjU=",
@@ -12,7 +83,7 @@
         "url": "https://github.com/jost-s.keys"
       }
     },
-    "maackleKeys": {
+    "keys_maackle": {
       "flake": false,
       "locked": {
         "narHash": "sha256-T37xaWCJEz6qltgTH5c67SvQ3VCd7SJty3iWjD1C6sw=",
@@ -24,7 +95,7 @@
         "url": "https://github.com/maackle.keys"
       }
     },
-    "neonphogKeys": {
+    "keys_neonphog": {
       "flake": false,
       "locked": {
         "narHash": "sha256-InV0oto4PA8gLATCZxeP80V8QPrOxdJg0Qxfn0zaTa0=",
@@ -34,6 +105,58 @@
       "original": {
         "type": "file",
         "url": "https://github.com/neonphog.keys"
+      }
+    },
+    "keys_steveej": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-oWou51Fqm2fNARZ2iEyKwmnDXB85fnw8vgVxZfBZuqI=",
+        "type": "file",
+        "url": "https://github.com/steveej.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/steveej.keys"
+      }
+    },
+    "keys_thedavidmeister": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Sn/Z7MgiUwwrJ/ZOZhta/18e/kx+iSrdMVnJPlX1CLE=",
+        "type": "file",
+        "url": "https://github.com/thedavidmeister.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/thedavidmeister.keys"
+      }
+    },
+    "keys_zippy": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-aO9Vws3uxsX9DfuBwtOs1fJ9CwUoz1aVodjkE+qWgh0=",
+        "type": "file",
+        "url": "https://github.com/zippy.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/zippy.keys"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1673612960,
+        "narHash": "sha256-DWR7hrbecJKmUJCswk9MXZta710mq+3jZwTvHU/UfyY=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "e285dd0ca97c264003867c7329f0d1f4f028739c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-22.11",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "nixpkgs-github-runner": {
@@ -52,68 +175,53 @@
         "type": "github"
       }
     },
-    "nixpkgs-unstable": {
+    "nixpkgs-lib": {
       "locked": {
-        "lastModified": 1671139475,
-        "narHash": "sha256-9hQgR6gLuMEvpG/RpoW7+BaeycgR+ib9O9LTENgcbj0=",
-        "owner": "nixos",
+        "dir": "lib",
+        "lastModified": 1672350804,
+        "narHash": "sha256-jo6zkiCabUBn3ObuKXHGqqORUMH27gYDIFFfLq5P4wg=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f30da2c2622736aecdccac893666ea23cad90f2d",
+        "rev": "677ed08a50931e38382dbef01cba08a8f7eac8f6",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "release-22.11",
+        "dir": "lib",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
-        "jost-sKeys": "jost-sKeys",
-        "maackleKeys": "maackleKeys",
-        "neonphogKeys": "neonphogKeys",
-        "nixpkgs-github-runner": "nixpkgs-github-runner",
-        "nixpkgs-unstable": "nixpkgs-unstable",
-        "steveejKeys": "steveejKeys",
-        "thedavidmeisterKeys": "thedavidmeisterKeys",
-        "zippyKeys": "zippyKeys"
+        "darwin": "darwin",
+        "flake-parts": "flake-parts",
+        "home-manager": "home-manager",
+        "keys_davhau": "keys_davhau",
+        "keys_jost-s": "keys_jost-s",
+        "keys_maackle": "keys_maackle",
+        "keys_neonphog": "keys_neonphog",
+        "keys_steveej": "keys_steveej",
+        "keys_thedavidmeister": "keys_thedavidmeister",
+        "keys_zippy": "keys_zippy",
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-github-runner": "nixpkgs-github-runner"
       }
     },
-    "steveejKeys": {
-      "flake": false,
+    "utils": {
       "locked": {
-        "narHash": "sha256-oWou51Fqm2fNARZ2iEyKwmnDXB85fnw8vgVxZfBZuqI=",
-        "type": "file",
-        "url": "https://github.com/steveej.keys"
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "type": "github"
       },
       "original": {
-        "type": "file",
-        "url": "https://github.com/steveej.keys"
-      }
-    },
-    "thedavidmeisterKeys": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-Wr1+806gPIJfBlW0j236fezHWsEtqATbLKVQ1V02phM=",
-        "type": "file",
-        "url": "https://github.com/thedavidmeister.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/thedavidmeister.keys"
-      }
-    },
-    "zippyKeys": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-aO9Vws3uxsX9DfuBwtOs1fJ9CwUoz1aVodjkE+qWgh0=",
-        "type": "file",
-        "url": "https://github.com/zippy.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/zippy.keys"
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     }
   },

@@ -38,3 +38,6 @@
 nix flake update
 nixos-rebuild --flake .#githubRunnerHost --no-build-nix --target-host root@${IP:?} --build-host root@${IP:?} switch
 ```
+### Update macos host
+Deploy by executing one of the flake apps named `deploy-[host]`.
+To list the available hosts, execute `nix flake show` and inspect the apps.

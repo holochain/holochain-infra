@@ -1,65 +1,48 @@
 {
-  description = "An example NixOS configuration";
+  description = "The new, performant, and simplified version of Holochain on Rust (sometimes called Holochain RSM for Refactored State Model) ";
 
   inputs = rec {
-    nixpkgs-unstable = { url = "github:nixos/nixpkgs/release-22.11"; };
+    nixpkgs = { url = "github:nixos/nixpkgs/release-22.11"; };
     # nixpkgs-github-runner = { url = "github:nixos/nixpkgs/941c79b6207fa84612b4170ca3bc04984f3d79fc"; };
-    nixpkgs-github-runner = nixpkgs-unstable;
+    nixpkgs-github-runner = nixpkgs;
 
-    steveejKeys = { url = "https://github.com/steveej.keys"; flake = false; };
-    jost-sKeys = { url = "https://github.com/jost-s.keys"; flake = false; };
-    maackleKeys = { url = "https://github.com/maackle.keys"; flake = false; };
-    neonphogKeys = { url = "https://github.com/neonphog.keys"; flake = false; };
-    thedavidmeisterKeys = { url = "https://github.com/thedavidmeister.keys"; flake = false; };
-    zippyKeys = { url = "https://github.com/zippy.keys"; flake = false; };
+    # nix darwin
+    darwin.url = "github:lnl7/nix-darwin/master";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    # home manager
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    keys_steveej = { url = "https://github.com/steveej.keys"; flake = false; };
+    keys_jost-s = { url = "https://github.com/jost-s.keys"; flake = false; };
+    keys_maackle = { url = "https://github.com/maackle.keys"; flake = false; };
+    keys_neonphog = { url = "https://github.com/neonphog.keys"; flake = false; };
+    keys_thedavidmeister = { url = "https://github.com/thedavidmeister.keys"; flake = false; };
+    keys_zippy = { url = "https://github.com/zippy.keys"; flake = false; };
+    keys_davhau = { url = "https://github.com/davhau.keys"; flake = false; };
   };
 
-  outputs = inputs: {
-    magicPaths = {
-      githubRunnerHraTokenHostPath = "/var/secrets/github-runner/hra2.token";
-      githubRunnerHraTokenMountPoint = "/secrets/github-runner/token";
-    };
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
 
-    nixosConfigurations = rec {
-      githubRunnerContainerPathFn = name: extraLabels: (inputs.nixpkgs-github-runner.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./nixos-containers/github-runner/configuration.nix
-        ];
+      # auto import all nix code from `./modules`
+      imports = map (m: "${./modules}/${m}")
+        (builtins.attrNames (builtins.readDir ./modules));
 
-        specialArgs = {
-          githubRunnerHolochainHolochainTokenFile = inputs.self.magicPaths.githubRunnerHraTokenMountPoint;
-          inherit name extraLabels;
-        };
-      }).config.system.build.toplevel;
+      systems = [ "x86_64-linux" ];
 
-      githubRunnerHost = inputs.nixpkgs-unstable.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./nixos-hosts/github-runner-host/configuration.nix
-        ];
+      perSystem = { config, self', inputs', ... }: {
+        # Per-system attributes can be defined here. The self' and inputs'
+        # module parameters provide easy access to attributes of the same
+        # system.
 
-        specialArgs = {
-          inherit githubRunnerContainerPathFn;
-          # githubRunnerContainerPath = githubRunnerContainer.config.system.build.toplevel;
-          githubRunnerContainerNixpkgs = inputs.nixpkgs-github-runner;
+      };
+      flake = {
+        # The usual flake attributes can be defined here, including system-
+        # agnostic ones like nixosModule and system-enumerating ones, although
+        # those are more easily expressed in perSystem.
 
-          inherit (inputs.self.magicPaths)
-            githubRunnerHraTokenHostPath
-            githubRunnerHraTokenMountPoint
-            ;
-
-          extraAuthorizedKeyFiles = with inputs; [
-            steveejKeys
-            jost-sKeys
-            maackleKeys
-            neonphogKeys
-            thedavidmeisterKeys
-            zippyKeys
-          ];
-        };
       };
     };
-  };
 }
-
