@@ -12,6 +12,7 @@
     neonphogKeys = { url = "https://github.com/neonphog.keys"; flake = false; };
     thedavidmeisterKeys = { url = "https://github.com/thedavidmeister.keys"; flake = false; };
     zippyKeys = { url = "https://github.com/zippy.keys"; flake = false; };
+    davhauKeys = { url = "https://github.com/davhau.keys"; flake = false; };
   };
 
   outputs = inputs: {
@@ -56,6 +57,7 @@
             neonphogKeys
             thedavidmeisterKeys
             zippyKeys
+            davhauKeys
           ];
         };
       };
