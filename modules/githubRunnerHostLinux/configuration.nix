@@ -51,8 +51,8 @@ in
 
   # runs GC when free space falls below 1GB, and tries to delete up to 5GB.
   nix.extraOptions = ''
-    min-free = ${toString (1 * 1024 * 1024 * 1024)}
-    max-free = ${toString (5 * 1024 * 1024 * 1024)}
+    min-free = ${toString (50 * 1024 * 1024 * 1024)}
+    max-free = ${toString (100 * 1024 * 1024 * 1024)}
   '';
 
   # Use the GRUB 2 boot loader.

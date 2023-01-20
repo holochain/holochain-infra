@@ -17,3 +17,9 @@ https://gist.github.com/jmatsushita/5c50ef14b4b96cb24ae5268dab613050
 ### follow this guide to set up the runner
 https://docs.github.com/en/actions/hosting-your-own-runners/adding-self-hosted-runners
 - 
+
+### install rosetta
+This will provide compatibility with x86_64-darwin
+```command
+softwareupdate --install-rosetta --agree-to-license
+```
