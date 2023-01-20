@@ -1,5 +1,17 @@
 {
   "nodes": {
+    "davhauKeys": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-0fd0gyrCTIDOPdmbPIKj7CD6696tiEumLZPoXqDd8dc=",
+        "type": "file",
+        "url": "https://github.com/davhau.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/davhau.keys"
+      }
+    },
     "jost-sKeys": {
       "flake": false,
       "locked": {
@@ -38,11 +50,11 @@
     },
     "nixpkgs-github-runner": {
       "locked": {
-        "lastModified": 1671139475,
-        "narHash": "sha256-9hQgR6gLuMEvpG/RpoW7+BaeycgR+ib9O9LTENgcbj0=",
+        "lastModified": 1674176757,
+        "narHash": "sha256-GqY5Y/i6+3gXK9pRUU5iNpWNn8g07mIbca9JLucIb48=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f30da2c2622736aecdccac893666ea23cad90f2d",
+        "rev": "5e74639a056321c5e08643ebf571e98d0b075909",
         "type": "github"
       },
       "original": {
@@ -54,11 +66,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1671139475,
-        "narHash": "sha256-9hQgR6gLuMEvpG/RpoW7+BaeycgR+ib9O9LTENgcbj0=",
+        "lastModified": 1674176757,
+        "narHash": "sha256-GqY5Y/i6+3gXK9pRUU5iNpWNn8g07mIbca9JLucIb48=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f30da2c2622736aecdccac893666ea23cad90f2d",
+        "rev": "5e74639a056321c5e08643ebf571e98d0b075909",
         "type": "github"
       },
       "original": {
@@ -70,6 +82,7 @@
     },
     "root": {
       "inputs": {
+        "davhauKeys": "davhauKeys",
         "jost-sKeys": "jost-sKeys",
         "maackleKeys": "maackleKeys",
         "neonphogKeys": "neonphogKeys",
@@ -95,7 +108,7 @@
     "thedavidmeisterKeys": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-Wr1+806gPIJfBlW0j236fezHWsEtqATbLKVQ1V02phM=",
+        "narHash": "sha256-Sn/Z7MgiUwwrJ/ZOZhta/18e/kx+iSrdMVnJPlX1CLE=",
         "type": "file",
         "url": "https://github.com/thedavidmeister.keys"
       },
