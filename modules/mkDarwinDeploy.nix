@@ -12,7 +12,7 @@
         nix
       ])}:$PATH"
       set -x
-      rsync -r ${self}/ hetzner@${hostName}:/tmp/deploy-flake
+      rsync -r --delete ${self}/ hetzner@${hostName}:/tmp/deploy-flake
       ssh hetzner@${hostName} /nix/var/nix/profiles/default/bin/nix \
         --extra-experimental-features '"flakes nix-command"' \
         build \

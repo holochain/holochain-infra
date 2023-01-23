@@ -4,11 +4,11 @@
       type = "app";
       program = toString (config.mkDarwinDeploy {
         inherit (import ./attrs.nix) hostName;
-        attrName = "githubRunnerDarwinArm01";
+        attrName = "macos-01";
       });
     };
   };
-  flake.darwinConfigurations.githubRunnerDarwinArm01 = inputs.darwin.lib.darwinSystem {
+  flake.darwinConfigurations.macos-01 = inputs.darwin.lib.darwinSystem {
     system = "aarch64-darwin";
     modules = [
       ./configuration.nix
