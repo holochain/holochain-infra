@@ -50,8 +50,6 @@
   in {
     aarch64-darwin-01 = mkRunner "aarch64-darwin";
     aarch64-darwin-02 = mkRunner "aarch64-darwin";
-    # x86_64-darwin-01 = mkRunner "x86_64-darwin";
-    # x86_64-darwin-02 = mkRunner "x86_64-darwin";
   };
 
   # Create /etc/bashrc that loads the nix-darwin environment.

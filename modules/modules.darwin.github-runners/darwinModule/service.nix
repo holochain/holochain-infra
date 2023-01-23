@@ -159,7 +159,7 @@ let
     in
       lib.concatStringsSep "\n"
       (map (x: "${x} ${escapeShellArgs [ stateDir workDir logsDir ]}") [
-        "${unconfigureRunner}"
+        unconfigureRunner
         configureRunner
         setupWorkDir
       ]);

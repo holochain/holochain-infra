@@ -152,6 +152,6 @@ with lib;
       On aarch64-darwin which have rosetta enabled, this can be used to register a runner for x86_64-darwin.
       Defaults to the hosts system.
     '';
-    default = null;
+    default = pkgs.system;
   };
 }

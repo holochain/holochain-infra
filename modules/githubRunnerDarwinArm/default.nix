@@ -1,6 +1,6 @@
 { self, lib, inputs, config, ... }: {
   perSystem = { config, self', inputs', pkgs, ... }: {
-    apps."deploy-${(import ./attrs.nix).hostName}" = {
+    apps."deploy-macos-01" = {
       type = "app";
       program = toString (config.mkDarwinDeploy {
         inherit (import ./attrs.nix) hostName;

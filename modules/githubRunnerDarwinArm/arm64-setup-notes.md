@@ -23,3 +23,13 @@ This will provide compatibility with x86_64-darwin
 ```command
 softwareupdate --install-rosetta --agree-to-license
 ```
+
+(for VM support, see tart.run)
+### install tart
+see: https://tart.run/quick-start/
+```command
+$ CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+$ echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /Users/hetzner/.zprofile
+$ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/hetzner/.zprofile
+$ eval "$(/opt/homebrew/bin/brew shellenv)"
+```
