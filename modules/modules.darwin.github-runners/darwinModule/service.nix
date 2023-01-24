@@ -16,15 +16,6 @@ let
   workDir =  "${baseDir}/work";
   stateDir = "${baseDir}/state";
   logsDir = "${baseDir}/logs";
-  system =
-    if cfg.system != null
-    then cfg.system
-    else pkgs.system;
-  nixConfForSystem = toString (
-    pkgs.writeText "nix.conf" ''
-      system = ${system}
-    ''
-  );
   # Does the following, sequentially:
   # - If the module configuration or the token has changed, purge the state directory,
   #   and create the current and the new token file with the contents of the configured
@@ -166,7 +157,6 @@ let
 in {
   script = ''
     set -x
-    export NIX_USER_CONF_FILES=${nixConfForSystem}''${NIX_USER_CONF_FILES:+:$NIX_USER_CONF_FILES}
     ${setupScript}
     ${cfg.package}/bin/Runner.Listener run --startuptype service
   '';

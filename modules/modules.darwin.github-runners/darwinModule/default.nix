@@ -66,6 +66,4 @@ in
       description = "Github runner user group";
     };
   };
-
-  meta.maintainers = with maintainers; [ veehaitch newam ];
 }

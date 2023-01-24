@@ -141,17 +141,4 @@ with lib;
     '';
     default = null;
   };
-
-  system = mkOption {
-    type = types.nullOr (types.enum [
-      "aarch64-darwin"
-      "x86_64-darwin"
-    ]);
-    description = lib.mdDoc ''
-      The system the runner should build derivations for.
-      On aarch64-darwin which have rosetta enabled, this can be used to register a runner for x86_64-darwin.
-      Defaults to the hosts system.
-    '';
-    default = pkgs.system;
-  };
 }
