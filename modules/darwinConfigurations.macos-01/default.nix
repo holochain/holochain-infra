@@ -13,6 +13,7 @@
     modules = [
       ./configuration.nix
       self.modules.darwin.github-runners
+      self.modules.darwin.github-runners-tart
       inputs.home-manager.darwinModules.home-manager
       {
         # `home-manager` config

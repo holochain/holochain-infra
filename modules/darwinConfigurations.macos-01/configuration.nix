@@ -31,25 +31,27 @@
 
   services.dnsmasq.enable = true;
 
-  services.github-runners = let
-    mkRunner = system: {
-      inherit system;
+  services.github-runners-tart = let
+    runnerConf = {
       replace = true;
-      ephemeral = false;
+      ephemeral = true;
       tokenFile = "/Users/hetzner/hra2.token";
       url = "https://github.com/holochain/holochain";
-      package = pkgs.github-runner.overrideAttrs (
-        { postInstall ? "", buildInputs ? [ ], ... }:
-        {
-          postInstall = postInstall + ''
-            ln -s ${pkgs.nodejs-16_x} $out/externals/node12
-          '';
-        }
-      );
     };
   in {
-    aarch64-darwin-01 = mkRunner "aarch64-darwin";
-    aarch64-darwin-02 = mkRunner "aarch64-darwin";
+    aarch64-darwin-tart-01 = runnerConf;
+  };
+
+  services.github-runners = let
+    runnerConf = {
+      replace = true;
+      ephemeral = true;
+      tokenFile = "/Users/hetzner/hra2.token";
+      url = "https://github.com/holochain/holochain";
+    };
+  in {
+    aarch64-darwin-01 = runnerConf;
+    aarch64-darwin-02 = runnerConf;
   };
 
   # Create /etc/bashrc that loads the nix-darwin environment.
