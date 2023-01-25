@@ -1,13 +1,5 @@
 { self, lib, inputs, config, ... }: {
-  perSystem = { config, self', inputs', pkgs, ... }: {
-    apps."deploy-macos-01" = {
-      type = "app";
-      program = toString (config.mkDarwinDeploy {
-        inherit (import ./attrs.nix) hostName;
-        attrName = "macos-01";
-      });
-    };
-  };
+
   flake.darwinConfigurations.macos-01 = inputs.darwin.lib.darwinSystem {
     system = "aarch64-darwin";
     modules = [

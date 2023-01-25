@@ -1,13 +1,4 @@
 { lib, inputs, config, ... }: {
-  perSystem = { config, self', inputs', pkgs, ... }: {
-    apps."deploy-linux-01" = {
-      type = "app";
-      program = toString (config.mkLinuxDeploy {
-        inherit (import ./attrs.nix) hostName;
-        attrName = "linux-01";
-      });
-    };
-  };
 
   flake.nixosConfigurations.linux-01 = let
 

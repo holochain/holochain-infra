@@ -4,8 +4,9 @@
 ```command
 nix flake show
 ```
+notice apps prefixed with `deploy-`
 
-### Deploy updates to host
+### Deploy changes to host
 ```command
 nix run .#deploy-{hostname}
 ```
