@@ -175,6 +175,7 @@ let
     # populate nix.conf
     echo "trusted-users = root $USER" > nix.conf
     echo "experimental-features = nix-command flakes" >> nix.conf
+    echo "max-jobs = 4" >> nix.conf
 
     # install nix
     sh <(curl -L https://releases.nixos.org/nix/nix-2.12.0/install) \
