@@ -1,3 +1,22 @@
+## Commands
+
+### Show available apps
+```command
+nix flake show
+```
+notice apps prefixed with `deploy-`
+
+### Deploy changes to host
+```command
+nix run .#deploy-{hostname}
+```
+
+### Update dependencies (nixpkgs version)
+
+```
+nix flake update
+```
+
 ## Install log
 
 1. connected to vps via ssh when it's in recovery mode
@@ -29,15 +48,3 @@
   unset NIX_PATH
   nixos-install --flake ".#mysystem"
   ```
-
-## Commands
-
-### Update and Rebuild
-
-```
-nix flake update
-nixos-rebuild --flake .#githubRunnerHost --no-build-nix --target-host root@${IP:?} --build-host root@${IP:?} switch
-```
-### Update macos host
-Deploy by executing one of the flake apps named `deploy-[host]`.
-To list the available hosts, execute `nix flake show` and inspect the apps.

@@ -1,18 +1,11 @@
 { self, lib, inputs, config, ... }: {
-  perSystem = { config, self', inputs', pkgs, ... }: {
-    apps."deploy-${(import ./attrs.nix).hostName}" = {
-      type = "app";
-      program = toString (config.mkDarwinDeploy {
-        inherit (import ./attrs.nix) hostName;
-        attrName = "githubRunnerDarwinArm01";
-      });
-    };
-  };
-  flake.darwinConfigurations.githubRunnerDarwinArm01 = inputs.darwin.lib.darwinSystem {
+
+  flake.darwinConfigurations.macos-01 = inputs.darwin.lib.darwinSystem {
     system = "aarch64-darwin";
     modules = [
       ./configuration.nix
       self.modules.darwin.github-runners
+      self.modules.darwin.github-runners-tart
       inputs.home-manager.darwinModules.home-manager
       {
         # `home-manager` config

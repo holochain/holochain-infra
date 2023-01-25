@@ -7,11 +7,11 @@
 with lib;
 
 let
-  cfg = config.services.github-runners;
+  cfg = config.services.github-runners-tart;
 in
 
 {
-  options.services.github-runners = mkOption {
+  options.services.github-runners-tart = mkOption {
     default = {};
     type = with types;
       attrsOf (submodule { options = import ./options.nix args; });

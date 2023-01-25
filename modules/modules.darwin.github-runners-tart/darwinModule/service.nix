@@ -26,12 +26,7 @@ let
   setupScript =
     let
       # Wrapper script which expects the full path of the state, working and logs
-      # directory as arguments. Overrides the respective systemd variables to provide
-      # unambiguous directory names. This becomes relevant, for example, if the
-      # caller overrides any of the StateDirectory=, RuntimeDirectory= or LogDirectory=
-      # to contain more than one directory. This causes systemd to set the respective
-      # environment variables with the path of all of the given directories, separated
-      # by a colon.
+      # directory as arguments.
       writeScript = name: lines: pkgs.writeShellScript "${svcName}-${name}.sh" ''
         set -euo pipefail
         set -x
@@ -67,9 +62,9 @@ let
       unconfigureRunner = writeScript "unconfigure" ''
         copy_tokens() {
           # Copy the configured token file to the state dir and allow the service user to read the file
-          install --mode=666 ${escapeShellArg cfg.tokenFile} "${newConfigTokenPath}"
+          ${pkgs.coreutils}/bin/install --mode=666 $TOKEN_FILE "${newConfigTokenPath}"
           # Also copy current file to allow for a diff on the next start
-          install --mode=600 ${escapeShellArg cfg.tokenFile} "${currentConfigTokenPath}"
+          ${pkgs.coreutils}/bin/install --mode=600 $TOKEN_FILE "${currentConfigTokenPath}"
         }
         clean_state() {
           ${pkgs.findutils}/bin/find "$STATE_DIRECTORY/" -mindepth 1 -delete
@@ -83,7 +78,7 @@ let
             || changed=1
           # Also check the content of the token file
           [[ -f "${currentConfigTokenPath}" ]] \
-            && ${pkgs.diffutils}/bin/diff -q "${currentConfigTokenPath}" ${escapeShellArg cfg.tokenFile} >/dev/null 2>&1 \
+            && ${pkgs.diffutils}/bin/diff -q "${currentConfigTokenPath}" $TOKEN_FILE >/dev/null 2>&1 \
             || changed=1
           # If the config has changed, remove old state and copy tokens
           if [[ "$changed" -eq 1 ]]; then
@@ -154,11 +149,88 @@ let
         configureRunner
         setupWorkDir
       ]);
+
+  runnerTarball = pkgs.callPackage (pkgs.path + /nixos/lib/make-system-tarball.nix) {
+    fileName = "github-runner";
+    storeContents = [
+      {object=scriptGuest; symlink=null;}
+    ];
+    contents = [];
+    compressCommand = "pixz -t -1";
+  };
+
+  scriptGuest = pkgs.writeScript "guest.sh" ''
+    set -euo pipefail
+    set -x
+
+    # set up env
+    export runnerTarball="$PWD/github-runner.tar.xz"
+    export RUNNER_ROOT=${stateDir}
+    export HOME=${baseDir}
+    export USER=$(whoami)
+    export NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
+    export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+    export PATH="/nix/var/nix/profiles/per-user/$USER/profile/bin:$PATH"
+
+    # populate nix.conf
+    echo "trusted-users = root $USER" > nix.conf
+    echo "experimental-features = nix-command flakes" >> nix.conf
+    echo "max-jobs = 4" >> nix.conf
+
+    # install nix
+    sh <(curl -L https://releases.nixos.org/nix/nix-2.12.0/install) \
+      --daemon \
+      --no-channel-add \
+      --darwin-use-unencrypted-nix-store-volume \
+      --daemon-user-count 8 \
+      --nix-extra-conf-file ./nix.conf
+
+    # make /nix writable and push the github runner app to the store
+    sudo mount -uw /nix
+    cd / && sudo tar xf $runnerTarball nix/
+
+    # ensure the working directories do exist and are owned by the user
+    sudo mkdir -p ${baseDir}
+    sudo chown -R $(whoami) ${baseDir}
+    cd $HOME
+    ${setupScript}
+    rm $TOKEN_FILE
+    ${cfg.package}/bin/Runner.Listener run --startuptype service
+  '';
+
+  cirrucConf = pkgs.writeText ".cirrus.yml" ''
+    task:
+      name: ${svcName}
+      macos_instance:
+        # can be a remote or a local virtual machine
+        image: ghcr.io/cirruslabs/macos-monterey-base:latest
+      hello_script:
+        - export TOKEN_FILE="$PWD/tokenFile"
+        - bash ./script-guest.sh
+
+  '';
+
 in {
   script = ''
     set -x
-    ${setupScript}
-    ${cfg.package}/bin/Runner.Listener run --startuptype service
+
+    # make cirrus and tart available via PATH
+    export PATH="$PATH:/opt/homebrew/bin"
+
+    # clean the working directory
+    chmod +w -R ./cirrusWorkDir || true
+    rm -rf ./cirrusWorkDir
+
+    # populate the working directory
+    mkdir ./cirrusWorkDir
+    cat ${cirrucConf} > ./cirrusWorkDir/.cirrus.yml
+    cp ${scriptGuest} ./cirrusWorkDir/script-guest.sh
+    cp ${runnerTarball}/tarball/github-runner.tar.xz ./cirrusWorkDir/github-runner.tar.xz
+    cp ${cfg.tokenFile} ./cirrusWorkDir/tokenFile
+
+    # run the VM (the current dir will be pushed inside the VM)
+    cd ./cirrusWorkDir
+    cirrus run -o simple
   '';
 
   path = config.environment.systemPackages;
