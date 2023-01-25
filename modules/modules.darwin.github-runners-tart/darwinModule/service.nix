@@ -150,17 +150,10 @@ let
         setupWorkDir
       ]);
 
-  start = pkgs.writeScript "start-github-runner" ''
-    set -x
-    ${setupScript}
-    ${cfg.package}/bin/Runner.Listener run --startuptype service
-  '';
-
   runnerTarball = pkgs.callPackage (pkgs.path + /nixos/lib/make-system-tarball.nix) {
     fileName = "github-runner";
     storeContents = [
-      {object=start; symlink=null;}
-      {object=pkgs.cacert; symlink=null;}
+      {object=scriptGuest; symlink=null;}
     ];
     contents = [];
     compressCommand = "pixz -t -1";
@@ -198,7 +191,10 @@ let
     # ensure the working directories do exist and are owned by the user
     sudo mkdir -p ${baseDir}
     sudo chown -R $(whoami) ${baseDir}
-    cd $HOME && ${start}
+    cd $HOME
+    ${setupScript}
+    rm $TOKEN_FILE
+    ${cfg.package}/bin/Runner.Listener run --startuptype service
   '';
 
   cirrucConf = pkgs.writeText ".cirrus.yml" ''
