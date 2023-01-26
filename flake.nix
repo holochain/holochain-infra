@@ -27,7 +27,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
 
       # auto import all nix code from `./modules`
-      imports = map (m: "${./modules}/${m}")
+      imports = map (m: "${./.}/modules/${m}")
         (builtins.attrNames (builtins.readDir ./modules));
 
       systems = [

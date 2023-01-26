@@ -4,6 +4,8 @@
     system = "aarch64-darwin";
     modules = [
       ./configuration.nix
+      ./remote-builder.nix
+      ../../shared.nix
       self.modules.darwin.github-runners
       self.modules.darwin.github-runners-tart
       inputs.home-manager.darwinModules.home-manager

@@ -29,7 +29,12 @@ in
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./github-runner-multi-arch.nix
+      ../../shared.nix
     ];
+
+  # set options defined by us
+  hostName = "185.255.131.141";
 
   # FIXME: investigate if it's possible to specify these only in the github-runner containers
   nix.settings.trusted-users = [
@@ -39,21 +44,25 @@ in
     builtins.genList (x: "github-runner-${githubRunnersCfg.namePrefix}-${builtins.toString x}") githubRunnersCfg.count
   );
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  nix.settings.auto-optimise-store = true;
-
-  nix.gc = {
-    automatic = true;
-    dates = "daily";
-    options = "--delete-older-than 10d";
-  };
-
-  # runs GC when free space falls below 1GB, and tries to delete up to 5GB.
-  nix.extraOptions = ''
-    min-free = ${toString (50 * 1024 * 1024 * 1024)}
-    max-free = ${toString (100 * 1024 * 1024 * 1024)}
-  '';
+  nix.distributedBuilds = true;
+  nix.buildMachines = [
+    {
+      hostName = "167.235.13.208";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "aarch64-darwin";
+      maxJobs = 4;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
+    {
+      hostName = "167.235.13.208";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "x86_64-darwin";
+      maxJobs = 4;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
+  ];
 
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;

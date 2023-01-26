@@ -25,21 +25,6 @@
     "github-runner-${name}"
     "sshsession"
   ];
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  nix.settings.auto-optimise-store = true;
-
-  nix.gc = {
-    automatic = true;
-    dates = "daily";
-    options = "--delete-older-than 10d";
-  };
-
-  # runs GC when free space falls below 1GB, and tries to delete up to 5GB.
-  nix.extraOptions = ''
-    min-free = ${toString (1 * 1024 * 1024 * 1024)}
-    max-free = ${toString (5 * 1024 * 1024 * 1024)}
-  '';
 
   environment.systemPackages = with pkgs; [
     coreutils

@@ -2,8 +2,8 @@
 { self, lib, ... }: {
   perSystem = {pkgs, ...}: let
     mkDarwinDeploy = {
+      attrName,
       hostName,
-      attrName ? "darwin-${hostName}",
     }: pkgs.writeScript "deploy-${hostName}" ''
       set -Eeuo pipefail
       export PATH="${lib.makeBinPath (with pkgs; [
@@ -13,6 +13,12 @@
 
       rsync -r --delete ${self}/ hetzner@${hostName}:/tmp/deploy-flake
 
+      ssh hetzner@${hostName} /nix/var/nix/profiles/default/bin/nix \
+        --extra-experimental-features '"flakes nix-command"' \
+        build \
+          -o /tmp/next-system \
+          /tmp/deploy-flake#darwinConfigurations.'"${attrName}"'.system
+
       ssh hetzner@${hostName} /tmp/next-system/sw/bin/darwin-rebuild \
         switch --flake /tmp/deploy-flake#'"${attrName}"'
     '';
@@ -21,7 +27,7 @@
       type = "app";
       program = builtins.toString (mkDarwinDeploy {
         inherit attrName;
-        hostName = (import "${self}/modules/darwinConfigurations.${attrName}/attrs.nix").hostName;
+        inherit (config.config) hostName;
       });
     };
 
