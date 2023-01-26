@@ -1,31 +1,20 @@
 { pkgs, lib, ... }:
 {
-  # Nix configuration ------------------------------------------------------------------------------
 
-  nix.settings.substituters = [
-    "https://holochain-ci.cachix.org/"
-  ];
-  nix.settings.trusted-public-keys = [
-    "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
-  ];
+  # set options defined by us
+  deployUser = "hetzner";
+  hostName = "167.235.13.208";
+
   nix.settings.trusted-users = [
     "@admin"
     "github-runner"
     "hetzner"
+    "builder"
   ];
   nix.useDaemon = true;
   # runs GC when free space falls below 1GB, and tries to delete up to 5GB.
 
   nix.settings.max-jobs = 8;
-
-  # nix config
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
-    min-free = ${toString (1 * 1024 * 1024 * 1024)}
-    max-free = ${toString (5 * 1024 * 1024 * 1024)}
-  '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
-    extra-platforms = x86_64-darwin aarch64-darwin
-  '';
 
   nix.configureBuildUsers = true;
 
@@ -65,21 +54,6 @@
   # `home-manager` currently has issues adding them to `~/Applications`
   # Issue: https://github.com/nix-community/home-manager/issues/1341
   environment.systemPackages = with pkgs; [
-    gnugrep
-    gnutar
-    gzip
-    coreutils
-    libressl.nc
-    procps
-    cachix
-    xz
-    zstd
-    openssh
-    tree
-    tmux
-    upterm
-    gawk
-    gitFull
-    vim
+
   ];
 }

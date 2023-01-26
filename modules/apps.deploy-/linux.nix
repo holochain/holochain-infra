@@ -2,8 +2,8 @@
 { self, lib, ... }: {
   perSystem = {pkgs, ...}: let
     mkLinuxDeploy = {
+      attrName,
       hostName,
-      attrName ? "darwin-${hostName}",
     }: pkgs.writeScript "deploy-${hostName}" ''
       set -Eeuo pipefail
       export PATH="${lib.makeBinPath (with pkgs; [
@@ -21,7 +21,7 @@
       type = "app";
       program = builtins.toString (mkLinuxDeploy {
         inherit attrName;
-        hostName = (import "${self}/modules/nixosConfigurations.${attrName}/attrs.nix").hostName;
+        inherit (config.config) hostName;
       });
     };
   in {

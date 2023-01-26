@@ -2,10 +2,7 @@
 
   flake.nixosConfigurations.linux-01 = let
 
-    magicPaths = {
-      githubRunnerHraTokenHostPath = "/var/secrets/github-runner/hra2.token";
-      githubRunnerHraTokenMountPoint = "/secrets/github-runner/token";
-    };
+    magicPaths = import ./magicPaths.nix;
 
     githubRunnerContainerPathFn = name: extraLabels: let
       nixos = inputs.nixpkgs-github-runner.lib.nixosSystem {

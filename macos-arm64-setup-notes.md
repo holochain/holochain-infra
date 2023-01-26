@@ -33,3 +33,9 @@ $ echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /Users/hetzner/.zprofile
 $ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/hetzner/.zprofile
 $ eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
+
+### create `builder` user if the host should be a remote builder
+First deploy the macos via our nix-darwin config, then
+```command
+sudo dseditgroup -o edit -a builder -t user com.apple.access_ssh
+```
