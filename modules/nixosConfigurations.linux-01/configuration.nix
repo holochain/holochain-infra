@@ -2,47 +2,38 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs
-, githubRunnerContainerPathFn
-  # , githubRunnerContainerPath
-, githubRunnerContainerNixpkgs
-, githubRunnerHraTokenHostPath
+{ pkgs, githubRunnerContainerPathFn
+# , githubRunnerContainerPath
+, githubRunnerContainerNixpkgs, githubRunnerHraTokenHostPath
 , githubRunnerHraTokenMountPoint
 
-  # not used explicitly
-, lib
-, config
-, options
-, modulesPath
-, specialArgs
-, extraAuthorizedKeyFiles
-}:
+# not used explicitly
+, lib, config, options, modulesPath, specialArgs, extraAuthorizedKeyFiles }:
 
 let
-  githubRunnersCfg = { count = 4; namePrefix = "nixos"; };
+  githubRunnersCfg = {
+    count = 4;
+    namePrefix = "nixos";
+  };
   grafana_http_port = 2342;
 
-in
-{
+in {
 
-  imports =
-    [
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./github-runner-multi-arch.nix
-      ../../shared.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./github-runner-multi-arch.nix
+    ../../shared.nix
+    ../../shared-nix-settings.nix
+  ];
 
   # set options defined by us
   hostName = "185.255.131.141";
 
   # FIXME: investigate if it's possible to specify these only in the github-runner containers
-  nix.settings.trusted-users = [
-    "root"
-    "sshsession"
-  ] ++ (
-    builtins.genList (x: "github-runner-${githubRunnersCfg.namePrefix}-${builtins.toString x}") githubRunnersCfg.count
-  );
+  nix.settings.trusted-users = [ "root" "sshsession" ] ++ (builtins.genList
+    (x: "github-runner-${githubRunnersCfg.namePrefix}-${builtins.toString x}")
+    githubRunnersCfg.count);
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
@@ -71,7 +62,6 @@ in
 
   networking.hostName = "github-runner-host"; # Define your hostname.
 
-
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
 
@@ -98,9 +88,7 @@ in
     createHome = false;
     group = "sshsession";
   };
-  users.groups.sshsession = {
-    gid = 1001;
-  };
+  users.groups.sshsession = { gid = 1001; };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -125,8 +113,7 @@ in
   services.openssh.enable = true;
   services.openssh.permitRootLogin = "prohibit-password";
   users.users."root".openssh.authorizedKeys = {
-    keys = [
-    ];
+    keys = [ ];
     keyFiles = extraAuthorizedKeyFiles;
   };
 
@@ -141,43 +128,31 @@ in
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
-  containers =
-    let
-      mkGithubRunner = name: extraLabels:
-        let
-          path = githubRunnerContainerPathFn name extraLabels;
-        in
-        {
-          inherit path;
-          nixpkgs = githubRunnerContainerNixpkgs;
+  containers = let
+    mkGithubRunner = name: extraLabels:
+      let path = githubRunnerContainerPathFn name extraLabels;
+      in {
+        inherit path;
+        nixpkgs = githubRunnerContainerNixpkgs;
 
-          autoStart = true;
-          ephemeral = false;
-          bindMounts = {
-            hraToken = {
-              hostPath = githubRunnerHraTokenHostPath;
-              mountPoint = githubRunnerHraTokenMountPoint;
-              isReadOnly = true;
-            };
+        autoStart = true;
+        ephemeral = false;
+        bindMounts = {
+          hraToken = {
+            hostPath = githubRunnerHraTokenHostPath;
+            mountPoint = githubRunnerHraTokenMountPoint;
+            isReadOnly = true;
           };
-
-          extraFlags = [
-            "--resolv-conf=bind-host"
-          ];
         };
-    in
-      builtins.listToAttrs
-        (
-          builtins.genList
-          (x:
-            {
-              name = "githubRunner-${builtins.toString x}";
-              value = mkGithubRunner "${githubRunnersCfg.namePrefix}-${builtins.toString x}" (if x == 0 then ["release"] else []);
-            }
-          )
-          githubRunnersCfg.count
-        )
-        ;
+
+        extraFlags = [ "--resolv-conf=bind-host" ];
+      };
+  in builtins.listToAttrs (builtins.genList (x: {
+    name = "githubRunner-${builtins.toString x}";
+    value =
+      mkGithubRunner "${githubRunnersCfg.namePrefix}-${builtins.toString x}"
+      (if x == 0 then [ "release" ] else [ ]);
+  }) githubRunnersCfg.count);
 
   services.prometheus = {
     enable = true;
@@ -194,21 +169,20 @@ in
 
     };
 
-    scrapeConfigs = [
-      {
-        job_name = "node-scraper";
-        static_configs = [{
-          targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
-        }];
-      }
-    ];
+    scrapeConfigs = [{
+      job_name = "node-scraper";
+      static_configs = [{
+        targets = [
+          "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+        ];
+      }];
+    }];
 
   };
 
   # grafana configuration
   services.grafana = {
     enable = true;
-
 
     settings.server = {
       http_addr = "127.0.0.1";
@@ -236,8 +210,7 @@ in
           # required when the target is also TLS server with multiple hosts
           "proxy_ssl_server_name on;" +
           # required when the server wants to use HTTP Authentication
-          "proxy_pass_header Authorization;"
-        ;
+          "proxy_pass_header Authorization;";
       };
     };
   };

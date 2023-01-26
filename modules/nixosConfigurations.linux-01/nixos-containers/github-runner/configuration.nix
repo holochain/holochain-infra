@@ -1,16 +1,9 @@
 { pkgs
 
-, githubRunnerHolochainHolochainTokenFile
-, name
-, extraLabels
+, githubRunnerHolochainHolochainTokenFile, name, extraLabels
 
-  # not used explicitly
-, lib
-, specialArgs
-, config
-, options
-, modulesPath
-}: {
+# not used explicitly
+, lib, specialArgs, config, options, modulesPath }: {
   boot.isContainer = true;
 
   # disabledModules = [ "services/continuous-integration/github-runner.nix" ];
@@ -18,13 +11,11 @@
     # inputs.nixos-fhs-compat.nixosModules.combined
     # "${inputs.nixpkgs-ghrunner}/nixos/modules/services/continuous-integration/github-runner.nix"
     # "${inputs.nixpkgs-ghrunner}/nixos/modules/services/continuous-integration/github-runners.nix"
+
+    ../../../../shared-nix-settings.nix
   ];
 
-  nix.settings.trusted-users = [
-    "root"
-    "github-runner-${name}"
-    "sshsession"
-  ];
+  nix.settings.trusted-users = [ "root" "github-runner-${name}" "sshsession" ];
 
   environment.systemPackages = with pkgs; [
     coreutils
@@ -42,36 +33,28 @@
     vim
   ];
 
-  services.github-runner =
-    let
-      mkHolochainRunner = args: ({
+  services.github-runner = let
+    mkHolochainRunner = args:
+      ({
         enable = true;
         replace = true;
         ephemeral = false;
         # user = "github-runner";
         url = "https://github.com/holochain/holochain";
         tokenFile = githubRunnerHolochainHolochainTokenFile;
-        package = pkgs.github-runner.overrideAttrs (
-          { postInstall ? "", buildInputs ? [ ], ... }:
-          {
+        package = pkgs.github-runner.overrideAttrs
+          ({ postInstall ? "", buildInputs ? [ ], ... }: {
             postInstall = postInstall + ''
               ln -s ${pkgs.nodejs-16_x} $out/externals/node12
             '';
-          }
-        );
+          });
 
         extraPackages =
           # add a dummy script for commands that won't work in this runner
-          (builtins.map
-            (elem: pkgs.writeShellScriptBin "${elem}" "echo wanted to run: ${elem} \${@}")
-            [
-              "sudo"
-              "apt-get"
-              "apt"
-            ]
-          ++
-          config.environment.systemPackages
-          );
+          (builtins.map (elem:
+            pkgs.writeShellScriptBin "${elem}"
+            "echo wanted to run: ${elem} \${@}") [ "sudo" "apt-get" "apt" ]
+            ++ config.environment.systemPackages);
 
         inherit extraLabels;
 
@@ -106,8 +89,7 @@
         #   Environment="SYSTEMD_LOG_LEVEL=debug COMPlus_EnableDiagnostics=0";
         # };
       } // args);
-    in
-    mkHolochainRunner { inherit name; };
+  in mkHolochainRunner { inherit name; };
   #{
   # r0 = mkHolochainRunner { name = "nixos-r0"; };
   # r1 = mkHolochainRunner { name = "nixos-r1"; };
@@ -138,9 +120,7 @@
     createHome = false;
     group = "github-runner";
   };
-  users.groups.github-runner = {
-    gid = 1000;
-  };
+  users.groups.github-runner = { gid = 1000; };
 
   users.users.sshsession = {
     uid = 1001;
@@ -148,9 +128,7 @@
     createHome = false;
     group = "sshsession";
   };
-  users.groups.sshsession = {
-    gid = 1001;
-  };
+  users.groups.sshsession = { gid = 1001; };
 
   systemd.services.sshsession = {
     enable = true;
@@ -243,8 +221,7 @@
       RuntimeDirectoryPreserve = false;
       WorkingDirectory = "%t/sshsession";
 
-      InaccessiblePaths = [
-      ];
+      InaccessiblePaths = [ ];
 
       # By default, use a dynamically allocated user
       DynamicUser = true;
