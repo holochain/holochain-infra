@@ -20,30 +20,6 @@
 
   services.dnsmasq.enable = true;
 
-  # services.github-runners-tart = let
-  #   runnerConf = {
-  #     replace = true;
-  #     ephemeral = true;
-  #     tokenFile = "/Users/hetzner/hra2.token";
-  #     url = "https://github.com/holochain/holochain";
-  #   };
-  # in {
-  #   aarch64-darwin-tart-01 = runnerConf;
-  #   aarch64-darwin-tart-02 = runnerConf;
-  # };
-
-  services.github-runners = let
-    runnerConf = {
-      replace = true;
-      ephemeral = true;
-      tokenFile = "/Users/hetzner/hra2.token";
-      url = "https://github.com/holochain/holochain";
-    };
-  in {
-    aarch64-darwin-01 = runnerConf;
-    aarch64-darwin-02 = runnerConf;
-  };
-
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;
 
