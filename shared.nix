@@ -21,7 +21,7 @@
     automatic = true;
     options = "--delete-older-than 10d --max-freed 0";
   } // lib.optionalAttrs pkgs.stdenv.isLinux { dates = "daily"; }
-    // lib.optionalAttrs pkgs.stdenv.isDarwin { interval.Hour = 0; };
+  // lib.optionalAttrs pkgs.stdenv.isDarwin { interval.Hour = 0; };
 
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
