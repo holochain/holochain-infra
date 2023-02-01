@@ -1,4 +1,4 @@
-{ config, lib, ... }: {
+{ config, lib, magicPaths, ... }: {
   services.github-runners = lib.genAttrs
     [
       "multi-arch-01"
@@ -14,7 +14,7 @@
       replace = true;
       ephemeral = true;
       extraLabels = [ "multi-arch" ];
-      tokenFile = (import ./magicPaths.nix).githubRunnerHraTokenHostPath;
+      tokenFile = magicPaths.githubRunnerHraTokenHostPath;
       url = "https://github.com/holochain/holochain";
       extraPackages = config.environment.systemPackages;
     });

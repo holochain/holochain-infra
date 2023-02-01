@@ -3,18 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { pkgs
-, githubRunnerContainerPathFn
-  # , githubRunnerContainerPath
-, githubRunnerContainerNixpkgs
-, githubRunnerHraTokenHostPath
-, githubRunnerHraTokenMountPoint
-
-  # not used explicitly
-, lib
 , config
-, options
-, modulesPath
-, specialArgs
 , extraAuthorizedKeyFiles
 , ...
 }:
@@ -40,10 +29,12 @@ in
   # set options defined by us
   hostName = "185.255.131.141";
 
-  # FIXME: investigate if it's possible to specify these only in the github-runner containers
-  nix.settings.trusted-users = [ "root" "sshsession" ] ++ (builtins.genList
-    (x: "github-runner-${githubRunnersCfg.namePrefix}-${builtins.toString x}")
-    githubRunnersCfg.count);
+  nix.settings.trusted-users = [ "root" "sshsession" ]
+    # FIXME: investigate if it's possible to specify these only in the github-runner containers
+    # ++ (builtins.genList
+    #   (x: "github-runner-${githubRunnersCfg.namePrefix}-${builtins.toString x}")
+    #   githubRunnersCfg.count)
+  ;
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
@@ -137,37 +128,6 @@ in
   # (/run/current-system/configuration.nix). This is useful in case you
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
-
-  containers =
-    let
-      mkGithubRunner = name: extraLabels:
-        let path = githubRunnerContainerPathFn name extraLabels;
-        in
-        {
-          inherit path;
-          nixpkgs = githubRunnerContainerNixpkgs;
-
-          autoStart = true;
-          ephemeral = false;
-          bindMounts = {
-            hraToken = {
-              hostPath = githubRunnerHraTokenHostPath;
-              mountPoint = githubRunnerHraTokenMountPoint;
-              isReadOnly = true;
-            };
-          };
-
-          extraFlags = [ "--resolv-conf=bind-host" ];
-        };
-    in
-    builtins.listToAttrs (builtins.genList
-      (x: {
-        name = "githubRunner-${builtins.toString x}";
-        value =
-          mkGithubRunner "${githubRunnersCfg.namePrefix}-${builtins.toString x}"
-            (if x == 0 then [ "release" ] else [ ]);
-      })
-      githubRunnersCfg.count);
 
   services.prometheus = {
     enable = true;
