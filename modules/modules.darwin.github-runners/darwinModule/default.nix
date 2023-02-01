@@ -12,7 +12,7 @@ in
 
 {
   options.services.github-runners = mkOption {
-    default = {};
+    default = { };
     type = with types;
       attrsOf (submodule { options = import ./options.nix args; });
     example = {
@@ -42,15 +42,15 @@ in
       let
         svcName = name;
       in
-        nameValuePair svcName
+      nameValuePair svcName
         (import ./service.nix (args // {
           inherit svcName;
           cfg = runnerConfig;
         }))
     );
 
-    users.knownGroups = ["github-runner"];
-    users.knownUsers = ["github-runner"];
+    users.knownGroups = [ "github-runner" ];
+    users.knownUsers = [ "github-runner" ];
     users.users.github-runner = {
       name = "github-runner";
       uid = mkDefault 533;

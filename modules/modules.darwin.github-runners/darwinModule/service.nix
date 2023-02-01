@@ -13,7 +13,7 @@ with lib;
 
 let
   baseDir = "${config.users.users.github-runner.home}/${svcName}";
-  workDir =  "${baseDir}/work";
+  workDir = "${baseDir}/work";
   stateDir = "${baseDir}/state";
   logsDir = "${baseDir}/logs";
   # Does the following, sequentially:
@@ -148,13 +148,14 @@ let
         ln -s "$STATE_DIRECTORY"/{${lib.concatStringsSep "," runnerCredFiles}} "$WORK_DIRECTORY/"
       '';
     in
-      lib.concatStringsSep "\n"
+    lib.concatStringsSep "\n"
       (map (x: "${x} ${escapeShellArgs [ stateDir workDir logsDir ]}") [
         unconfigureRunner
         configureRunner
         setupWorkDir
       ]);
-in {
+in
+{
   script = ''
     set -x
     ${setupScript}

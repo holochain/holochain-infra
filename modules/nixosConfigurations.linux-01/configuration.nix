@@ -2,13 +2,21 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, githubRunnerContainerPathFn
-# , githubRunnerContainerPath
-, githubRunnerContainerNixpkgs, githubRunnerHraTokenHostPath
+{ pkgs
+, githubRunnerContainerPathFn
+  # , githubRunnerContainerPath
+, githubRunnerContainerNixpkgs
+, githubRunnerHraTokenHostPath
 , githubRunnerHraTokenMountPoint
 
-# not used explicitly
-, lib, config, options, modulesPath, specialArgs, extraAuthorizedKeyFiles }:
+  # not used explicitly
+, lib
+, config
+, options
+, modulesPath
+, specialArgs
+, extraAuthorizedKeyFiles
+}:
 
 let
   githubRunnersCfg = {
@@ -17,7 +25,8 @@ let
   };
   grafana_http_port = 2342;
 
-in {
+in
+{
 
   imports = [
     # Include the results of the hardware scan.
@@ -128,31 +137,36 @@ in {
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
-  containers = let
-    mkGithubRunner = name: extraLabels:
-      let path = githubRunnerContainerPathFn name extraLabels;
-      in {
-        inherit path;
-        nixpkgs = githubRunnerContainerNixpkgs;
+  containers =
+    let
+      mkGithubRunner = name: extraLabels:
+        let path = githubRunnerContainerPathFn name extraLabels;
+        in
+        {
+          inherit path;
+          nixpkgs = githubRunnerContainerNixpkgs;
 
-        autoStart = true;
-        ephemeral = false;
-        bindMounts = {
-          hraToken = {
-            hostPath = githubRunnerHraTokenHostPath;
-            mountPoint = githubRunnerHraTokenMountPoint;
-            isReadOnly = true;
+          autoStart = true;
+          ephemeral = false;
+          bindMounts = {
+            hraToken = {
+              hostPath = githubRunnerHraTokenHostPath;
+              mountPoint = githubRunnerHraTokenMountPoint;
+              isReadOnly = true;
+            };
           };
-        };
 
-        extraFlags = [ "--resolv-conf=bind-host" ];
-      };
-  in builtins.listToAttrs (builtins.genList (x: {
-    name = "githubRunner-${builtins.toString x}";
-    value =
-      mkGithubRunner "${githubRunnersCfg.namePrefix}-${builtins.toString x}"
-      (if x == 0 then [ "release" ] else [ ]);
-  }) githubRunnersCfg.count);
+          extraFlags = [ "--resolv-conf=bind-host" ];
+        };
+    in
+    builtins.listToAttrs (builtins.genList
+      (x: {
+        name = "githubRunner-${builtins.toString x}";
+        value =
+          mkGithubRunner "${githubRunnersCfg.namePrefix}-${builtins.toString x}"
+            (if x == 0 then [ "release" ] else [ ]);
+      })
+      githubRunnersCfg.count);
 
   services.prometheus = {
     enable = true;

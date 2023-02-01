@@ -90,7 +90,7 @@ with lib;
     example = {
       GIT_CONFIG = "/path/to/git/config";
     };
-    default = {};
+    default = { };
   };
 
   serviceOverrides = mkOption {
@@ -102,7 +102,7 @@ with lib;
       ProtectHome = false;
       RestrictAddressFamilies = [ "AF_PACKET" ];
     };
-    default = {};
+    default = { };
   };
 
   package = mkOption {

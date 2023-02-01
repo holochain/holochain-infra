@@ -1,9 +1,16 @@
 { pkgs
 
-, githubRunnerHolochainHolochainTokenFile, name, extraLabels
+, githubRunnerHolochainHolochainTokenFile
+, name
+, extraLabels
 
-# not used explicitly
-, lib, specialArgs, config, options, modulesPath }: {
+  # not used explicitly
+, lib
+, specialArgs
+, config
+, options
+, modulesPath
+}: {
   boot.isContainer = true;
 
   # disabledModules = [ "services/continuous-integration/github-runner.nix" ];
@@ -33,63 +40,66 @@
     vim
   ];
 
-  services.github-runner = let
-    mkHolochainRunner = args:
-      ({
-        enable = true;
-        replace = true;
-        ephemeral = false;
-        # user = "github-runner";
-        url = "https://github.com/holochain/holochain";
-        tokenFile = githubRunnerHolochainHolochainTokenFile;
-        package = pkgs.github-runner.overrideAttrs
-          ({ postInstall ? "", buildInputs ? [ ], ... }: {
-            postInstall = postInstall + ''
-              ln -s ${pkgs.nodejs-16_x} $out/externals/node12
-            '';
-          });
+  services.github-runner =
+    let
+      mkHolochainRunner = args:
+        ({
+          enable = true;
+          replace = true;
+          ephemeral = false;
+          # user = "github-runner";
+          url = "https://github.com/holochain/holochain";
+          tokenFile = githubRunnerHolochainHolochainTokenFile;
+          package = pkgs.github-runner.overrideAttrs
+            ({ postInstall ? "", buildInputs ? [ ], ... }: {
+              postInstall = postInstall + ''
+                ln -s ${pkgs.nodejs-16_x} $out/externals/node12
+              '';
+            });
 
-        extraPackages =
-          # add a dummy script for commands that won't work in this runner
-          (builtins.map (elem:
-            pkgs.writeShellScriptBin "${elem}"
-            "echo wanted to run: ${elem} \${@}") [ "sudo" "apt-get" "apt" ]
+          extraPackages =
+            # add a dummy script for commands that won't work in this runner
+            (builtins.map
+              (elem:
+                pkgs.writeShellScriptBin "${elem}"
+                  "echo wanted to run: ${elem} \${@}") [ "sudo" "apt-get" "apt" ]
             ++ config.environment.systemPackages);
 
-        inherit extraLabels;
+          inherit extraLabels;
 
-        # serviceOverrides = {
-        #   RuntimeDirectoryPreserve=false;
-        #   # CapabilityBoundingSet = "CAP_SYS_ADMIN";
-        #   DynamicUser = false;
+          # serviceOverrides = {
+          #   RuntimeDirectoryPreserve=false;
+          #   # CapabilityBoundingSet = "CAP_SYS_ADMIN";
+          #   DynamicUser = false;
 
-        #   NoNewPrivileges = false;
-        #   PrivateDevices = false;
-        #   PrivateMounts = false;
-        #   PrivateTmp = false;
-        #   PrivateUsers = false;
-        #   ProtectClock = false;
-        #   ProtectControlGroups = false;
-        #   ProtectHome = false;
-        #   ProtectHostname = false;
-        #   ProtectKernelLogs = false;
-        #   ProtectKernelModules = false;
-        #   ProtectKernelTunables = false;
-        #   ProtectSystem = "";
-        #   RemoveIPC = false;
-        #   RestrictNamespaces = false;
-        #   RestrictRealtime = false;
-        #   RestrictSUIDSGID = false;
-        #   UMask = "0066";
-        #   ProtectProc = "invisible";
+          #   NoNewPrivileges = false;
+          #   PrivateDevices = false;
+          #   PrivateMounts = false;
+          #   PrivateTmp = false;
+          #   PrivateUsers = false;
+          #   ProtectClock = false;
+          #   ProtectControlGroups = false;
+          #   ProtectHome = false;
+          #   ProtectHostname = false;
+          #   ProtectKernelLogs = false;
+          #   ProtectKernelModules = false;
+          #   ProtectKernelTunables = false;
+          #   ProtectSystem = "";
+          #   RemoveIPC = false;
+          #   RestrictNamespaces = false;
+          #   RestrictRealtime = false;
+          #   RestrictSUIDSGID = false;
+          #   UMask = "0066";
+          #   ProtectProc = "invisible";
 
-        #   SystemCallFilter = [];
-        #   InaccessiblePaths = [];
+          #   SystemCallFilter = [];
+          #   InaccessiblePaths = [];
 
-        #   Environment="SYSTEMD_LOG_LEVEL=debug COMPlus_EnableDiagnostics=0";
-        # };
-      } // args);
-  in mkHolochainRunner { inherit name; };
+          #   Environment="SYSTEMD_LOG_LEVEL=debug COMPlus_EnableDiagnostics=0";
+          # };
+        } // args);
+    in
+    mkHolochainRunner { inherit name; };
   #{
   # r0 = mkHolochainRunner { name = "nixos-r0"; };
   # r1 = mkHolochainRunner { name = "nixos-r1"; };
