@@ -21,4 +21,6 @@ in
       url = "https://github.com/holochain/holochain";
       extraPackages = config.environment.systemPackages;
     });
+
+  nix.settings.trusted-users = (mkList "github-runner-");
 }
