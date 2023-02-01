@@ -8,7 +8,9 @@
 
   nix.settings.builders-use-substitutes = true;
 
-  nix.settings.max-jobs = lib.mkDefault 4;
+  nix.settings.max-jobs = lib.mkDefault "auto";
+  nix.settings.keep-outputs = true; # Nice for developers
+  nix.settings.keep-derivations = true; # Idem
 
   # garbage collection
   nix.settings.min-free = lib.mkDefault (toString (40 * 1024 * 1024 * 1024));
