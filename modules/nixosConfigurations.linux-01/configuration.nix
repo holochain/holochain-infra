@@ -9,10 +9,6 @@
 }:
 
 let
-  githubRunnersCfg = {
-    count = 4;
-    namePrefix = "nixos";
-  };
   grafana_http_port = 2342;
 
 in
@@ -29,12 +25,7 @@ in
   # set options defined by us
   hostName = "185.255.131.141";
 
-  nix.settings.trusted-users = [ "root" "sshsession" ]
-    # FIXME: investigate if it's possible to specify these only in the github-runner containers
-    # ++ (builtins.genList
-    #   (x: "github-runner-${githubRunnersCfg.namePrefix}-${builtins.toString x}")
-    #   githubRunnersCfg.count)
-  ;
+  nix.settings.trusted-users = [ "root" "sshsession" ];
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
