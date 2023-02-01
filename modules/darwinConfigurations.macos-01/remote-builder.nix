@@ -16,5 +16,9 @@
   };
   system.activationScripts.postActivation.text = ''
     echo 'PATH=/nix/var/nix/profiles/default/bin:$PATH' > /Users/builder/.bashrc
+
+    // TODO: write the multi-arch keys to /Users/builder/.ssh/authorized_keys with 0600 perms
   '';
+
+  nix.settings.trusted-users = [ "builder" ];
 }
