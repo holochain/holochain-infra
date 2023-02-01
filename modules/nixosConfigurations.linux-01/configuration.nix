@@ -16,6 +16,7 @@
 , modulesPath
 , specialArgs
 , extraAuthorizedKeyFiles
+, ...
 }:
 
 let

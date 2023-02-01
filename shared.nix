@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, inputs, ... }: {
   # Nix configuration shared between all hosts
 
   imports = [ ./options.nix ];
@@ -26,7 +26,7 @@
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
   # Issue: https://github.com/nix-community/home-manager/issues/1341
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = (with pkgs; [
     nix
     gnugrep
     gnutar
@@ -34,7 +34,6 @@
     coreutils
     libressl.nc
     procps
-    cachix
     xz
     zstd
     openssh
@@ -44,5 +43,7 @@
     gawk
     gitFull
     vim
+  ]) ++ [
+    inputs.cachix.packages.${pkgs.stdenv.system}.cachix
   ];
 }
