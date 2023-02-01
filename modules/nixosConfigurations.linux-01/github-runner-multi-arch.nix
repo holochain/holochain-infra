@@ -12,7 +12,7 @@
     ]
     (_: {
       replace = true;
-      ephemeral = false;
+      ephemeral = true;
       extraLabels = [ "multi-arch" ];
       tokenFile = (import ./magicPaths.nix).githubRunnerHraTokenHostPath;
       url = "https://github.com/holochain/holochain";

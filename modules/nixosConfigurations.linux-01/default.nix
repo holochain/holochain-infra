@@ -21,9 +21,11 @@
         in
         nixos.config.system.build.toplevel;
 
+      system = "x86_64-linux";
+
     in
     inputs.nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
+      inherit system;
       modules = [
         ./configuration.nix
       ];
@@ -39,6 +41,8 @@
           ;
 
         extraAuthorizedKeyFiles = config.sshKeysAll;
+
+        inherit inputs;
       };
     };
 }

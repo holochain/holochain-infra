@@ -1,7 +1,11 @@
-{ self, lib, inputs, config, ... }: {
+{ self, lib, inputs, config, ... }:
+let
+  system = "aarch64-darwin";
 
+in
+{
   flake.darwinConfigurations.macos-01 = inputs.darwin.lib.darwinSystem {
-    system = "aarch64-darwin";
+    inherit system;
     modules = [
       ./configuration.nix
       ./remote-builder.nix
@@ -15,9 +19,9 @@
         home-manager.users.hetzner = import ./home.nix;
       }
     ];
+
+    specialArgs = {
+      inherit inputs;
+    };
   };
 }
-
-
-
-
