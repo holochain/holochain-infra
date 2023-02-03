@@ -66,6 +66,26 @@
         "type": "github"
       }
     },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1675428060,
+        "narHash": "sha256-kiNRL6qfkikXnPivBw3RIEvvKLWYJ3TDplhvtlElV7w=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "da20419aabc6f3ea5088d3b6b1d132ea8a50619c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -384,16 +404,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1675237434,
-        "narHash": "sha256-YoFR0vyEa1HXufLNIFgOGhIFMRnY6aZ0IepZF5cYemo=",
+        "lastModified": 1675273418,
+        "narHash": "sha256-tpYc4TEGvDzh9uRf44QemyQ4TpVuUbxb07b2P99XDbM=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "285b3ff0660640575186a4086e1f8dc0df2874b5",
+        "rev": "4d7c2644dbac9cf8282c0afe68fca8f0f3e7b2db",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "release-22.11",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -432,6 +452,7 @@
       "inputs": {
         "cachix": "cachix",
         "darwin": "darwin",
+        "disko": "disko",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "keys_davhau": "keys_davhau",
@@ -441,7 +462,29 @@
         "keys_steveej": "keys_steveej",
         "keys_thedavidmeister": "keys_thedavidmeister",
         "keys_zippy": "keys_zippy",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_2",
+        "srvos": "srvos"
+      }
+    },
+    "srvos": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1675414258,
+        "narHash": "sha256-Np2WgOsqSC41Mtby2R8z5l8gYSlgo8+2R7aiG2SqZAU=",
+        "owner": "numtide",
+        "repo": "srvos",
+        "rev": "02810c012f25b1e1b330e1ecb6b4bd1f1b90e8ff",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "ref": "nix-remote-builder",
+        "repo": "srvos",
+        "type": "github"
       }
     },
     "utils": {
