@@ -9,6 +9,8 @@
     inputs',
     pkgs,
     ...
-  }: {};
-  flake = {};
+  }: {
+    # define formatter used by `nix fmt`
+    formatter = pkgs.alejandra;
+  };
 }

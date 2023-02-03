@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   home.stateVersion = "22.11";
 
   # https://github.com/malob/nixpkgs/blob/master/home/default.nix

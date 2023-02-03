@@ -1,20 +1,16 @@
-{ config
-, pkgs
-, lib
-, ...
-}@args:
-
-with lib;
-
-let
-  cfg = config.services.github-runners;
-in
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+} @ args:
+with lib; let
+  cfg = config.services.github-runners;
+in {
   options.services.github-runners = mkOption {
-    default = { };
+    default = {};
     type = with types;
-      attrsOf (submodule { options = import ./options.nix args; });
+      attrsOf (submodule {options = import ./options.nix args;});
     example = {
       runner1 = {
         url = "https://github.com/owner/repo";
@@ -38,19 +34,20 @@ in
 
   config = {
     # create a launchd service for each gtihub runner
-    launchd.daemons = flip mapAttrs' cfg (name: runnerConfig:
-      let
+    launchd.daemons = flip mapAttrs' cfg (
+      name: runnerConfig: let
         svcName = name;
       in
-      nameValuePair svcName
-        (import ./service.nix (args // {
-          inherit svcName;
-          cfg = runnerConfig;
-        }))
+        nameValuePair svcName
+        (import ./service.nix (args
+          // {
+            inherit svcName;
+            cfg = runnerConfig;
+          }))
     );
 
-    users.knownGroups = [ "github-runner" ];
-    users.knownUsers = [ "github-runner" ];
+    users.knownGroups = ["github-runner"];
+    users.knownUsers = ["github-runner"];
     users.users.github-runner = {
       name = "github-runner";
       uid = mkDefault 533;
