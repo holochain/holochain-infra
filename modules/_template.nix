@@ -1,4 +1,14 @@
-{ self, lib, ... }: {
-  perSystem = { config, self', inputs', pkgs, ... }: { };
-  flake = { };
+{
+  self,
+  lib,
+  ...
+}: {
+  perSystem = {
+    config,
+    self',
+    inputs',
+    pkgs,
+    ...
+  }: {};
+  flake = {};
 }

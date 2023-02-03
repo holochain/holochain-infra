@@ -1,19 +1,14 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ pkgs
-, config
-, extraAuthorizedKeyFiles
-, ...
-}:
-
-let
-  grafana_http_port = 2342;
-
-in
 {
-
+  pkgs,
+  config,
+  extraAuthorizedKeyFiles,
+  ...
+}: let
+  grafana_http_port = 2342;
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -25,7 +20,7 @@ in
   # set options defined by us
   hostName = "185.255.131.141";
 
-  nix.settings.trusted-users = [ "root" "sshsession" ];
+  nix.settings.trusted-users = ["root" "sshsession"];
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
@@ -72,7 +67,7 @@ in
     createHome = false;
     group = "github-runner";
   };
-  users.groups.github-runner = { };
+  users.groups.github-runner = {};
 
   users.users.sshsession = {
     uid = 1001;
@@ -80,7 +75,7 @@ in
     createHome = false;
     group = "sshsession";
   };
-  users.groups.sshsession = { gid = 1001; };
+  users.groups.sshsession = {gid = 1001;};
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -105,12 +100,12 @@ in
   services.openssh.enable = true;
   services.openssh.permitRootLogin = "prohibit-password";
   users.users."root".openssh.authorizedKeys = {
-    keys = [ ];
+    keys = [];
     keyFiles = extraAuthorizedKeyFiles;
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [80 443];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = true;
@@ -129,21 +124,23 @@ in
     exporters = {
       node = {
         enable = true;
-        enabledCollectors = [ "systemd" ];
+        enabledCollectors = ["systemd"];
         port = 9002;
       };
-
     };
 
-    scrapeConfigs = [{
-      job_name = "node-scraper";
-      static_configs = [{
-        targets = [
-          "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+    scrapeConfigs = [
+      {
+        job_name = "node-scraper";
+        static_configs = [
+          {
+            targets = [
+              "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+            ];
+          }
         ];
-      }];
-    }];
-
+      }
+    ];
   };
 
   # grafana configuration
@@ -174,7 +171,8 @@ in
         proxyWebsockets = true; # needed if you need to use WebSocket
         extraConfig =
           # required when the target is also TLS server with multiple hosts
-          "proxy_ssl_server_name on;" +
+          "proxy_ssl_server_name on;"
+          +
           # required when the server wants to use HTTP Authentication
           "proxy_pass_header Authorization;";
       };
@@ -189,4 +187,3 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
 }
-

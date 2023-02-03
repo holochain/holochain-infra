@@ -1,12 +1,10 @@
-{ config
-, lib
-, pkgs
-, ...
-}:
-
-with lib;
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   url = mkOption {
     type = types.str;
     description = lib.mdDoc ''
@@ -61,7 +59,7 @@ with lib;
       Changing this option triggers a new runner registration.
     '';
     example = literalExpression ''[ "nixos" ]'';
-    default = [ ];
+    default = [];
   };
 
   replace = mkOption {
@@ -79,7 +77,7 @@ with lib;
     description = lib.mdDoc ''
       Extra packages to add to `PATH` of the service to make them available to workflows.
     '';
-    default = [ ];
+    default = [];
   };
 
   extraEnvironment = mkOption {
@@ -90,7 +88,7 @@ with lib;
     example = {
       GIT_CONFIG = "/path/to/git/config";
     };
-    default = { };
+    default = {};
   };
 
   serviceOverrides = mkOption {
@@ -100,9 +98,9 @@ with lib;
     '';
     example = {
       ProtectHome = false;
-      RestrictAddressFamilies = [ "AF_PACKET" ];
+      RestrictAddressFamilies = ["AF_PACKET"];
     };
-    default = { };
+    default = {};
   };
 
   package = mkOption {
