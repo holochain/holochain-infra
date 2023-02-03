@@ -1,4 +1,4 @@
-{config, lib, ...}: {
+{ config, lib, ... }: {
   options = {
     deployUser = lib.mkOption {
       type = lib.types.str;

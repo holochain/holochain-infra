@@ -3,12 +3,16 @@
 
   inputs = rec {
     nixpkgs = { url = "github:nixos/nixpkgs/release-22.11"; };
-    # nixpkgs-github-runner = { url = "github:nixos/nixpkgs/941c79b6207fa84612b4170ca3bc04984f3d79fc"; };
-    nixpkgs-github-runner = nixpkgs;
+
+    cachix = {
+      url = "github:cachix/cachix/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # nix darwin
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
+
 
     # home manager
     home-manager.url = "github:nix-community/home-manager";

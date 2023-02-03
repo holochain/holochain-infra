@@ -1,21 +1,26 @@
-{config, lib, ...}: {
+{ config, lib, magicPaths, ... }:
+let
+  githubRunnersCfg = {
+    count = 10;
+    namePrefix = "multi-arch";
+  };
+
+  mkList = prefix: (builtins.genList
+    (x: "${prefix}${githubRunnersCfg.namePrefix}-${builtins.toString x}")
+    githubRunnersCfg.count);
+
+in
+{
   services.github-runners = lib.genAttrs
-    [
-      "multi-arch-01"
-      "multi-arch-02"
-      "multi-arch-03"
-      "multi-arch-04"
-      "multi-arch-05"
-      "multi-arch-06"
-      "multi-arch-07"
-      "multi-arch-08"
-    ]
+    (mkList "")
     (_: {
       replace = true;
-      ephemeral = false;
-      extraLabels = ["multi-arch"];
-      tokenFile = (import ./magicPaths.nix).githubRunnerHraTokenHostPath;
+      ephemeral = true;
+      extraLabels = [ githubRunnersCfg.namePrefix ];
+      tokenFile = magicPaths.githubRunnerHraTokenHostPath;
       url = "https://github.com/holochain/holochain";
       extraPackages = config.environment.systemPackages;
     });
+
+  nix.settings.trusted-users = (mkList "github-runner-");
 }

@@ -1,6 +1,6 @@
-{config, lib, ...}: {
-  users.knownGroups = ["builder"];
-  users.knownUsers = ["builder"];
+{ config, lib, ... }: {
+  users.knownGroups = [ "builder" ];
+  users.knownUsers = [ "builder" ];
   users.groups.builder = {
     name = "builder";
     gid = lib.mkDefault 8765;

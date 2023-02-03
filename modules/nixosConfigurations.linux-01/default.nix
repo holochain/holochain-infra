@@ -1,41 +1,21 @@
-{ lib, inputs, config, ... }: {
+{ self, lib, inputs, config, ... }: {
 
-  flake.nixosConfigurations.linux-01 = let
+  flake.nixosConfigurations.linux-01 =
+    let
+      system = "x86_64-linux";
 
-    magicPaths = import ./magicPaths.nix;
-
-    githubRunnerContainerPathFn = name: extraLabels: let
-      nixos = inputs.nixpkgs-github-runner.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./nixos-containers/github-runner/configuration.nix
-        ];
-
-        specialArgs = {
-          githubRunnerHolochainHolochainTokenFile = magicPaths.githubRunnerHraTokenMountPoint;
-          inherit name extraLabels;
-        };
-      };
     in
-      nixos.config.system.build.toplevel;
+    inputs.nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = [
+        ./configuration.nix
+      ];
 
-  in inputs.nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-    modules = [
-      ./configuration.nix
-    ];
+      specialArgs = {
+        magicPaths = import ./magicPaths.nix;
+        extraAuthorizedKeyFiles = config.sshKeysAll;
 
-    specialArgs = {
-      inherit githubRunnerContainerPathFn;
-      # githubRunnerContainerPath = githubRunnerContainer.config.system.build.toplevel;
-      githubRunnerContainerNixpkgs = inputs.nixpkgs-github-runner;
-
-      inherit (magicPaths)
-        githubRunnerHraTokenHostPath
-        githubRunnerHraTokenMountPoint
-        ;
-
-      extraAuthorizedKeyFiles = config.sshKeysAll;
+        inherit inputs;
+      };
     };
-  };
 }

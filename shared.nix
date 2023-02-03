@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, inputs, ... }: {
   # Nix configuration shared between all hosts
 
   imports = [ ./options.nix ];
@@ -8,7 +8,9 @@
 
   nix.settings.builders-use-substitutes = true;
 
-  nix.settings.max-jobs = lib.mkDefault 4;
+  nix.settings.max-jobs = lib.mkDefault "auto";
+  nix.settings.keep-outputs = true; # Nice for developers
+  nix.settings.keep-derivations = true; # Idem
 
   # garbage collection
   nix.settings.min-free = lib.mkDefault (toString (40 * 1024 * 1024 * 1024));
@@ -21,12 +23,12 @@
     automatic = true;
     options = "--delete-older-than 10d --max-freed 0";
   } // lib.optionalAttrs pkgs.stdenv.isLinux { dates = "daily"; }
-    // lib.optionalAttrs pkgs.stdenv.isDarwin { interval.Hour = 0; };
+  // lib.optionalAttrs pkgs.stdenv.isDarwin { interval.Hour = 0; };
 
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
   # Issue: https://github.com/nix-community/home-manager/issues/1341
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = (with pkgs; [
     nix
     gnugrep
     gnutar
@@ -34,7 +36,6 @@
     coreutils
     libressl.nc
     procps
-    cachix
     xz
     zstd
     openssh
@@ -44,5 +45,7 @@
     gawk
     gitFull
     vim
+  ]) ++ [
+    inputs.cachix.packages.${pkgs.stdenv.system}.cachix
   ];
 }
