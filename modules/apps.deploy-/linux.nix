@@ -13,12 +13,14 @@
         set -Eeuo pipefail
         export PATH="${lib.makeBinPath (with pkgs; [
           nix
+          rsync
         ])}:$PATH"
         set -x
 
         rsync -r --delete ${self}/ root@${hostName}:/tmp/deploy-flake
 
         ssh root@${hostName} nixos-rebuild \
+          -j4 \
           switch --flake /tmp/deploy-flake#'"${attrName}"'
       '';
 

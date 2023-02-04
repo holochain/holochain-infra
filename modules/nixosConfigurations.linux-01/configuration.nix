@@ -20,7 +20,7 @@ in {
   hostName = "185.255.131.141";
 
   nix.settings.trusted-users = ["root" "sshsession"];
-  nix.settings.max-jobs = 1;
+  nix.settings.max-jobs = 0;
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
