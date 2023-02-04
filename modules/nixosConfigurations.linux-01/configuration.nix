@@ -20,6 +20,7 @@ in {
   hostName = "185.255.131.141";
 
   nix.settings.trusted-users = ["root" "sshsession"];
+  nix.settings.max-jobs = 1;
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
@@ -42,7 +43,7 @@ in {
     {
       hostName = "95.217.193.35";
       sshUser = "root";
-      protocol = "ssh-ng";
+      protocol = "ssh";
       system = "x86_64-linux";
       maxJobs = 32;
       supportedFeatures = config.nix.settings.experimental-features;
