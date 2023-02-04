@@ -9,6 +9,10 @@
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
   ];
 
-  nix.settings.experimental-features = ["nix-command" "flakes" "ca-derivations"];
-  nix.settings.extra-experimental-features = ["impure-derivations" "ca-derivations"];
+  nix.settings.experimental-features = lib.mkForce [
+    "nix-command"
+    "flakes"
+    "ca-derivations"
+    "impure-derivations"
+  ];
 }

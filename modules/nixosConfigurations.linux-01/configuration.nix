@@ -4,7 +4,6 @@
 {
   pkgs,
   config,
-  extraAuthorizedKeyFiles,
   ...
 }: let
   grafana_http_port = 2342;
@@ -21,6 +20,7 @@ in {
   hostName = "185.255.131.141";
 
   nix.settings.trusted-users = ["root" "sshsession"];
+  nix.settings.max-jobs = 0;
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
@@ -40,6 +40,14 @@ in {
       maxJobs = 4;
       supportedFeatures = config.nix.settings.experimental-features;
     }
+    {
+      hostName = "95.217.193.35";
+      sshUser = "root";
+      protocol = "ssh";
+      system = "x86_64-linux";
+      maxJobs = 32;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
   ];
 
   # Use the GRUB 2 boot loader.
@@ -47,7 +55,7 @@ in {
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
-  networking.hostName = "github-runner-host"; # Define your hostname.
+  networking.hostName = "linux-01"; # Define your hostname.
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
@@ -98,11 +106,7 @@ in {
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-  services.openssh.permitRootLogin = "prohibit-password";
-  users.users."root".openssh.authorizedKeys = {
-    keys = [];
-    keyFiles = extraAuthorizedKeyFiles;
-  };
+  services.openssh.settings.PermitRootLogin = "prohibit-password";
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [80 443];

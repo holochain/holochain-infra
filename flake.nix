@@ -1,13 +1,14 @@
 {
   description = "The new, performant, and simplified version of Holochain on Rust (sometimes called Holochain RSM for Refactored State Model) ";
 
-  inputs = rec {
-    nixpkgs = {url = "github:nixos/nixpkgs/release-22.11";};
+  inputs = {
+    nixpkgs = {url = "github:nixos/nixpkgs/nixos-unstable";};
 
-    cachix = {
-      url = "github:cachix/cachix/latest";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    srvos.url = "github:numtide/srvos/nix-remote-builder";
+    srvos.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix darwin
     darwin.url = "github:lnl7/nix-darwin/master";
@@ -54,11 +55,7 @@
         map (m: "${./.}/modules/${m}")
         (builtins.attrNames (builtins.readDir ./modules));
 
-      systems = [
-        "aarch64-darwin"
-        "x86_64-darwin"
-        "x86_64-linux"
-      ];
+      systems = ["aarch64-darwin" "x86_64-darwin" "x86_64-linux"];
 
       perSystem = {
         config,
