@@ -7,7 +7,7 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    srvos.url = "github:numtide/srvos/nix-remote-builder";
+    srvos.url = "github:numtide/srvos/remote-builder";
     srvos.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix darwin
