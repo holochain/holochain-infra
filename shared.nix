@@ -19,8 +19,8 @@
   nix.settings.keep-derivations = true; # Idem
 
   # garbage collection
-  nix.settings.min-free = lib.mkDefault (toString (40 * 1024 * 1024 * 1024));
-  nix.settings.max-free = lib.mkDefault (toString (60 * 1024 * 1024 * 1024));
+  nix.settings.min-free = lib.mkOptionDefault (toString (40 * 1024 * 1024 * 1024));
+  nix.settings.max-free = lib.mkOptionDefault (toString (60 * 1024 * 1024 * 1024));
 
   # Enable the automatic gc only to clean up gc-roots.
   # We always want to keep as much as possible in the store.
@@ -28,9 +28,9 @@
   nix.gc =
     {
       automatic = true;
-      options = "--delete-older-than 10d --max-freed 0";
+      options = lib.mkDefault "--delete-older-than 10d --max-freed 0";
     }
-    // lib.optionalAttrs pkgs.stdenv.isLinux {dates = "daily";}
+    // lib.optionalAttrs pkgs.stdenv.isLinux {dates = "*:45";}
     // lib.optionalAttrs pkgs.stdenv.isDarwin {interval.Hour = 0;};
 
   # Apps

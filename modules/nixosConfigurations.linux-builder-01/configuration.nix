@@ -12,6 +12,9 @@
     inputs.srvos.nixosModules.hardware-hetzner-online-amd
     inputs.srvos.nixosModules.roles-nix-remote-builder
     self.nixosModules.holo-users
+
+    ../../shared.nix
+    ../../shared-nix-settings.nix
   ];
 
   networking.hostName = "linux-builder-01"; # Define your hostname.
