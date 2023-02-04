@@ -40,6 +40,14 @@ in {
       maxJobs = 4;
       supportedFeatures = config.nix.settings.experimental-features;
     }
+    {
+      hostName = "95.217.193.35";
+      sshUser = "root";
+      protocol = "ssh-ng";
+      system = "x86_64-linux";
+      maxJobs = 32;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
   ];
 
   # Use the GRUB 2 boot loader.

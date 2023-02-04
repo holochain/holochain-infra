@@ -1,7 +1,15 @@
-{config, lib, inputs, self, ...}: {
+{
+  config,
+  lib,
+  inputs,
+  self,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
+    inputs.srvos.nixosModules.hardware-hetzner-online-amd
     inputs.srvos.nixosModules.roles-nix-remote-builder
     self.nixosModules.holo-users
   ];
@@ -11,12 +19,15 @@
   ];
 
   boot.loader.grub = {
-    devices = [ "/dev/nvme0n1" ];
-    # efiSupport = true;
-    # efiInstallAsRemovable = true;
+    version = 2;
+    efiSupport = false;
+    device = "/dev/nvme0n1";
   };
   # boot.loader.systemd-boot.enable = true;
   # boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  systemd.network.networks."10-uplink".networkConfig.Address = "2a01:4f9:4a:5026::1/64";
 
   disko.devices.disk.nvme0n1 = {
     device = "/dev/nvme0n1";
@@ -33,32 +44,30 @@
           part-type = "primary";
           flags = ["bios_grub"];
         }
-        # {
-        #   type = "partition";
-        #   name = "ESP";
-        #   start = "1MiB";
-        #   end = "1000MiB";
-        #   bootable = true;
-        #   content = {
-        #     type = "filesystem";
-        #     format = "vfat";
-        #     mountpoint = "/boot";
-        #   };
-        # }
         {
           name = "root";
           type = "partition";
-          start = "1000MiB";
+          start = "1M";
           end = "100%";
           part-type = "primary";
           bootable = true;
           content = {
-            type = "filesystem";
-            format = "ext4";
-            mountpoint = "/";
+            type = "btrfs";
+            extraArgs = "-f"; # Override existing partition
+            subvolumes = {
+              # Subvolume name is different from mountpoint
+              "/rootfs" = {
+                mountpoint = "/";
+              };
+              "/nix" = {
+                mountOptions = ["compress=zstd" "noatime"];
+              };
+            };
           };
         }
       ];
     };
   };
+
+  system.stateVersion = "23.05";
 }
