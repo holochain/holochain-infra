@@ -42,8 +42,8 @@ in {
     }
     {
       hostName = "95.217.193.35";
-      sshUser = "root";
-      protocol = "ssh";
+      sshUser = "builder";
+      protocol = "ssh-ng";
       system = "x86_64-linux";
       maxJobs = 32;
       supportedFeatures = config.nix.settings.experimental-features;
