@@ -54,7 +54,7 @@ in {
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
-  networking.hostName = "github-runner-host"; # Define your hostname.
+  networking.hostName = "linux-01"; # Define your hostname.
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";

@@ -14,6 +14,10 @@
     self.nixosModules.holo-users
   ];
 
+  networking.hostName = "linux-builder-01"; # Define your hostname.
+
+  hostName = "95.217.193.35";
+
   roles.nix-remote-builder.schedulerPublicKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHVxIpF1Rfqz6i8JfhYswzYUM9cuL5p11LfVGSfPmw4Q root@github-runner-host"
   ];
