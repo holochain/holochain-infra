@@ -13,6 +13,7 @@
         set -Eeuo pipefail
         export PATH="${lib.makeBinPath (with pkgs; [
           nix
+          rsync
         ])}:$PATH"
         set -x
 
@@ -25,6 +26,7 @@
             /tmp/deploy-flake#darwinConfigurations.'"${attrName}"'.system
 
         ssh hetzner@${hostName} /tmp/next-system/sw/bin/darwin-rebuild \
+          -j4 \
           switch --flake /tmp/deploy-flake#'"${attrName}"'
       '';
 
