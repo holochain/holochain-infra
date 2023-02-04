@@ -15,4 +15,5 @@
     "ca-derivations"
     "impure-derivations"
   ];
+  nix.settings.sandbox = "relaxed";
 }
