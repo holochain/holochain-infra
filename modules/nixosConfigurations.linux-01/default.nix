@@ -12,11 +12,11 @@
       inherit system;
       modules = [
         ./configuration.nix
+        self.nixosModules.holo-users
       ];
 
       specialArgs = {
         magicPaths = import ./magicPaths.nix;
-        extraAuthorizedKeyFiles = config.sshKeysAll;
 
         inherit inputs;
       };

@@ -4,7 +4,6 @@
 {
   pkgs,
   config,
-  extraAuthorizedKeyFiles,
   ...
 }: let
   grafana_http_port = 2342;
@@ -106,11 +105,7 @@ in {
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-  services.openssh.permitRootLogin = "prohibit-password";
-  users.users."root".openssh.authorizedKeys = {
-    keys = [];
-    keyFiles = extraAuthorizedKeyFiles;
-  };
+  services.openssh.settings.PermitRootLogin = "prohibit-password";
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [80 443];

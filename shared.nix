@@ -54,8 +54,8 @@
       gawk
       gitFull
       vim
+      cachix
     ])
     ++ [
-      inputs.cachix.packages.${pkgs.stdenv.system}.cachix
     ];
 }
