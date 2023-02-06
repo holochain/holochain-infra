@@ -22,6 +22,8 @@
   nix.settings.min-free = lib.mkOptionDefault (toString (1 * 1024 * 1024 * 1024));
   nix.settings.max-free = lib.mkOptionDefault (toString (11 * 1024 * 1024 * 1024));
 
+  nix.settings.system-features = ["recursive-nix"];
+
   # Enable the automatic gc only to clean up gc-roots.
   # We always want to keep as much as possible in the store.
   # Actual deletion of store paths is done via 'nix.settings.min-free'.

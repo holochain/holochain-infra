@@ -14,6 +14,7 @@
     "flakes"
     "ca-derivations"
     "impure-derivations"
+    "recursive-nix"
   ];
   nix.settings.sandbox = "relaxed";
 }
