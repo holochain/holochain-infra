@@ -14,6 +14,10 @@
     "flakes"
     "ca-derivations"
     "impure-derivations"
+    "recursive-nix"
   ];
-  nix.settings.sandbox = "relaxed";
+  nix.settings.sandbox =
+    if pkgs.stdenv.isLinux
+    then "relaxed"
+    else false;
 }
