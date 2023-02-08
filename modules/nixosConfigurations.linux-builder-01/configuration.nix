@@ -12,6 +12,8 @@
     inputs.srvos.nixosModules.hardware-hetzner-online-amd
     inputs.srvos.nixosModules.roles-nix-remote-builder
     self.nixosModules.holo-users
+    self.nixosModules.github-runner-multi-arch
+    self.nixosModules.nix-build-distributor
 
     ../../shared.nix
     ../../shared-nix-settings.nix
@@ -20,6 +22,8 @@
   networking.hostName = "linux-builder-01"; # Define your hostname.
 
   hostName = "95.217.193.35";
+
+  nix.settings.max-jobs = 32;
 
   roles.nix-remote-builder.schedulerPublicKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHVxIpF1Rfqz6i8JfhYswzYUM9cuL5p11LfVGSfPmw4Q root@github-runner-host"
