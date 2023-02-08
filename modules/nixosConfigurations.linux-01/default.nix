@@ -16,8 +16,6 @@
       ];
 
       specialArgs = {
-        magicPaths = import ./magicPaths.nix;
-
         inherit inputs;
       };
     };
