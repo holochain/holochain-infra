@@ -6,7 +6,7 @@
     ...
   }: let
     githubRunnersCfg = {
-      count = 10;
+      count = 16;
       namePrefix = "multi-arch";
     };
 
