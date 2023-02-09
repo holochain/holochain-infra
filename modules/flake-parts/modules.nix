@@ -1,24 +1,25 @@
-{lib, config, ...}: {
+{lib, config, ...}: let
+
+  mapModules = kind:
+    lib.mapAttrs'
+    (fn: _:
+      lib.nameValuePair
+      (lib.removeSuffix ".nix" fn)
+      "${../.}/${kind}/${fn}")
+    (builtins.readDir ("${../.}/${kind}"));
+
+in {
+
   options.flake.modules = lib.mkOption {
     type = lib.types.anything;
   };
 
-  config.flake.modules.darwin =
-    lib.mapAttrs
-    (_: m: "${../darwin}/${m}")
-    (builtins.readDir ../darwin);
+  # generates flake outputs: `modules.<kind>.<module-name>`
+  config.flake.modules.darwin = mapModules "darwin";
+  config.flake.modules.nixos = mapModules "nixos";
+  config.flake.modules.flake-parts = mapModules "flake-parts";
 
-  config.flake.modules.nixos =
-    lib.mapAttrs
-    (_: m: "${../nixos}/${m}")
-    (builtins.readDir ../nixos);
-
-  config.flake.modules.flake-parts =
-    lib.mapAttrs
-    (_: m: "${../flake-parts}/${m}")
-    (builtins.readDir ../flake-parts);
-
-  # comapt to legacy schema
+  # comapt to legacy schema: `nixosModules` / `darwinModules`
   config.flake.nixosModules = config.flake.modules.nixos;
   config.flake.darwinModules = config.flake.modules.darwin;
 }
