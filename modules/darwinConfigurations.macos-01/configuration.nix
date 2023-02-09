@@ -7,6 +7,18 @@
   deployUser = "hetzner";
   hostName = "167.235.13.208";
 
+  nixpkgs.overlays = let
+    nixOverlay = curr: prev: {
+      nix = prev.nix.overrideAttrs
+        (old: {
+          patches = (old.patches or []) ++ [
+            ../../patches/0001-fix-daemon.cc-Lock-gc.lock-on-nix-daemon-stdio.patch
+          ];
+        });
+    };
+  in
+    [nixOverlay];
+
   nix.settings.trusted-users = [
     "@admin"
     "github-runner"
