@@ -1,0 +1,38 @@
+From d2ec8d30c74cef7b7aa44b6b2db7a00e2a555ec2 Mon Sep 17 00:00:00 2001
+From: DavHau <hsngrmpf+github@gmail.com>
+Date: Thu, 9 Feb 2023 12:51:36 +0700
+Subject: [PATCH] fix(daemon.cc): Lock gc.lock on `nix-daemon --stdio`
+
+On macos, when remote building. On the remote, build inputs of were not protected from GC which lead to missing files during the build.
+---
+ src/nix/daemon.cc | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/src/nix/daemon.cc b/src/nix/daemon.cc
+index 2ba56ee26..23a6f1b49 100644
+--- a/src/nix/daemon.cc
++++ b/src/nix/daemon.cc
+@@ -294,9 +294,20 @@ static void daemonLoop()
+     }
+ }
+ 
++AutoCloseFD openGCLock()
++{
++    Path fnGCLock = settings.nixStateDir + "/gc.lock";
++    auto fdGCLock = open(fnGCLock.c_str(), O_RDWR | O_CREAT | O_CLOEXEC, 0600);
++    if (!fdGCLock)
++        throw SysError("opening global GC lock '%1%'", fnGCLock);
++    return fdGCLock;
++}
++
+ static void runDaemon(bool stdio)
+ {
+     if (stdio) {
++        auto fdGCLock = openGCLock();
++        FdLock gcLock(fdGCLock.get(), ltRead, true, "waiting for the big garbage collector lock...");
+         if (auto store = openUncachedStore().dynamic_pointer_cast<RemoteStore>()) {
+             auto conn = store->openConnectionWrapper();
+             int from = conn->from.fd;
+-- 
+2.38.3
+
