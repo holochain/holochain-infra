@@ -15,7 +15,7 @@
           patches =
             (old.patches or [])
             ++ [
-              ../../patches/0001-fix-daemon.cc-Lock-gc.lock-on-nix-daemon-stdio.patch
+              ./0001-fix-daemon.cc-Lock-gc.lock-on-nix-daemon-stdio.patch
             ];
         });
     };
