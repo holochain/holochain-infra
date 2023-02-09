@@ -15,8 +15,8 @@
     self.nixosModules.github-runner-multi-arch
     self.nixosModules.nix-build-distributor
 
-    ../../shared.nix
-    ../../shared-nix-settings.nix
+    ../../nixos/shared.nix
+    ../../nixos/shared-nix-settings.nix
   ];
 
   networking.hostName = "linux-builder-01"; # Define your hostname.

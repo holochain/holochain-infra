@@ -11,8 +11,8 @@ in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ../../shared.nix
-    ../../shared-nix-settings.nix
+    ../../nixos/shared.nix
+    ../../nixos/shared-nix-settings.nix
   ];
 
   # set options defined by us
