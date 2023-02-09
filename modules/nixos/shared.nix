@@ -2,12 +2,11 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: {
   # Nix configuration shared between all hosts
 
-  imports = [./options.nix];
+  imports = [./holo-deploy.nix];
 
   nix.settings.extra-platforms =
     lib.mkIf pkgs.stdenv.isDarwin ["x86_64-darwin" "aarch64-darwin"];

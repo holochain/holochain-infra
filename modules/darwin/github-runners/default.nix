@@ -10,7 +10,7 @@ in {
   options.services.github-runners = mkOption {
     default = {};
     type = with types;
-      attrsOf (submodule {options = import ./options.nix args;});
+      attrsOf (submodule {options = import ../options.nix args;});
     example = {
       runner1 = {
         url = "https://github.com/owner/repo";

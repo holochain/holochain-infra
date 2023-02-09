@@ -12,8 +12,8 @@ in {
     modules = [
       ./configuration.nix
       ./remote-builder.nix
-      ../../shared.nix
-      ../../shared-nix-settings.nix
+      ../../nixos/shared.nix
+      ../../nixos/shared-nix-settings.nix
       self.modules.darwin.github-runners-tart
       inputs.home-manager.darwinModules.home-manager
       {

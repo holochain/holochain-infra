@@ -9,15 +9,17 @@
 
   nixpkgs.overlays = let
     nixOverlay = curr: prev: {
-      nix = prev.nix.overrideAttrs
+      nix =
+        prev.nix.overrideAttrs
         (old: {
-          patches = (old.patches or []) ++ [
-            ../../patches/0001-fix-daemon.cc-Lock-gc.lock-on-nix-daemon-stdio.patch
-          ];
+          patches =
+            (old.patches or [])
+            ++ [
+              ./0001-fix-daemon.cc-Lock-gc.lock-on-nix-daemon-stdio.patch
+            ];
         });
     };
-  in
-    [nixOverlay];
+  in [nixOverlay];
 
   nix.settings.trusted-users = [
     "@admin"
