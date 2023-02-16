@@ -27,34 +27,6 @@ in {
 
   networking.hostName = "linux-01"; # Define your hostname.
 
-  # Set your time zone.
-  # time.timeZone = "Europe/Amsterdam";
-
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkbOptions in tty.
-  # };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.github-runner = {
-    uid = 1000;
-    isSystemUser = true;
-    createHome = false;
-    group = "github-runner";
-  };
-  users.groups.github-runner = {};
-
-  users.users.sshsession = {
-    uid = 1001;
-    isSystemUser = true;
-    createHome = false;
-    group = "sshsession";
-  };
-  users.groups.sshsession = {gid = 1001;};
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -63,14 +35,6 @@ in {
     htop
     glances
   ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
 
   # List services that you want to enable:
 
