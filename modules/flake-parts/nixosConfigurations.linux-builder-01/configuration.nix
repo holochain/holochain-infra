@@ -17,6 +17,7 @@
 
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
+    ../../nixos/cachix-watch.nix
   ];
 
   networking.hostName = "linux-builder-01"; # Define your hostname.

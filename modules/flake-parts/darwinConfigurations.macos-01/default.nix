@@ -14,7 +14,6 @@ in {
       ./remote-builder.nix
       ../../nixos/shared.nix
       ../../nixos/shared-nix-settings.nix
-      self.modules.darwin.github-runners-tart
       inputs.home-manager.darwinModules.home-manager
       {
         # `home-manager` config
