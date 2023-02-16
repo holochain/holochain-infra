@@ -15,11 +15,9 @@ in {
   };
 
   # generates flake outputs: `modules.<kind>.<module-name>`
-  config.flake.modules.darwin = mapModules "darwin";
   config.flake.modules.nixos = mapModules "nixos";
   config.flake.modules.flake-parts = mapModules "flake-parts";
 
   # comapt to legacy schema: `nixosModules` / `darwinModules`
   config.flake.nixosModules = config.flake.modules.nixos;
-  config.flake.darwinModules = config.flake.modules.darwin;
 }

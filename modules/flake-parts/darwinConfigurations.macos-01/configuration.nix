@@ -9,7 +9,6 @@
 
   nix.settings.trusted-users = [
     "@admin"
-    "github-runner"
     "hetzner"
     "builder"
   ];
