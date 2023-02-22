@@ -15,6 +15,10 @@ in {
     type = lib.types.anything;
   };
 
+  options.flake.darwinConfigurations = lib.mkOption {
+    type = lib.types.attrs;
+  };
+
   # generates flake outputs: `modules.<kind>.<module-name>`
   config.flake.modules.nixos = mapModules "nixos";
   config.flake.modules.flake-parts = mapModules "flake-parts";
