@@ -1,4 +1,9 @@
-{config, lib, magicPaths, ...}: {
+{
+  config,
+  lib,
+  magicPaths,
+  ...
+}: {
   services.cachix-watch-store = {
     enable = true;
     cacheName = "holochain-ci";
