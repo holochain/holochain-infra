@@ -15,7 +15,7 @@
   nix.useDaemon = true;
   # runs GC when free space falls below 1GB, and tries to delete up to 5GB.
 
-  nix.settings.max-jobs = 16;
+  nix.settings.max-jobs = 12;
 
   nix.configureBuildUsers = true;
 
