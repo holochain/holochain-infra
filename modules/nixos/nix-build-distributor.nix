@@ -12,7 +12,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 4;
+      maxJobs = 7;
       supportedFeatures = config.nix.settings.experimental-features;
     }
     {
@@ -20,8 +20,17 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      maxJobs = 4;
+      maxJobs = 1;
       supportedFeatures = config.nix.settings.experimental-features;
+    }
+    {
+      hostName = "hydra-minion-2.holo.host";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "x86_64-darwin";
+      maxJobs = 12;
+      supportedFeatures = config.nix.settings.experimental-features;
+      speedFactor = 10;
     }
 
     # currently not required as this machine runs the distributor
