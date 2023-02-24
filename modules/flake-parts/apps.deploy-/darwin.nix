@@ -8,6 +8,7 @@
     mkDarwinDeploy = {
       attrName,
       hostName,
+      deployUser,
     }:
       pkgs.writeScript "deploy-${hostName}" ''
         set -Eeuo pipefail
@@ -17,15 +18,15 @@
         ])}:$PATH"
         set -x
 
-        rsync -r --delete ${self}/ hetzner@${hostName}:/tmp/deploy-flake
+        rsync -r --delete ${self}/ ${deployUser}@${hostName}:/tmp/deploy-flake
 
-        ssh hetzner@${hostName} /nix/var/nix/profiles/default/bin/nix \
+        ssh ${deployUser}@${hostName} /nix/var/nix/profiles/default/bin/nix \
           --extra-experimental-features '"flakes nix-command"' \
           build \
             -o /tmp/next-system \
             /tmp/deploy-flake#darwinConfigurations.'"${attrName}"'.system
 
-        ssh hetzner@${hostName} /tmp/next-system/sw/bin/darwin-rebuild \
+        ssh ${deployUser}@${hostName} /tmp/next-system/sw/bin/darwin-rebuild \
           -j4 \
           switch --flake /tmp/deploy-flake#'"${attrName}"'
       '';
@@ -35,7 +36,7 @@
         type = "app";
         program = builtins.toString (mkDarwinDeploy {
           inherit attrName;
-          inherit (config.config) hostName;
+          inherit (config.config) hostName deployUser;
         });
       };
   in {
