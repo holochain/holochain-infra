@@ -23,6 +23,9 @@
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;
+  programs.zsh.loginShellInit = ''
+    echo This machine has nix-darwin based declarative configuration at https://github.com/holochain/holochain-infra.
+  '';
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
