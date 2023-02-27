@@ -29,10 +29,10 @@
   nix.gc =
     {
       automatic = true;
-      options = lib.mkForce ''--max-freed "$((32* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
+      options = lib.mkForce ''--max-freed "$((48* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
     }
-    // lib.optionalAttrs pkgs.stdenv.isLinux (lib.mkForce {dates = "*:30";})
-    // lib.optionalAttrs pkgs.stdenv.isDarwin {interval.Minute = 30;};
+    // lib.optionalAttrs pkgs.stdenv.isLinux (lib.mkForce {dates = "*:17";})
+    // lib.optionalAttrs pkgs.stdenv.isDarwin {interval.Minute = 17;};
 
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
