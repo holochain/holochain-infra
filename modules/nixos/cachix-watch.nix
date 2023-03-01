@@ -10,5 +10,6 @@
     cachixTokenFile = magicPaths.cachixToken;
     jobs = 4;
     compressionLevel = 3;
+    verbose = true;
   };
 }
