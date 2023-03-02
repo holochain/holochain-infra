@@ -32,14 +32,16 @@
       options = lib.mkForce ''--max-freed "$((48* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
     }
     // lib.optionalAttrs pkgs.stdenv.isLinux (lib.mkForce {
-      dates = "*:5,15,25,35,45,55";
-      randomizedDelaySec = "60";
+      # run at all minutes that are a multiple of 7
+      # verified with `systemd-analyze calendar "*-*-* *:0/7:00"`
+      dates = "*-*-* *:0/7:00";
+      # TODO: for some reason the timer is configured with RandomizedDelaySec=1800 regardless of this value
+      randomizedDelaySec = "1min";
     })
     // lib.optionalAttrs pkgs.stdenv.isDarwin {
-      # frequencies higher than 1h are currently not possible in nix-darwin.
-      # It could be possible to patch nix-darwin to support a list of dates,
-      # launchd might support this according to https://developer.apple.com/forums/thread/22946
-      interval.Minute = 17;
+      # run at all minutes that are a multiple of 7
+      intervals =
+        builtins.map (Minute: {inherit Minute;}) (builtins.genList (n: n * 7) 9);
     };
 
   # Apps
