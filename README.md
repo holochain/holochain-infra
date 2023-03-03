@@ -17,7 +17,7 @@ This repository uses nix flakes. To interact with it, add the experimental featu
 experimental-features = flakes nix-command
 ```
 
-Flakes have a standardized output schema, for which a good overview exists in the [nixos wiki](https://nixos.wiki/wiki/Flakes).
+Flakes have a standardized output schema, for which a good overview exists in the [nixos wiki](https://nixos.wiki/wiki/Flakes#Output_schema).
 
 Before getting started, it is always a good idea to inspect the outputs of the current project:
 
