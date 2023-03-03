@@ -29,10 +29,20 @@
   nix.gc =
     {
       automatic = true;
-      options = lib.mkForce ''--max-freed "$((32* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
+      options = lib.mkForce ''--max-freed "$((48* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
     }
-    // lib.optionalAttrs pkgs.stdenv.isLinux (lib.mkForce {dates = "*:30";})
-    // lib.optionalAttrs pkgs.stdenv.isDarwin {interval.Minute = 30;};
+    // lib.optionalAttrs pkgs.stdenv.isLinux (lib.mkForce {
+      # run at all minutes that are a multiple of 7
+      # verified with `systemd-analyze calendar "*-*-* *:0/7:00"`
+      dates = "*-*-* *:0/7:00";
+      # TODO: for some reason the timer is configured with RandomizedDelaySec=1800 regardless of this value
+      randomizedDelaySec = "1min";
+    })
+    // lib.optionalAttrs pkgs.stdenv.isDarwin {
+      # run at all minutes that are a multiple of 7
+      intervals =
+        builtins.map (Minute: {inherit Minute;}) (builtins.genList (n: n * 7) 9);
+    };
 
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`

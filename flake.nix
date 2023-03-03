@@ -11,7 +11,7 @@
     srvos.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix darwin
-    darwin.url = "github:lnl7/nix-darwin/master";
+    darwin.url = "github:steveeJ-forks/nix-darwin/pr_gc_interval";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
