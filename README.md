@@ -11,7 +11,7 @@ For making changes to the macos configuration files, please refer to the [nix-da
 
 ## Development on this repo
 
-This repository uses nix flakes. To interact with it, add the experimental features `flakes` and `nix-command` to your `nix.conf`:
+This repository uses nix flakes. To interact with it, add the experimental features `flakes` and `nix-command` to your `~/.config/nix/nix.conf`:
 
 ```
 experimental-features = flakes nix-command
