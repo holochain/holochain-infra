@@ -33,7 +33,28 @@ To change the definition of some attribute seen in `nix flake show`, adapt the f
 
 Example: The definition for `nixosConfigurations.linux-builder-01` is located at `./modules/flake-parts/nixosConfigurations.linux-builder-01`.
 
-For any configuration code that is shared between hosts, we'd like to factor it out into a nixos module and put it under `./modules/nixos/`.
+Code shared between hosts should be factored out into one or more nixos modules located under `./modules/nixos/`.
+
+## Module types & File structure
+
+This project splits up its nix code into modules in order to improve maintainability and portability of the code.
+
+There are two kinds of modules:
+
+1. **nixos modules**: located under `./modules/nixos`
+1. **flake-parts modules**: located under `./modules/flake-parts`
+
+**nixos modules** contain configuration for linux or macos hosts.
+
+**flake-parts modules** export entities like packages, apps, or machine configurations via the flake outputs, the projects `public API` so to speak.
+
+**flake-parts modules** are responsible for everything seen in the output of `nix flake show`.
+
+A new flake module can be added by creating a new file under `./modules/flake-parts`. (Or a new directory containing a `default.nix` file)
+
+A template for initializing new modules is located under `./modules/flake-parts/_template.nix`.
+
+For more information on how to write flake modules, visit [flake.parts](https://flake.parts/).
 
 ## Deploying changes
 
