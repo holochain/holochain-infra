@@ -1,4 +1,4 @@
-## Install log
+## Install log for a contabo linux VPS
 
 1. connected to vps via ssh when it's in recovery mode
 2. installed nix
