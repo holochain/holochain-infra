@@ -1,12 +1,54 @@
-## Commands
+# CI Infrastructure for Holochain
+
+This is the declarative deployment of the holochain CI infrastructure.
+All hosts are running either Linux or MacOS.
+
+The linux hosts are managed via [NixOS](https://nixos.org/) and the MacOS hosts are managed via [nix-darwin](https://github.com/LnL7/nix-darwin).
+
+For making changes to the nixos configuration files, please refer to the [nixos manual](https://nixos.org/manual/nixos/stable/index.html#ch-configuration).
+
+For making changes to the macos configuration files, please refer to the [nix-darwin manual](https://daiderd.com/nix-darwin/manual/index.html).
+
+## Development on this repo
+
+This repository uses nix flakes. To interact with it, add the experimental features `flakes` and `nix-command` to your `~/.config/nix/nix.conf`:
+
+```
+experimental-features = flakes nix-command
+```
+
+Flakes have a standardized output schema, for which a good overview exists in the [nixos wiki](https://nixos.wiki/wiki/Flakes#Output_schema).
+
+Before getting started, it is always a good idea to inspect the outputs of the current project:
+
+```
+nix flake show
+```
+
+Notice the field `nixosConfigurations` which lists all hosts managed by this repo.
+
+## Repo structure
+
+To change the definition of some attribute seen in `nix flake show`, adapt the files under `./modules/flake-parts`. The file and directory names seen in the `flake-parts` directory are similar to the flake output names.
+
+Example: The definition for `nixosConfigurations.linux-builder-01` is located at `./modules/flake-parts/nixosConfigurations.linux-builder-01`.
+
+For any configuration code that is shared between hosts, we'd like to factor it out into a nixos module and put it under `./modules/nixos/`.
+
+## Deploying changes
+
+After making changes to the configuration files of a host, a flake app must be executed in order to apply the changes to that host.
 
 ### Show available apps
+
 ```command
 nix flake show
 ```
+
 notice apps prefixed with `deploy-`
 
 ### Deploy changes to host
+
 ```command
 nix run .#deploy-{hostname}
 ```
@@ -16,35 +58,3 @@ nix run .#deploy-{hostname}
 ```
 nix flake update
 ```
-
-## Install log
-
-1. connected to vps via ssh when it's in recovery mode
-2. installed nix
-  ```
-  sh <(curl -L https://nixos.org/nix/install) --daemon
-  source /etc/profile
-  nix-env -i nixos-install-tools
-  ```
-3. install nixos using https://nixos.org/manual/nixos/stable/index.html#ch-installation
-  ```
-  parted /dev/sda -- mklabel msdos
-  parted /dev/sda -- mkpart primary 1MB -8GB
-  parted /dev/sda -- mkpart primary linux-swap -8GB 100%
-
-  mkfs.btrfs -L nixos -f /dev/sda1
-  mkswap -L swap /dev/sda2
-  mount /dev/disk/by-label/nixos /mnt
-  mkdir -p /mnt/boot
-  swapon /dev/sda2
-  nixos-generate-config --root /mnt
-  # convert the config into a flake according to https://github.com/colemickens/nixos-flake-example
-  curl https://raw.githubusercontent.com/colemickens/nixos-flake-example/master/flake.nix > /mnt/etc/nixos/flake.nix
-  cd /mnt/etc/nixos/
-
-  # edit the config file accordingly
-  vim configuration.nix
-
-  unset NIX_PATH
-  nixos-install --flake ".#mysystem"
-  ```
