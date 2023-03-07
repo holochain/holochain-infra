@@ -12,6 +12,7 @@ in {
     modules = [
       ./configuration.nix
       ./remote-builder.nix
+      ../../nixos/macos.nix
       ../../nixos/shared.nix
       ../../nixos/shared-nix-settings.nix
       inputs.home-manager.darwinModules.home-manager
