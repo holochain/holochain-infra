@@ -20,8 +20,13 @@
     description = "User for remote build clients";
   };
   system.activationScripts.postActivation.text = ''
+    # fixup bashrc for remote nix executions
     echo 'PATH=/nix/var/nix/profiles/default/bin:$PATH' > /Users/builder/.bashrc
+
+    # allow builder usre to lock gc.lock
     chown builder /nix/var/nix/gc.lock
+
+    # setup ssh credentials for remote builds
     mkdir -p /Users/builder/.ssh/
     echo "command=\"${pkgs.flock}/bin/flock -s /nix/var/nix/gc.lock nix-daemon --stdio\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ1K1ZYBnf3UqQbln5Z8DLYsXyJo6pRAFISPQ7lJZpoO root@linux-builder-01" > /Users/builder/.ssh/authorized_keys
     chown -R builder:staff /Users/builder/.ssh/
