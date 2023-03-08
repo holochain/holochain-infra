@@ -7,6 +7,7 @@
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
+    # macos-01
     {
       hostName = "167.235.13.208";
       sshUser = "builder";
@@ -15,6 +16,7 @@
       maxJobs = 8;
       supportedFeatures = config.nix.settings.experimental-features;
     }
+    # macos-02
     {
       hostName = "hydra-minion-2.holo.host";
       sshUser = "builder";
@@ -23,6 +25,26 @@
       maxJobs = 12;
       supportedFeatures = config.nix.settings.experimental-features;
       speedFactor = 10;
+    }
+
+    # macos-03
+    {
+      hostName = "142.132.140.224";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "aarch64-darwin";
+      maxJobs = 8;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
+
+    # macos-04
+    {
+      hostName = "167.235.38.111";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "aarch64-darwin";
+      maxJobs = 8;
+      supportedFeatures = config.nix.settings.experimental-features;
     }
 
     # currently not required as this machine runs the distributor

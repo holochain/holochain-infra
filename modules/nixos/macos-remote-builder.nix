@@ -19,6 +19,9 @@
     shell = "/bin/bash";
     description = "User for remote build clients";
   };
+  nix.settings.trusted-users = [
+    "builder"
+  ];
   system.activationScripts.postActivation.text = ''
     # fixup bashrc for remote nix executions
     echo 'PATH=/nix/var/nix/profiles/default/bin:$PATH' > /Users/builder/.bashrc
@@ -32,5 +35,13 @@
     chown -R builder:staff /Users/builder/.ssh/
     chmod 700 /Users/builder/.ssh/
     chmod 400 /Users/builder/.ssh/authorized_keys
+    dseditgroup -o edit -a builder -t user com.apple.access_ssh
+
+    # restart nix daemon if nix.conf changed
+    if [ ! -e /etc/nix/nix.conf.old ] && ! diff -q /etc/nix/nix.conf /etc/nix/nix.conf.old; then
+      cp /etc/nix/nix.conf /etc/nix/nix.conf.old
+      launchctl stop org.nixos.nix-daemon
+      launchctl start org.nixos.nix-daemon
+    fi
   '';
 }

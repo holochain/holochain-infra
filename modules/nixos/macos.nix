@@ -1,13 +1,19 @@
 {
+  config,
   pkgs,
   lib,
   ...
 }: {
 
+  imports = [
+    ./shared.nix
+    ./shared-nix-settings.nix
+  ];
+
   nix.settings.trusted-users = [
     "@admin"
     "hetzner"
-    "builder"
+    config.deployUser
   ];
 
   nix.useDaemon = lib.mkDefault true;

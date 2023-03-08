@@ -5,9 +5,9 @@
   config,
   ...
 }: let
-  system = "x86_64-darwin";
+  system = "aarch64-darwin";
 in {
-  flake.darwinConfigurations.macos-02 = inputs.darwin.lib.darwinSystem {
+  flake.darwinConfigurations.macos-04 = inputs.darwin.lib.darwinSystem {
     inherit system;
     modules = [
       ./configuration.nix
