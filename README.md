@@ -41,8 +41,12 @@ This project splits up its nix code into modules in order to improve maintainabi
 
 There are two kinds of modules:
 
-1. **nixos modules**: located under `./modules/nixos`
-1. **flake-parts modules**: located under `./modules/flake-parts`
+There are two kinds of modules:
+ - **nixos modules**: located under `./modules/nixos`
+	 - contain configuration for linux or macos hosts.
+ - **flake-parts modules**: located under `./modules/flake-parts`
+	 - export entities like packages, apps, or machine configurations via the flake outputs, the projects `public API` so to speak.
+	 - are responsible for everything seen in the output of `nix flake show`.
 
 **nixos modules** contain configuration for linux or macos hosts.
 
