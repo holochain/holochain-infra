@@ -48,12 +48,6 @@ There are two kinds of modules:
 	 - export entities like packages, apps, or machine configurations via the flake outputs, the projects `public API` so to speak.
 	 - are responsible for everything seen in the output of `nix flake show`.
 
-**nixos modules** contain configuration for linux or macos hosts.
-
-**flake-parts modules** export entities like packages, apps, or machine configurations via the flake outputs, the projects `public API` so to speak.
-
-**flake-parts modules** are responsible for everything seen in the output of `nix flake show`.
-
 A new flake module can be added by creating a new file under `./modules/flake-parts`. (Or a new directory containing a `default.nix` file)
 
 A template for initializing new modules is located under `./modules/flake-parts/_template.nix`.
