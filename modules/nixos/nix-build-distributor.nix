@@ -24,7 +24,6 @@
       system = "x86_64-darwin";
       maxJobs = 12;
       supportedFeatures = config.nix.settings.experimental-features;
-      speedFactor = 10;
     }
 
     # macos-03
