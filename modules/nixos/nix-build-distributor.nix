@@ -42,7 +42,7 @@
       hostName = "167.235.38.111";
       sshUser = "builder";
       protocol = "ssh-ng";
-      system = "aarch64-darwin";
+      system = "x86_64-darwin";
       maxJobs = 8;
       supportedFeatures = config.nix.settings.experimental-features;
     }
