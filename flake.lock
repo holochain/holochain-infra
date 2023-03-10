@@ -142,7 +142,7 @@
     "keys_thedavidmeister": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-Sn/Z7MgiUwwrJ/ZOZhta/18e/kx+iSrdMVnJPlX1CLE=",
+        "narHash": "sha256-BB02KZaTWEHer1UjEXWyQlmEsHidKBzxfs8i9zAP3og=",
         "type": "file",
         "url": "https://github.com/thedavidmeister.keys"
       },

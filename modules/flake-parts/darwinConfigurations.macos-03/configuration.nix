@@ -1,5 +1,5 @@
 {
   # set options defined by us
   deployUser = "hetzner";
-  hostName = "167.235.13.208";
+  hostName = "142.132.140.224";
 }
