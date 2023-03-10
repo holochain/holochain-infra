@@ -139,6 +139,18 @@
         "url": "https://github.com/steveej.keys"
       }
     },
+    "keys_thedavidmeister": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Sn/Z7MgiUwwrJ/ZOZhta/18e/kx+iSrdMVnJPlX1CLE=",
+        "type": "file",
+        "url": "https://github.com/thedavidmeister.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/thedavidmeister.keys"
+      }
+    },
     "keys_zippy": {
       "flake": false,
       "locked": {
@@ -196,6 +208,7 @@
         "keys_maackle": "keys_maackle",
         "keys_neonphog": "keys_neonphog",
         "keys_steveej": "keys_steveej",
+        "keys_thedavidmeister": "keys_thedavidmeister",
         "keys_zippy": "keys_zippy",
         "nixpkgs": "nixpkgs",
         "srvos": "srvos"
