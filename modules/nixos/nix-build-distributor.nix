@@ -13,7 +13,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 8;
+      maxJobs = 4;
       supportedFeatures = config.nix.settings.experimental-features;
     }
     # macos-02
@@ -22,7 +22,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      maxJobs = 12;
+      maxJobs = 4;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
@@ -32,7 +32,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 8;
+      maxJobs = 4;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
@@ -42,7 +42,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      maxJobs = 8;
+      maxJobs = 4;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
