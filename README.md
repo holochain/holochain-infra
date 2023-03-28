@@ -77,3 +77,24 @@ nix run .#deploy-{hostname}
 ```
 nix flake update
 ```
+
+## Common Error Cases
+
+### Github Action Runners are down
+
+If a runner appears offline in the [runners settings page](https://github.com/holochain/holochain/settings/actions/runners) we can inspect and potentially restart the service.
+
+In the root of this repo:
+
+```shell
+nix run .\#ssh-linux-builder-01
+
+# on the remote host, we can inspect the status of a runner that appears problematic on GitHub, e.g.
+systemctl status github-runner-multi-arch-0.service
+```
+
+Before debugging too much, restarting one, or all as shown below, is worth attempting:
+
+```shell
+systemctl restart github-runner-multi-arch-*.service
+```
