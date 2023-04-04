@@ -42,6 +42,8 @@
       url = "https://github.com/zippy.keys";
       flake = false;
     };
+
+    cachix_for_watch_store.url = github:cachix/cachix/v1.4.1;
   };
 
   outputs = inputs @ {flake-parts, ...}:

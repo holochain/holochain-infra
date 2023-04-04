@@ -21,7 +21,7 @@
 
         ssh root@${hostName} nixos-rebuild \
           -j4 \
-          switch --flake /tmp/deploy-flake#'"${attrName}"'
+          "''${1:-switch}" --flake /tmp/deploy-flake#'"${attrName}"'
       '';
 
     mkLinuxDeployApp = attrName: config:
