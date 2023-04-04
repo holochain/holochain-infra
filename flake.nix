@@ -42,10 +42,6 @@
       url = "https://github.com/zippy.keys";
       flake = false;
     };
-    keys_davhau = {
-      url = "https://github.com/davhau.keys";
-      flake = false;
-    };
   };
 
   outputs = inputs @ {flake-parts, ...}:

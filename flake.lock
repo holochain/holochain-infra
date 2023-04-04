@@ -79,18 +79,6 @@
         "type": "github"
       }
     },
-    "keys_davhau": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-0fd0gyrCTIDOPdmbPIKj7CD6696tiEumLZPoXqDd8dc=",
-        "type": "file",
-        "url": "https://github.com/davhau.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/davhau.keys"
-      }
-    },
     "keys_jost-s": {
       "flake": false,
       "locked": {
@@ -203,7 +191,6 @@
         "disko": "disko",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
-        "keys_davhau": "keys_davhau",
         "keys_jost-s": "keys_jost-s",
         "keys_maackle": "keys_maackle",
         "keys_neonphog": "keys_neonphog",
