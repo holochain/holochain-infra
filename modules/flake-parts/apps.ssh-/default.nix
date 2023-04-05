@@ -13,7 +13,7 @@
       pkgs.writeScript "deploy-${hostName}" ''
         set -Eeuo pipefail
         set -x
-        ssh ${deployUser}@${hostName}
+        ssh ${deployUser}@${hostName} ''${@}
       '';
 
     mkSshApp = attrName: config:
