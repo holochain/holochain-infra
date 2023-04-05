@@ -29,7 +29,7 @@
   nix.gc =
     {
       automatic = true;
-      options = lib.mkForce ''--max-freed "$((48* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
+      options = lib.mkForce ''--max-freed "$((96* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
     }
     // lib.optionalAttrs pkgs.stdenv.isLinux (lib.mkForce {
       # run at all minutes that are a multiple of 7
