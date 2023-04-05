@@ -4,7 +4,6 @@
   lib,
   ...
 }: {
-
   imports = [
     ./shared.nix
     ./shared-nix-settings.nix
@@ -12,7 +11,6 @@
 
   nix.settings.trusted-users = [
     "@admin"
-    "hetzner"
     config.deployUser
   ];
 
@@ -35,7 +33,7 @@
   # home-manager settings
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.users.hetzner = {
+  home-manager.users."${config.deployUser}" = {
     home.stateVersion = "22.11";
 
     # https://github.com/malob/nixpkgs/blob/master/home/default.nix
