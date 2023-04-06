@@ -12,6 +12,7 @@ sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 
 sudo mv /etc/nix/nix.conf{,.prev}
 sudo mv /etc/zshenv{,.prev}
+sudo mv /etc/zshrc{,.prev}
 sudo mv /etc/bashrc{,.prev}
 
 softwareupdate --install-rosetta --agree-to-license
@@ -28,7 +29,7 @@ nix run .#deploy-macos-XX
 
 After the deployment reload the nix-daemon via:
 ```command
-sudo launchctl stop org.nixos.nix-daemon && sudo launchctl start org.nixos.nix-daemon
+nix run .#ssh-macos-XX "sudo launchctl stop org.nixos.nix-daemon && sudo launchctl start org.nixos.nix-daemon"
 ```
 
 Add the new host as remote builder inside `modules/nixos/nix-build-distributor.nix`
@@ -37,11 +38,9 @@ Finalize the ssh authentication setup:
 
 - Ssh into the distributor host via `nix run .#ssh-linux-builder-01`.
 - Login to the builder via ssh to verify the host key initially: `ssh builder@{ip-of-new-host}`
-- verify the key and press `Y`, though the login will not succeed, as it's prevented by the authorized_keys.
+- verify the key and press `Y`, then cancel with Ctrl+C as won't be an interactive session as per the remote SSH config
 
 Verify that the new remote builder works:
-- Ssh into the distributor host via `nix run .#ssh-linux-builder-01`.
-- run:
-  ```
-    nix store ping --store 'ssh-ng://builder@IP_OF_NEW_BUILDER
-  ```
+```command
+nix run .#ssh-linux-builder-01 "nix store ping --store 'ssh-ng://builder@IP_OF_NEW_BUILDER'"
+```
