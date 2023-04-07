@@ -9,8 +9,8 @@
       attrName,
       hostName,
     }:
-      pkgs.writeScript "deploy-${hostName}" ''
-        set -Eeuo pipefail
+      pkgs.writeShellScript "deploy-${hostName}" ''
+        set -Eeo pipefail
         export PATH="${lib.makeBinPath (with pkgs; [
           nix
           rsync

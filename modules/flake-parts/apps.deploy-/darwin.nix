@@ -10,8 +10,8 @@
       hostName,
       deployUser,
     }:
-      pkgs.writeScript "deploy-${hostName}" ''
-        set -Eeuo pipefail
+      pkgs.writeShellScript "deploy-${hostName}" ''
+        set -Eeo pipefail
         export PATH="${lib.makeBinPath (with pkgs; [
           nix
           rsync
@@ -28,7 +28,7 @@
 
         ssh ${deployUser}@${hostName} /tmp/next-system/sw/bin/darwin-rebuild \
           -j4 \
-          switch --flake /tmp/deploy-flake#'"${attrName}"'
+          "''${1:-switch}" --flake /tmp/deploy-flake#'"${attrName}"'
       '';
 
     mkDarwinDeployApp = attrName: config:
