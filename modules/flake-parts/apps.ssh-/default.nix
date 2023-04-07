@@ -10,8 +10,8 @@
       hostName,
       deployUser,
     }:
-      pkgs.writeScript "deploy-${hostName}" ''
-        set -Eeuo pipefail
+      pkgs.writeShellScript "ssh-${hostName}" ''
+        set -Eeo pipefail
         set -x
         ssh ${deployUser}@${hostName} ''${@}
       '';
