@@ -34,10 +34,11 @@
       url = "https://github.com/neonphog.keys";
       flake = false;
     };
-    keys_thedavidmeister = {
-      url = "https://github.com/thedavidmeister.keys";
-      flake = false;
-    };
+    # TODO: re-enable once the change is verified
+    # keys_thedavidmeister = {
+    #   url = "https://github.com/thedavidmeister.keys";
+    #   flake = false;
+    # };
     keys_zippy = {
       url = "https://github.com/zippy.keys";
       flake = false;
