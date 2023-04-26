@@ -8,7 +8,7 @@
   system = "x86_64-darwin";
 in {
   flake.darwinConfigurations.macos-02 = inputs.darwin.lib.darwinSystem {
-    inherit system;
+    inherit system inputs;
     modules = [
       ./configuration.nix
       ../../nixos/macos.nix
