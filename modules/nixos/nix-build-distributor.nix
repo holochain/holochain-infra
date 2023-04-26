@@ -36,15 +36,16 @@
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
-    # macos-04
-    {
-      hostName = "167.235.38.111";
-      sshUser = "builder";
-      protocol = "ssh-ng";
-      system = "x86_64-darwin";
-      maxJobs = 4;
-      supportedFeatures = config.nix.settings.experimental-features;
-    }
+    # # macos-04
+    # FIXME: this machine has filesystem issues again which renders GC ineffective
+    # {
+    #   hostName = "167.235.38.111";
+    #   sshUser = "builder";
+    #   protocol = "ssh-ng";
+    #   system = "x86_64-darwin";
+    #   maxJobs = 4;
+    #   supportedFeatures = config.nix.settings.experimental-features;
+    # }
 
     # currently not required as this machine runs the distributor
     # {
