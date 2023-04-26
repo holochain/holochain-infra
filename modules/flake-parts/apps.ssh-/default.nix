@@ -25,8 +25,28 @@
         });
       };
   in {
-    config.apps =
-      lib.mapAttrs' mkSshApp
-      (self.darwinConfigurations // self.nixosConfigurations);
+    config.apps = let
+      individual =
+        lib.mapAttrs' mkSshApp
+        (self.darwinConfigurations // self.nixosConfigurations);
+    in
+      individual
+      // {
+        ssh-all = {
+          type = "app";
+          program = builtins.toString (
+            pkgs.writeShellScript "ssh-all"
+            (
+              builtins.concatStringsSep "\n" (
+                lib.mapAttrsToList (name: value: ''
+                  echo \# ${name}: running ${value.program} ''${@}
+                  ${value.program} ''${@}
+                '')
+                individual
+              )
+            )
+          );
+        };
+      };
   };
 }
