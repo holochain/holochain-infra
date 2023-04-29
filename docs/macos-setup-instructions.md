@@ -5,6 +5,9 @@ The determinate systems nix installer is used, see: https://github.com/Determina
 
 Login to the remote host and execute the following commands to set up nix and prepare for deployment
 ```command
+# Set up passwordless sudo for the deploy user
+echo "%admin            ALL = (ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 
 printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
@@ -20,6 +23,11 @@ softwareupdate --install-rosetta --agree-to-license
 
 Create a flake module for the new host similar to the one under `modules/flake-parts/darwinConfigurations.macos-04`
 
+Ensure the nix-daemon is running.
+```command
+nix run .#ssh-macos-XX "sudo launchctl kickstart -k system/org.nixos.nix-daemon"
+```
+
 Run the initial deployment.
 (replace `macos-XX` with the name of the new configuration)
 ```command
@@ -27,9 +35,9 @@ git add .
 nix run .#deploy-macos-XX
 ```
 
-After the deployment reload the nix-daemon via:
+After the deployment reload the nix-daemon again via:
 ```command
-nix run .#ssh-macos-XX "sudo launchctl stop org.nixos.nix-daemon && sudo launchctl start org.nixos.nix-daemon"
+nix run .#ssh-macos-XX "sudo launchctl kickstart -k system/org.nixos.nix-daemon"
 ```
 
 Add the new host as remote builder inside `modules/nixos/nix-build-distributor.nix`
