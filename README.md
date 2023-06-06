@@ -98,3 +98,26 @@ Before debugging too much, restarting one, or all as shown below, is worth attem
 ```shell
 systemctl restart github-runner-multi-arch-*.service
 ```
+
+### Upgrading the GitHub runner version
+
+If a runner appears offline in the [runners settings page](https://github.com/holochain/holochain/settings/actions/runners) and when SSHing into the host with `nix run .\#ssh-linux-builder-01` and checking `journalctl -b0 --unit "github*" -n 200` shows that the runner can't start because the runner software is deprecated then try the following steps.
+
+Update the `flake.nix` by pointing `nixpkgs` and `home-manager.url` at the latest stable release branch. These two must match since `home-manager` also references `nixpkgs`.
+
+Update the `flake.lock` based on your changes
+```shell
+nix flake lock --update-input nixpkgs  --update-input home-manager
+```
+
+If that works, check that everything builds successfully on the builder
+```shell
+nix run .#deploy-linux-builder-01 build
+```
+
+If that also works then ask nixos to apply these changes the next boot
+```shell
+nix run .#deploy-linux-builder-01 boot
+```
+
+You can then restart the builder to apply the update.

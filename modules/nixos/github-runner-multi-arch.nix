@@ -24,4 +24,9 @@ in {
       url = "https://github.com/holochain/holochain";
       extraPackages = config.environment.systemPackages;
     });
+
+  # TODO where is NodeJS coming from and how can it be updated?
+  nixpkgs.config.permittedInsecurePackages = [
+    "nodejs-16.20.0"
+  ];
 }

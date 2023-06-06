@@ -2,7 +2,7 @@
   description = "The new, performant, and simplified version of Holochain on Rust (sometimes called Holochain RSM for Refactored State Model) ";
 
   inputs = {
-    nixpkgs = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    nixpkgs = {url = "github:nixos/nixpkgs/release-23.05";};
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -15,7 +15,7 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     keys_steveej = {
