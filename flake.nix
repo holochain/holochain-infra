@@ -48,7 +48,7 @@
       flake = false;
     };
 
-    cachix_for_watch_store.url = github:cachix/cachix/v1.4.1;
+    cachix_for_watch_store.url = github:cachix/cachix/v1.5;
   };
 
   outputs = inputs @ {flake-parts, ...}:
