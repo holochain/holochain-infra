@@ -26,10 +26,11 @@
       url = "https://github.com/jost-s.keys";
       flake = false;
     };
-    keys_maackle = {
-      url = "https://github.com/maackle.keys";
-      flake = false;
-    };
+    # hash mismatch
+    # keys_maackle = {
+    #   url = "https://github.com/maackle.keys";
+    #   flake = false;
+    # };
     keys_neonphog = {
       url = "https://github.com/neonphog.keys";
       flake = false;
