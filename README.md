@@ -103,7 +103,7 @@ systemctl restart github-runner-multi-arch-*.service
 
 If a runner appears offline in the [runners settings page](https://github.com/holochain/holochain/settings/actions/runners) and when SSHing into the host with `nix run .\#ssh-linux-builder-01` and checking `journalctl -b0 --unit "github*" -n 200` shows that the runner can't start because the runner software is deprecated then try the following steps.
 
-Update the `flake.nix` by pointing `nixpkgs` and `home-manager.url` at the latest stable release branch. These two must match since `home-manager` also references `nixpkgs`.
+(optional) Update the `flake.nix` by pointing `nixpkgs` and `home-manager.url` at the latest stable release branch. These two must match since `home-manager` also references `nixpkgs`.
 
 Update the `flake.lock` based on your changes
 ```shell
