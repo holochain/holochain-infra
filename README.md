@@ -120,4 +120,4 @@ If that also works then ask nixos to apply these changes the next boot
 nix run .#deploy-linux-builder-01 boot
 ```
 
-You can then restart the builder to apply the update.
+You can then restart the builder to apply the update via `nix run .#ssh-linux-builder-01 reboot`
