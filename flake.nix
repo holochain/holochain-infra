@@ -7,8 +7,11 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    srvos.url = "github:numtide/srvos/remote-builder";
+    srvos.url = "github:numtide/srvos";
     srvos.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixos-anywhere.url = "github:numtide/nixos-anywhere";
+    nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix darwin
     darwin.url = "github:steveeJ-forks/nix-darwin/pr_gc_interval";
@@ -48,6 +51,10 @@
       url = "https://github.com/zippy.keys";
       flake = false;
     };
+    keys_artbrock = {
+      url = "https://github.com/artbrock.keys";
+      flake = false;
+    };
 
     cachix_for_watch_store.url = github:cachix/cachix/v1.5;
   };
@@ -65,11 +72,17 @@
         config,
         self',
         inputs',
+        pkgs,
         ...
       }: {
         # Per-system attributes can be defined here. The self' and inputs'
         # module parameters provide easy access to attributes of the same
         # system.
+        devShells.default = pkgs.mkShell {
+          packages = [
+            inputs'.nixos-anywhere.packages.default
+          ];
+        };
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
