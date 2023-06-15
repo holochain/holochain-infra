@@ -191,7 +191,7 @@ in {
     # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
   };
 
-  systemd.services.dns-rfc2136-1-conf = let 
+  systemd.services.dns-rfc2136-1-conf = let
     dnskeysConfPath = "/var/lib/secrets/${fqdn1domain}-dnskeys.conf";
     dnskeysSecretPath = "/var/lib/secrets/${fqdn1domain}-dnskeys.secret";
   in {
@@ -225,7 +225,7 @@ in {
     '';
   };
 
-  systemd.services.dns-rfc2136-2-conf = let 
+  systemd.services.dns-rfc2136-2-conf = let
     dnskeysConfPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.conf";
     dnskeysSecretPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
   in {
@@ -260,85 +260,30 @@ in {
   };
 
   ### Caddy
-  users.users.caddy.extraGroups = [ "acme" ];
+  users.users.caddy.extraGroups = ["acme"];
   services.caddy.enable = true;
   services.caddy.virtualHosts = {
-      "steveej.${fqdn1domain}:443" = {
-        useACMEHost = fqdn1domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.154.109:80
-        '';
-      };
-      "steveej.${fqdn1domain}:8030" = {
-        useACMEHost = fqdn1domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.154.109:8030 
-          {
-            transport http {
-              keepalive 1d
-            }
+    "steveej.${fqdn2domain}:443" = {
+      useACMEHost = fqdn2domain;
+      extraConfig = ''
+        reverse_proxy http://172.24.154.109:80 {
+          transport http {
+            keepalive 1d
           }
-        '';
-      };
+        }
+      '';
+    };
 
-      # zippy 1
-      "dweb1.${fqdn1domain}:443" = {
-        useACMEHost = fqdn1domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.135.11:80
-        '';
-      };
-      "dweb1.${fqdn1domain}:8030" = {
-        useACMEHost = fqdn1domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.135.11:8030
-          {
-            transport http {
-              keepalive 1d
-            }
+    # zippy 1
+    "dweb1.${fqdn2domain}:443" = {
+      useACMEHost = fqdn2domain;
+      extraConfig = ''
+        reverse_proxy http://172.24.135.11:80 {
+          transport http {
+            keepalive 1d
           }
-        '';
-      };
-
-
-      # --------
-
-      "steveej.${fqdn2domain}:443" = {
-        useACMEHost = fqdn2domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.154.109:80
-        '';
-      };
-      "steveej.${fqdn2domain}:8030" = {
-        useACMEHost = fqdn2domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.154.109:8030 
-          {
-            transport http {
-              keepalive 1d
-            }
-          }
-        '';
-      };
-
-      # zippy 1
-      "dweb1.${fqdn2domain}:443" = {
-        useACMEHost = fqdn2domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.135.11:80
-        '';
-      };
-      "dweb1.${fqdn2domain}:8030" = {
-        useACMEHost = fqdn2domain;
-        extraConfig = ''
-          reverse_proxy http://172.24.135.11:8030
-          {
-            transport http {
-              keepalive 1d
-            }
-          }
-        '';
-      };
-      ### } holochain.org domain
+        }
+      '';
+    };
   };
 }
