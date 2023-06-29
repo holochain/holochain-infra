@@ -8,7 +8,6 @@
 }: let
   ipv4 = "5.78.43.185";
   ipv6Prefix = "2a01:4ff:1f0:872a";
-  fqdn1domain = "holochain.noosphere.life";
   fqdn2domain = "infra.holochain.org";
 in {
   imports = [
@@ -84,12 +83,13 @@ in {
     joinNetworks = [ 
     ];
   };
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "zerotierone"
-  ];
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "zerotierone"
+    ];
 
-  networking.firewall.allowedTCPPorts = [ 53 80 443 8030 ];
-  networking.firewall.allowedUDPPorts = [ 53 ];
+  networking.firewall.allowedTCPPorts = [53 80 443 8030];
+  networking.firewall.allowedUDPPorts = [53];
 
   ### BIND and ACME
 
@@ -129,33 +129,8 @@ in {
     '';
     zones = [
       {
-        name = fqdn1domain;
-        allowQuery = [ "any" ];
-        file = pkgs.writeText "${fqdn1domain}.zone" ''
-          $ORIGIN .
-          $TTL 86400      ; 1 day
-          ${fqdn1domain} IN SOA ns1.${fqdn1domain}. mail.noosphere.life. (
-                                            2001062504 ; serial
-                                            21600      ; refresh (6 hours)
-                                            3600       ; retry (1 hour)
-                                            604800     ; expire (1 week)
-                                            86400      ; minimum (1 day)
-                                          )
-
-                                  NS      ns1.${fqdn1domain}.
-          $ORIGIN ${fqdn1domain}.
-          ns1            A             ${ipv4}
-          ${fqdn1domain}.       A             ${ipv4}
-          *.${fqdn1domain}.     CNAME         ${fqdn1domain}.
-        '';
-
-        master = true;
-        extraConfig = "allow-update { key rfc2136key.${fqdn1domain}; };";
-      }
-
-      {
         name = fqdn2domain;
-        allowQuery = [ "any" ];
+        allowQuery = ["any"];
         file = "/etc/bind/zones/${fqdn2domain}.zone";
         master = true;
         extraConfig = "allow-update { key rfc2136key.${fqdn2domain}.; };";
@@ -163,19 +138,10 @@ in {
     ];
   };
 
-
   security.acme = {
     acceptTerms = true;
     defaults = {
-      email = "mail@noosphere.life";
-    };
-
-    certs."${fqdn1domain}" = {
-      domain = "*.${fqdn1domain}";
-      dnsProvider = "rfc2136";
-      credentialsFile = "/var/lib/secrets/${fqdn1domain}-dnskeys.secret";
-      # We don't need to wait for propagation since this is a local DNS server
-      dnsPropagationCheck = false;
+      email = "admin@holochain.org";
     };
 
     certs."${fqdn2domain}" = {
@@ -191,40 +157,6 @@ in {
     # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
   };
 
-  systemd.services.dns-rfc2136-1-conf = let
-    dnskeysConfPath = "/var/lib/secrets/${fqdn1domain}-dnskeys.conf";
-    dnskeysSecretPath = "/var/lib/secrets/${fqdn1domain}-dnskeys.secret";
-  in {
-    requiredBy = ["acme-${fqdn1domain}.service" "bind.service"];
-    before = ["acme-${fqdn1domain}.service" "bind.service"];
-    unitConfig = {
-      ConditionPathExists = "!${dnskeysConfPath}";
-    };
-    serviceConfig = {
-      Type = "oneshot";
-      UMask = 0077;
-    };
-    path = [ pkgs.bind ];
-    script = ''
-      mkdir -p /var/lib/secrets
-      chmod 755 /var/lib/secrets
-      tsig-keygen rfc2136key.${fqdn1domain} > ${dnskeysConfPath}
-      chown named:root ${dnskeysConfPath}
-      chmod 400 ${dnskeysConfPath}
-
-      # extract secret value from the dnskeys.conf
-      while read x y; do if [ "$x" = "secret" ]; then secret="''${y:1:''${#y}-3}"; fi; done < ${dnskeysConfPath}
-
-      cat > ${dnskeysSecretPath} << EOF
-      RFC2136_NAMESERVER='127.0.0.1:53'
-      RFC2136_TSIG_ALGORITHM='hmac-sha256.'
-      RFC2136_TSIG_KEY='rfc2136key.${fqdn1domain}'
-      RFC2136_TSIG_SECRET='$secret'
-      EOF
-      chmod 400 ${dnskeysSecretPath}
-    '';
-  };
-
   systemd.services.dns-rfc2136-2-conf = let
     dnskeysConfPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.conf";
     dnskeysSecretPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
@@ -238,7 +170,7 @@ in {
       Type = "oneshot";
       UMask = 0077;
     };
-    path = [ pkgs.bind ];
+    path = [pkgs.bind];
     script = ''
       mkdir -p /var/lib/secrets
       chmod 755 /var/lib/secrets
@@ -274,7 +206,7 @@ in {
       '';
     };
 
-    # zippy 1
+    # zippy 1 / emerge-3
     "dweb1.${fqdn2domain}:443" = {
       useACMEHost = fqdn2domain;
       extraConfig = ''
