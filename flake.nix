@@ -21,6 +21,10 @@
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    # secret management
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
     keys_steveej = {
       url = "https://github.com/steveej.keys";
       flake = false;
@@ -44,8 +48,8 @@
     #   flake = false;
     # };
     keys_thetasinner = {
-        url = "https://github.com/ThetaSinner.keys";
-        flake = false;
+      url = "https://github.com/ThetaSinner.keys";
+      flake = false;
     };
     keys_zippy = {
       url = "https://github.com/zippy.keys";
@@ -81,6 +85,12 @@
         devShells.default = pkgs.mkShell {
           packages = [
             inputs'.nixos-anywhere.packages.default
+
+            inputs'.sops-nix.packages.default
+            pkgs.ssh-to-age
+            pkgs.age
+            pkgs.age-plugin-yubikey
+            pkgs.sops
           ];
         };
       };
