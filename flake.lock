@@ -504,6 +504,22 @@
         "type": "github"
       }
     },
+    "nixpkgsUnstable": {
+      "locked": {
+        "lastModified": 1688322751,
+        "narHash": "sha256-eW62dC5f33oKZL7VWlomttbUnOTHrAbte9yNUNW8rbk=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "0fbe93c5a7cac99f90b60bdf5f149383daaa615f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1684754342,
@@ -581,6 +597,7 @@
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs_3",
         "nixpkgsGithubActionRunners": "nixpkgsGithubActionRunners",
+        "nixpkgsUnstable": "nixpkgsUnstable",
         "sops-nix": "sops-nix",
         "srvos": "srvos"
       }

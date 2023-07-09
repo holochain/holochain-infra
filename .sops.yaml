@@ -25,3 +25,13 @@ creation_rules:
       - *steveej
       age:
       - *linux-builder-01
+  - path_regex: ^secrets/nomad/.+$
+    key_groups:
+    - pgp:
+      - *steveej
+      age:
+      - *dweb-reverse-proxy
+  - path_regex: ^secrets/nomad/admin/.+$
+    key_groups:
+    - pgp:
+      - *steveej

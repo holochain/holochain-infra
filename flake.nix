@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs = {url = "github:nixos/nixpkgs/release-23.05";};
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -66,7 +67,11 @@
     cachix_for_watch_store.url = github:cachix/cachix/v1.5;
   };
 
-  outputs = inputs @ {flake-parts, ...}:
+  outputs = inputs @ {
+    self,
+    flake-parts,
+    ...
+  }:
     flake-parts.lib.mkFlake {inherit inputs;} {
       # auto import all nix code from `./modules`
       imports =
@@ -87,6 +92,8 @@
         # system.
         devShells.default = pkgs.mkShell {
           packages = [
+            pkgs.yq-go
+
             inputs'.nixos-anywhere.packages.default
 
             inputs'.sops-nix.packages.default
@@ -94,7 +101,26 @@
             pkgs.age
             pkgs.age-plugin-yubikey
             pkgs.sops
+
+            self'.packages.nomad
           ];
+
+          NOMAD_ADDR = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
+          NOMAD_CACERT = "./secrets/nomad/admin/nomad-agent-ca.pem";
+          NOMAD_CLIENT_CERT = ./secrets/nomad/cli/global-cli-nomad.pem;
+
+          shellHook = ''
+            set -x
+            REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
+            mkdir -p ''${REPO_SECRETS_DIR}
+            chmod 700 ''${REPO_SECRETS_DIR}
+            export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
+            sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
+          '';
+        };
+
+        packages = {
+          nomad = inputs'.nixpkgsUnstable.legacyPackages.nomad_1_5;
         };
       };
       flake = {

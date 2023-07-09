@@ -115,7 +115,16 @@ in {
     '';
   };
 
-  networking.firewall.allowedTCPPorts = [53 80 443 8030];
+  networking.firewall.allowedTCPPorts = [
+    53
+    80
+    443
+    8030
+
+    # nomad
+    4646
+    4647
+  ];
   networking.firewall.allowedUDPPorts = [53];
 
   ### BIND and ACME
@@ -244,5 +253,75 @@ in {
         }
       '';
     };
+
+    # "nomad.${fqdn2domain}:443" = {
+    #   useACMEHost = fqdn2domain;
+    #   extraConfig = ''
+    #     reverse_proxy http://127.0.0.1:4646 {
+    #       transport http {
+    #         tls_insecure_skip_verify
+    #       }
+    #     }
+    #   '';
+    # };
   };
+
+  sops.secrets.global-server-nomad-key = {
+    sopsFile = ../../../secrets/nomad/servers/keys.yaml;
+    owner = config.users.extraUsers.nomad.name;
+    group = config.users.groups.nomad.name;
+  };
+
+  services.nomad = {
+    enable = true;
+    package = self.packages.${pkgs.system}.nomad;
+    enableDocker = false;
+    dropPrivileges = false;
+
+    extraPackages = [
+      pkgs.coreutils
+    ];
+
+    settings = {
+      # advertise = {
+      #   http = config.hostName;
+      # };
+
+      bind_addr = config.hostName;
+
+      server = {
+        enabled = true;
+        bootstrap_expect = 1;
+
+        server_join = {
+          retry_join = [
+            config.hostName
+          ];
+        };
+      };
+
+      client.enabled = false;
+
+      tls = {
+        http = true;
+        rpc = true;
+        ca_file = ../../../secrets/nomad/admin/nomad-agent-ca.pem;
+        cert_file = ../../../secrets/nomad/servers/global-server-nomad.pem;
+        key_file = config.sops.secrets.global-server-nomad-key.path;
+
+        verify_server_hostname = true;
+        verify_https_client = true;
+      };
+    };
+  };
+
+  users.extraUsers.nomad.isNormalUser = true;
+  users.extraUsers.nomad.isSystemUser = false;
+  users.extraUsers.nomad.group = "nomad";
+  users.extraUsers.nomad.home = config.services.nomad.settings.data_dir;
+  users.extraUsers.nomad.createHome = true;
+  users.groups.nomad.members = ["nomad"];
+
+  systemd.services.nomad.serviceConfig.User = "nomad";
+  systemd.services.nomad.serviceConfig.Group = "nomad";
 }
