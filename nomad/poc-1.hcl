@@ -39,9 +39,7 @@ job "poc-1" {
                     <<ENDOFSCRIPT
                     set -xe
                     env
-                    while true; do
-                        nix run nixpkgs#iperf3 -- --port ''${NOMAD_PORT_iperf3} --server
-                    done
+                    nix run nixpkgs#iperf3 -- --port ''${NOMAD_PORT_iperf3} --server --one-off
                     ENDOFSCRIPT
                 ]
             }

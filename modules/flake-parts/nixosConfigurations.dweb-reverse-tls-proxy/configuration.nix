@@ -321,12 +321,14 @@ in {
       client = {
         enabled = true;
 
-        node_class = "poc-1";
+        node_class = "testing";
 
         meta = {
           inherit (pkgs.targetPlatform) system;
 
           features = builtins.concatStringsSep "," [
+            "poc-1"
+            "poc-2"
             "ipv4-public"
             "nix"
             "nixos"
