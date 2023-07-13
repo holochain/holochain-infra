@@ -90,34 +90,60 @@
         # Per-system attributes can be defined here. The self' and inputs'
         # module parameters provide easy access to attributes of the same
         # system.
-        devShells.default = pkgs.mkShell {
-          packages = [
-            pkgs.yq-go
+        devShells.default = let
+          nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
+          nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
+          nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
+        in
+          pkgs.mkShell {
+            packages = [
+              pkgs.yq-go
 
-            inputs'.nixos-anywhere.packages.default
+              inputs'.nixos-anywhere.packages.default
 
-            inputs'.sops-nix.packages.default
-            pkgs.ssh-to-age
-            pkgs.age
-            pkgs.age-plugin-yubikey
-            pkgs.sops
+              inputs'.sops-nix.packages.default
+              pkgs.ssh-to-age
+              pkgs.age
+              pkgs.age-plugin-yubikey
+              pkgs.sops
 
-            self'.packages.nomad
-          ];
+              self'.packages.nomad
 
-          NOMAD_ADDR = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
-          NOMAD_CACERT = "./secrets/nomad/admin/nomad-agent-ca.pem";
-          NOMAD_CLIENT_CERT = ./secrets/nomad/cli/global-cli-nomad.pem;
+              (pkgs.writeShellScriptBin "nomad-ui-proxy" (let
+                caddyfile = pkgs.writeText "caddyfile" ''
+                  {
+                    auto_https off
+                    http_port 2016
+                  }
 
-          shellHook = ''
-            set -x
-            REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
-            mkdir -p ''${REPO_SECRETS_DIR}
-            chmod 700 ''${REPO_SECRETS_DIR}
-            export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
-            sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
-          '';
-        };
+                  localhost:2016 {
+                    reverse_proxy ${nomadAddr} {
+                      transport http {
+                        tls_trusted_ca_certs ${nomadCaCert}
+                        tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                      }
+                    }
+                  }
+                '';
+              in ''
+                ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
+              ''))
+              pkgs.caddy
+            ];
+
+            NOMAD_ADDR = nomadAddr;
+            NOMAD_CACERT = nomadCaCert;
+            NOMAD_CLIENT_CERT = nomadClientCert;
+
+            shellHook = ''
+              set -x
+              REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
+              mkdir -p ''${REPO_SECRETS_DIR}
+              chmod 700 ''${REPO_SECRETS_DIR}
+              export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
+              sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
+            '';
+          };
 
         packages = {
           nomad = inputs'.nixpkgsUnstable.legacyPackages.nomad_1_5;
