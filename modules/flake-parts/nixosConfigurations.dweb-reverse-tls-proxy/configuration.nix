@@ -125,7 +125,22 @@ in {
     4646
     4647
   ];
+
   networking.firewall.allowedUDPPorts = [53];
+
+  # dynamic port ranges used by nomad services
+  networking.firewall.allowedTCPPortRanges = [
+    {
+      from = 20000;
+      to = 32000;
+    }
+  ];
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 20000;
+      to = 32000;
+    }
+  ];
 
   ### BIND and ACME
 
@@ -280,12 +295,16 @@ in {
 
     extraPackages = [
       pkgs.coreutils
+      pkgs.nix
+      pkgs.bash
+      pkgs.gitFull
+      pkgs.cacert
     ];
 
     settings = {
-      # advertise = {
-      #   http = config.hostName;
-      # };
+      advertise = {
+        http = config.hostName;
+      };
 
       bind_addr = config.hostName;
 
@@ -299,8 +318,24 @@ in {
           ];
         };
       };
+      client = {
+        enabled = true;
 
-      client.enabled = false;
+        node_class = "poc-1";
+
+        meta = {
+          inherit (pkgs.targetPlatform) system;
+
+          features = builtins.concatStringsSep "," [
+            "ipv4-public"
+            "nix"
+            "nixos"
+          ];
+
+          machine_type = "vps";
+        };
+      };
+      plugin.raw_exec.config.enabled = true;
 
       tls = {
         http = true;
