@@ -120,7 +120,7 @@ If that also works then ask nixos to apply these changes without updating the de
 nix run .#deploy-linux-builder-01 test
 ```
 
-If the runners are pack online then update the default profile
+If the runners are back online then update the default profile
 ```shell
 nix run .#deploy-linux-builder-01 switch
 ```
