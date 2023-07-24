@@ -107,7 +107,7 @@ If a runner appears offline in the [runners settings page](https://github.com/ho
 
 Update the `flake.lock` based on your changes
 ```shell
-nix flake lock --update-input nixpkgs  --update-input home-manager
+nix flake lock --update-input nixpkgsGithubActionRunners
 ```
 
 If that works, check that everything builds successfully on the builder
@@ -115,9 +115,12 @@ If that works, check that everything builds successfully on the builder
 nix run .#deploy-linux-builder-01 build
 ```
 
-If that also works then ask nixos to apply these changes the next boot
+If that also works then ask nixos to apply these changes without updating the default profile
 ```shell
-nix run .#deploy-linux-builder-01 boot
+nix run .#deploy-linux-builder-01 test
 ```
 
-You can then restart the builder to apply the update via `nix run .#ssh-linux-builder-01 reboot`
+If the runners are back online then update the default profile
+```shell
+nix run .#deploy-linux-builder-01 switch
+```
