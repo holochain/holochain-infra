@@ -20,7 +20,7 @@ in {
       replace = true;
       ephemeral = true;
       extraLabels = [githubRunnersCfg.namePrefix];
-      tokenFile = magicPaths.githubRunnerHraTokenHostPath;
+      tokenFile = config.sops.secrets.github-runners-token.path;
       url = "https://github.com/holochain/holochain";
       extraPackages = config.environment.systemPackages;
     });

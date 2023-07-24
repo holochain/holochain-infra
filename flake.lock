@@ -299,18 +299,6 @@
         "url": "https://github.com/ThetaSinner.keys"
       }
     },
-    "keys_zippy": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-aO9Vws3uxsX9DfuBwtOs1fJ9CwUoz1aVodjkE+qWgh0=",
-        "type": "file",
-        "url": "https://github.com/zippy.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/zippy.keys"
-      }
-    },
     "lowdown-src": {
       "flake": false,
       "locked": {
@@ -574,7 +562,6 @@
         "keys_neonphog": "keys_neonphog",
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
-        "keys_zippy": "keys_zippy",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs_3",
         "sops-nix": "sops-nix",

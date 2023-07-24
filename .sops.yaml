@@ -6,6 +6,7 @@
 keys:
   - &steveej 6F7069FE6B96E894E60EC45C6EEFA706CB17E89B
   - &dweb-reverse-proxy age1p4udet5m63tccqqpy38d2m90cv4rffe3cn3965jpmakkwcs7t56qvlp2vw
+  - &linux-builder-01 age1kxkr407jz77ljrhgsfwfmv2yvqjprc6unvx389xp2f48xj8r0vqq2wew5r
 
 creation_rules:
   - path_regex: ^(.+/|)secrets/[^/]+$
@@ -18,3 +19,9 @@ creation_rules:
       - *steveej
       age:
       - *dweb-reverse-proxy
+  - path_regex: ^secrets/linux-builder-01/[^/]+$
+    key_groups:
+    - pgp:
+      - *steveej
+      age:
+      - *linux-builder-01

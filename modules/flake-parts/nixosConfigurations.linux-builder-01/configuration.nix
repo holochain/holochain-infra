@@ -15,6 +15,8 @@
     self.nixosModules.github-runner-multi-arch
     self.nixosModules.nix-build-distributor
 
+    inputs.sops-nix.nixosModules.sops
+
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
     ../../nixos/cachix-watch.nix
@@ -77,6 +79,11 @@
         }
       ];
     };
+  };
+
+  sops.secrets.github-runners-token = {
+    key = "gh_hra2_pat3";
+    sopsFile = ../../../secrets/${config.networking.hostName}/secrets.yaml;
   };
 
   system.stateVersion = "23.05";
