@@ -146,7 +146,7 @@
           };
 
         packages = {
-          nomad = inputs'.nixpkgsUnstable.legacyPackages.nomad_1_5;
+          nomad = inputs'.nixpkgsUnstable.legacyPackages.nomad_1_6;
         };
       };
       flake = {
