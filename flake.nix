@@ -15,7 +15,8 @@
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix darwin
-    darwin.url = "github:steveeJ-forks/nix-darwin/pr_gc_interval";
+    darwin.url = "github:steveeJ-forks/nix-darwin/fork-fix-launchd-calendar-interval";
+
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
