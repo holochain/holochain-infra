@@ -15,7 +15,8 @@
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix darwin
-    darwin.url = "github:steveeJ-forks/nix-darwin/pr_gc_interval";
+    darwin.url = "github:steveeJ-forks/nix-darwin/fork-fix-launchd-calendar-interval";
+
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
@@ -39,10 +40,13 @@
     #   url = "https://github.com/maackle.keys";
     #   flake = false;
     # };
-    keys_neonphog = {
-      url = "https://github.com/neonphog.keys";
-      flake = false;
-    };
+
+    # hash mismatch 20230821
+    # keys_neonphog = {
+    #   url = "https://github.com/neonphog.keys";
+    #   flake = false;
+    # };
+
     # TODO: re-enable once the change is verified
     # keys_thedavidmeister = {
     #   url = "https://github.com/thedavidmeister.keys";

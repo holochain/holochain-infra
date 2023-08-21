@@ -29,16 +29,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1677745326,
-        "narHash": "sha256-IoA8dUObRmYTHCadc/RxasKzYkrb4rVBtGWQoOMHm2k=",
+        "lastModified": 1692613703,
+        "narHash": "sha256-ByFRYQ8J4YSeAU6N0gUc5nmIjAGoiDU+jMUL73Ns0ZU=",
         "owner": "steveeJ-forks",
         "repo": "nix-darwin",
-        "rev": "7891240728852f1a728b082bee7a5cda6bfdda02",
+        "rev": "72d647c8bda6d8d8a88ba2b63b56ce4e0be57ea7",
         "type": "github"
       },
       "original": {
         "owner": "steveeJ-forks",
-        "ref": "pr_gc_interval",
+        "ref": "fork-fix-launchd-calendar-interval",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -261,18 +261,6 @@
       "original": {
         "type": "file",
         "url": "https://github.com/jost-s.keys"
-      }
-    },
-    "keys_neonphog": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-InV0oto4PA8gLATCZxeP80V8QPrOxdJg0Qxfn0zaTa0=",
-        "type": "file",
-        "url": "https://github.com/neonphog.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/neonphog.keys"
       }
     },
     "keys_steveej": {
@@ -575,7 +563,6 @@
         "home-manager": "home-manager",
         "keys_artbrock": "keys_artbrock",
         "keys_jost-s": "keys_jost-s",
-        "keys_neonphog": "keys_neonphog",
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
         "nixos-anywhere": "nixos-anywhere",

@@ -40,7 +40,7 @@
     })
     // lib.optionalAttrs pkgs.stdenv.isDarwin {
       # run at all minutes that are a multiple of 7
-      intervals =
+      interval =
         builtins.map (Minute: {inherit Minute;}) (builtins.genList (n: n * 7) 9);
     };
 
