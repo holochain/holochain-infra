@@ -263,18 +263,6 @@
         "url": "https://github.com/jost-s.keys"
       }
     },
-    "keys_neonphog": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-InV0oto4PA8gLATCZxeP80V8QPrOxdJg0Qxfn0zaTa0=",
-        "type": "file",
-        "url": "https://github.com/neonphog.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/neonphog.keys"
-      }
-    },
     "keys_steveej": {
       "flake": false,
       "locked": {
@@ -575,7 +563,6 @@
         "home-manager": "home-manager",
         "keys_artbrock": "keys_artbrock",
         "keys_jost-s": "keys_jost-s",
-        "keys_neonphog": "keys_neonphog",
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
         "nixos-anywhere": "nixos-anywhere",
