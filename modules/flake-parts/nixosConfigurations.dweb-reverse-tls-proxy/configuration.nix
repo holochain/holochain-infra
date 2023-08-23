@@ -173,6 +173,9 @@ in {
 
     certs."${fqdn2domain}" = {
       domain = "*.${fqdn2domain}";
+      extraDomainNames = [
+        "*.cachix.${fqdn2domain}"
+      ];
       dnsProvider = "rfc2136";
       credentialsFile = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
       # We don't need to wait for propagation since this is a local DNS server
@@ -244,5 +247,25 @@ in {
         }
       '';
     };
+
+    # stub for redirecting the holochain-ci cachix to a DNS we're in control of.
+    # the use-case is that we can now override this DNS at local events and insert a transparent nix cache
+    "cachix.${fqdn2domain}:443" = {
+      useACMEHost = fqdn2domain;
+      extraConfig = ''
+        respond /api/v1/cache/holochain-ci `{"githubUsername":"","isPublic":true,"name":"holochain-ci","permission":"Read","preferredCompressionMethod":"ZSTD","publicSigningKeys":["holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="],"uri":"https://holochain-ci.cachix.infra.holochain.org"}`
+
+        redir / https://cachix.org{uri}
+      '';
+    };
+
+    "holochain-ci.cachix.${fqdn2domain}:443" = {
+      useACMEHost = fqdn2domain;
+      extraConfig = ''
+        redir https://holochain-ci.cachix.org{uri}
+        # reverse_proxy https://holochain-ci.cachix.org
+      '';
+    };
+
   };
 }
