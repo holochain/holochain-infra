@@ -40,10 +40,11 @@
     #   url = "https://github.com/maackle.keys";
     #   flake = false;
     # };
-    keys_neonphog = {
-      url = "https://github.com/neonphog.keys";
-      flake = false;
-    };
+    # hash mismatch
+    # keys_neonphog = {
+    #   url = "https://github.com/neonphog.keys";
+    #   flake = false;
+    # };
     # TODO: re-enable once the change is verified
     # keys_thedavidmeister = {
     #   url = "https://github.com/thedavidmeister.keys";
