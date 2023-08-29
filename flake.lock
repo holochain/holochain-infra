@@ -478,11 +478,11 @@
     },
     "nixpkgsGithubActionRunners": {
       "locked": {
-        "lastModified": 1689850295,
-        "narHash": "sha256-fUYf6WdQlhd2H+3aR8jST5dhFH1d0eE22aes8fNIfyk=",
+        "lastModified": 1693158576,
+        "narHash": "sha256-aRTTXkYvhXosGx535iAFUaoFboUrZSYb1Ooih/auGp0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5df4d78d54f7a34e9ea1f84a22b4fd9baebc68d0",
+        "rev": "a999c1cc0c9eb2095729d5aa03e0d8f7ed256780",
         "type": "github"
       },
       "original": {
