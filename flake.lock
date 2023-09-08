@@ -29,16 +29,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1677745326,
-        "narHash": "sha256-IoA8dUObRmYTHCadc/RxasKzYkrb4rVBtGWQoOMHm2k=",
+        "lastModified": 1692613703,
+        "narHash": "sha256-ByFRYQ8J4YSeAU6N0gUc5nmIjAGoiDU+jMUL73Ns0ZU=",
         "owner": "steveeJ-forks",
         "repo": "nix-darwin",
-        "rev": "7891240728852f1a728b082bee7a5cda6bfdda02",
+        "rev": "72d647c8bda6d8d8a88ba2b63b56ce4e0be57ea7",
         "type": "github"
       },
       "original": {
         "owner": "steveeJ-forks",
-        "ref": "pr_gc_interval",
+        "ref": "fork-fix-launchd-calendar-interval",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -478,11 +478,11 @@
     },
     "nixpkgsGithubActionRunners": {
       "locked": {
-        "lastModified": 1689850295,
-        "narHash": "sha256-fUYf6WdQlhd2H+3aR8jST5dhFH1d0eE22aes8fNIfyk=",
+        "lastModified": 1693158576,
+        "narHash": "sha256-aRTTXkYvhXosGx535iAFUaoFboUrZSYb1Ooih/auGp0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5df4d78d54f7a34e9ea1f84a22b4fd9baebc68d0",
+        "rev": "a999c1cc0c9eb2095729d5aa03e0d8f7ed256780",
         "type": "github"
       },
       "original": {
