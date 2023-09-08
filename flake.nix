@@ -5,6 +5,7 @@
     nixpkgs = {url = "github:nixos/nixpkgs/release-23.05";};
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -147,7 +148,7 @@
           };
 
         packages = {
-          nomad = inputs'.nixpkgsUnstable.legacyPackages.nomad_1_6;
+          nomad = inputs'.nixpkgsMaster.legacyPackages.nomad_1_6;
         };
       };
       flake = {
