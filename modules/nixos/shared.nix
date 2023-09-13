@@ -69,4 +69,12 @@
     ])
     ++ [
     ];
+
+  # fix for https://github.com/nix-community/home-manager/issues/4026
+  users.users."${config.deployUser}".home =
+    if pkgs.stdenvNoCC.isDarwin
+    then "/Users/${config.deployUser}"
+    else if config.deployUser == "root"
+    then "/root"
+    else "/home/${config.deployUser}";
 }
