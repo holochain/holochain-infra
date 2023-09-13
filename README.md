@@ -72,6 +72,17 @@ notice apps prefixed with `deploy-`
 nix run .#deploy-{hostname}
 ```
 
+### Deploy to all hosts
+
+```
+nix run .\#deploy-linux-builder-01
+nix run .\#deploy-dweb-reverse-tls-proxy
+nix run .\#deploy-macos-01
+nix run .\#deploy-macos-02
+nix run .\#deploy-macos-03
+nix run .\#deploy-macos-04
+```
+
 ### Update dependencies (nixpkgs version)
 
 ```
