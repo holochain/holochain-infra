@@ -5,7 +5,22 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  mkPopulateCacheSnippet = {arch}: ''
+    nix build --refresh --keep-going -j0 \
+      --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
+      github:holochain/holochain#devShells.${arch}.holonix
+
+    nix build --refresh --keep-going -j0 \
+      github:holochain/holochain#packages.${arch}.hc-scaffold
+
+    nix build --refresh --keep-going -j0 \
+      --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
+      github:holochain/holochain#devShells.${arch}.holonix
+  '';
+
+  storeDumpPath = "/nix/.rw-store/db.dump";
+in {
   imports = [
     self.nixosModules.holo-users
 
@@ -22,39 +37,74 @@
   services.getty.autologinUser = "root";
   services.openssh.enable = true;
 
-  systemd.services.download-holonix = {
+  systemd.services.populate-cache = {
     wantedBy = ["multi-user.target"];
+    partOf = ["nix-cache.target"];
+    requires = ["nix-store-load-db.service"];
     after = ["network.target"];
-    path = [pkgs.coreutils pkgs.nix pkgs.cacert pkgs.iputils];
-    description = "download holonix into the local store";
+    path = [pkgs.coreutils pkgs.nix pkgs.cacert pkgs.iputils pkgs.gitFull];
+    description = "populating nix cache";
     serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "download-holonix" ''
+      Type = "simple";
+    };
+
+    script =
+      ''
         echo waiting for WAN connectivity..
         while true; do
           ping -c1 -w1 1.1.1.1 && {
-            echo connected, continuing to download holonix
+            echo connected, continuing to populate cache
             break
           }
           sleep 1
         done
 
-        nix build --keep-going -j0 \
-          github:holochain/holochain#devShells.x86_64-linux.holonix \
-          github:holochain/holochain#devShells.x86_64-darwin.holonix \
-          github:holochain/holochain#devShells.aarch64-darwin.holonix \
-          --override-input versions 'github:holochain/holochain?dir=versions/0_1'
+        while true;
+          do
+      ''
+      + mkPopulateCacheSnippet {arch = "x86_64-linux";}
+      + mkPopulateCacheSnippet {arch = "x86_64-darwin";}
+      + mkPopulateCacheSnippet {arch = "aarch64-darwin";}
+      + ''
+          sleep 60
+        done
+      '';
+  };
 
-        nix build --keep-going -j0 \
-          github:holochain/holochain#packages.x86_64-linux.hc-scaffold \
-          github:holochain/holochain#packages.x86_64-darwin.hc-scaffold \
-          github:holochain/holochain#packages.aarch64-darwin.hc-scaffold
+  # due to a limitation in microvm.nix we manually dump and load the nix-store db.
+  # if we don't do this the store paths will be forgotten.
+  systemd.services.nix-store-load-db = {
+    wantedBy = ["multi-user.target"];
+    before = ["network.target"];
+    path = [pkgs.nix];
+    serviceConfig = {
+      Type = "oneshot";
+    };
+    script = ''
+      if [[ -f ${storeDumpPath} ]]; then
+        nix-store --load-db < ${storeDumpPath}
+        nix-store --verify --repair
+      else
+        echo WARNING: could not find db.dump
+      fi
+    '';
+  };
 
-        # nix build --keep-going -j0 \
-        #   github:holochain/holochain#devShells.x86_64-linux.holonix \
-        #   github:holochain/holochain#devShells.x86_64-darwin.holonix \
-        #   github:holochain/holochain#devShells.aarch64-darwin.holonix \
-        #   --override-input versions 'github:holochain/holochain?dir=versions/0_2'
+  systemd.services.nix-store-dump-db = {
+    wantedBy = ["multi-user.target"];
+    path = [pkgs.nix];
+    unitConfig.RequiresMountsFor = ["/nix/.rw-store"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = "yes";
+      ExecStop = pkgs.writeShellScript "nix-store-dump-db" ''
+        set -xe
+
+        echo >> ${storeDumpPath}.for.fun
+
+        nix-store --verify --repair
+        nix-store --dump-db > ${storeDumpPath}.new
+        mv --backup=numbered ${storeDumpPath}{.new,}
       '';
     };
   };
