@@ -1,9 +1,10 @@
 # Nix Cache MicroVM
 
 This machine can be used to set up a holochain nix cache for local networks.
-once booted the cache will be continously updated.
+Once booted the cache will be continously updated.
 
 The current plan is to use one signing key per event.
+In this document all examples are given for the _ams2023sep_ event (Amsterdam September 2023 Hackathon).
 
 ## Requirements
 
@@ -23,8 +24,6 @@ nix key convert-secret-to-public < secrets/events-nix-cache/harmonia.secret > se
 TODO: document how to add the key to SOPS
 
 ### DNS
-In this document all examples are given for the _ams2023sep_ event (Amsterdam September 2023 Hackathon).
-
 We rely on a public DNS server to point to local IP addresses which needs to be configured once the IP of the machine running the VM is known.
 For this purpose we have a DNS that we can add subdomains to. It's configured via the [../nixosConfigurations.dweb-reverse-tls-proxy/configuration.nix](../nixosConfigurations.dweb-reverse-tls-proxy/configuration.nix)
 
