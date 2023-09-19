@@ -19,10 +19,17 @@ in {
   networking.hostName = name;
   networking.firewall.enable = false;
 
-  services.harmonia.enable = true;
-  services.harmonia.settings.priority = 29;
+  services.harmonia = {
+    enable = true;
+    settings.priority = 29;
+    signKeyPath = "/nix/.rw-store/harmonia.secret";
+  };
   services.getty.autologinUser = "root";
   services.openssh.enable = true;
+
+  users.extraUsers.root.openssh.authorizedKeys.keys = [
+    # "ssh-rsa AAAAB3NzaC1yc2etc/etc/etcjwrsh8e596z6J0l7 example@host"
+  ];
 
   systemd.services.populate-cache = {
     wantedBy = ["multi-user.target"];
@@ -69,7 +76,7 @@ in {
       + mkPopulateCacheSnippet {arch = "x86_64-darwin";}
       + mkPopulateCacheSnippet {arch = "aarch64-darwin";}
       + ''
-          sleep 60
+          sleep 360
         done
       '';
   };

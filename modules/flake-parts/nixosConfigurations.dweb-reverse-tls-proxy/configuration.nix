@@ -178,9 +178,10 @@ in {
       ns1            A             ${ipv4}
       ${fqdn2domain}.       A             ${ipv4}
 
-      ams2023sep.events.${fqdn2domain}.     A 127.0.0.1
-
       *.${fqdn2domain}.     CNAME         ${fqdn2domain}.
+
+      ams2023sep.${fqdn2domain}.     A 127.0.0.1
+      ams2023sep.events.${fqdn2domain}.     A 127.0.0.1
     '';
   };
 

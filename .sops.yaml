@@ -37,3 +37,8 @@ creation_rules:
     key_groups:
     - pgp:
       - *steveej
+  - path_regex: ^secrets/events-nix-cache/.+$
+    key_groups:
+    - pgp:
+      - *steveej
+

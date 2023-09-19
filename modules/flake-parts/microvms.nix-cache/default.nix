@@ -57,7 +57,7 @@ in {
           #   size = 1024 * 8;
           # }
           {
-            image = "nix-store-overlay.img";
+            image = ".storage/nix-store-overlay.img";
             mountPoint = config.microvm.writableStoreOverlay;
             size = 1024 * 100;
             fsType = "ext4";
