@@ -132,7 +132,7 @@ in {
     mode = "0644";
     text = ''
       $ORIGIN .
-      $TTL 86400      ; 1 day
+      $TTL 60 ; 1 minute
       ${fqdn2domain} IN SOA ns1.${fqdn2domain}. admin.holochain.org. (
                                         2001062504 ; serial
                                         21600      ; refresh (6 hours)
@@ -145,6 +145,9 @@ in {
       $ORIGIN ${fqdn2domain}.
       ns1            A             ${ipv4}
       ${fqdn2domain}.       A             ${ipv4}
+
+      ams2023sep.events.${fqdn2domain}.     A 127.0.0.1
+
       *.${fqdn2domain}.     CNAME         ${fqdn2domain}.
     '';
   };
@@ -266,6 +269,5 @@ in {
         # reverse_proxy https://holochain-ci.cachix.org
       '';
     };
-
   };
 }
