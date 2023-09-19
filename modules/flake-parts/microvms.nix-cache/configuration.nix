@@ -6,19 +6,6 @@
   pkgs,
   ...
 }: let
-  mkPopulateCacheSnippet = {arch}: ''
-    nix build --refresh --keep-going -j0 \
-      --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
-      github:holochain/holochain#devShells.${arch}.holonix
-
-    nix build --refresh --keep-going -j0 \
-      github:holochain/holochain#packages.${arch}.hc-scaffold
-
-    nix build --refresh --keep-going -j0 \
-      --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
-      github:holochain/holochain#devShells.${arch}.holonix
-  '';
-
   storeDumpPath = "/nix/.rw-store/db.dump";
 in {
   imports = [
@@ -48,7 +35,20 @@ in {
       Type = "simple";
     };
 
-    script =
+    script = let
+      mkPopulateCacheSnippet = {arch}: ''
+        time nix build -L --refresh --keep-going -j0 \
+          --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
+          github:holochain/holochain#devShells.${arch}.holonix
+
+        time tnix build -L --refresh --keep-going -j0 \
+          github:holochain/holochain#packages.${arch}.hc-scaffold
+
+        time nix build -L --refresh --keep-going -j0 \
+          --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
+          github:holochain/holochain#devShells.${arch}.holonix
+      '';
+    in
       ''
         echo waiting for WAN connectivity..
         while true; do
@@ -82,7 +82,9 @@ in {
       Type = "oneshot";
     };
     script = ''
+      set -x
       if [[ -f ${storeDumpPath} ]]; then
+        set -e
         nix-store --load-db < ${storeDumpPath}
         nix-store --verify --repair
       else
@@ -93,7 +95,7 @@ in {
 
   systemd.services.nix-store-dump-db = {
     wantedBy = ["multi-user.target"];
-    path = [pkgs.nix];
+    path = [pkgs.nix pkgs.coreutils];
     unitConfig.RequiresMountsFor = ["/nix/.rw-store"];
     serviceConfig = {
       Type = "oneshot";
@@ -101,7 +103,7 @@ in {
       ExecStop = pkgs.writeShellScript "nix-store-dump-db" ''
         set -xe
 
-        echo >> ${storeDumpPath}.for.fun
+        sync
 
         nix-store --verify --repair
         nix-store --dump-db > ${storeDumpPath}.new
