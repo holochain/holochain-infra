@@ -41,7 +41,7 @@ in {
           --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
           github:holochain/holochain#devShells.${arch}.holonix
 
-        time tnix build -L --refresh --keep-going -j0 \
+        time nix build -L --refresh --keep-going -j0 \
           github:holochain/holochain#packages.${arch}.hc-scaffold
 
         time nix build -L --refresh --keep-going -j0 \
