@@ -53,7 +53,7 @@ Either in the `flake.nix` as an input like
 or via the [machine's config file](./configuration.nix_) to the list at `users.extraUsers.root.openssh.authorizedKeys.keys`.
 
 
-## Server set up
+## Server setup on a developer machine
 
 The machine will allocate 100GB disk space on first start.
 It's currently required to manually put in the signing key.
@@ -78,6 +78,8 @@ nix develop --command bash -c "sops -d secrets/events-nix-cache.yml | yq '.ams20
 
 ### Watch cache population progress
 
+This command works best via SSH because of the limitation of the VMs terminal. See the previous section for the SSH connection command.
+
 ```
 journalctl -f -b0 -n100 --unit populate-cache
 ```
@@ -92,6 +94,6 @@ nix build --refresh -vL -j0 \
   github:holochain/holochain#devShells.x86_64-linux.holonix
 ```
 
-## Client set up
+## Client setup
 
 TODO
