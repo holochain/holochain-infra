@@ -9,12 +9,18 @@ The current plan is to use one signing key per event.
 
 ### Signing Keys
 
-TODO: this example is not accurate as it does not store the key in SOPS.
+We rely on signing the binary packages for security. The existing signing keys are amanaged via the [.sops.yaml](../../.sops.yaml).
+Check in with an admin to get your key added.
+
+
+#### Generating a new signing key
 
 ```
 nix key generate-secret --key-name ams2023sep.events.infra.holochain.org-1 > secrets/events-nix-cache/ams2023sep.secret
 nix key convert-secret-to-public < secrets/events-nix-cache/harmonia.secret > secrets/events-nix-cache/ams2023sep.pub
 ```
+
+TODO: document how to add the key to SOPS
 
 ### DNS
 In this document all examples are given for the _ams2023sep_ event (Amsterdam September 2023 Hackathon).
@@ -34,11 +40,6 @@ Once the entry is made re-deploy the server:
 nix run .#deploy-dweb-reverse-tls-proxy
 ```
 
-## Server set up
-
-The machine will allocate 100GB disk space on first start.
-It's currently required to manually put in the signing key.
-
 ### Ensure your SSH key is configured
 
 Either in the `flake.nix` as an input like
@@ -52,10 +53,12 @@ Either in the `flake.nix` as an input like
 
 or via the [machine's config file](./configuration.nix_) to the list at `users.extraUsers.root.openssh.authorizedKeys.keys`.
 
-### Ensure you have access to the signing key
 
-We rely on signing the binary packages for security. The signing key is managed via the [.sops.yaml](../../.sops.yaml).
-Check in with an admin to get your key added.
+## Server set up
+
+The machine will allocate 100GB disk space on first start.
+It's currently required to manually put in the signing key.
+
 
 ### Starting the VM
 
