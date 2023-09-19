@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs = {url = "github:nixos/nixpkgs/release-23.05";};
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -40,7 +42,7 @@
     #   url = "https://github.com/maackle.keys";
     #   flake = false;
     # };
-
+    
     # hash mismatch 20230821
     # keys_neonphog = {
     #   url = "https://github.com/neonphog.keys";
@@ -70,7 +72,11 @@
     cachix_for_watch_store.url = github:cachix/cachix/v1.5;
   };
 
-  outputs = inputs @ {flake-parts, ...}:
+  outputs = inputs @ {
+    self,
+    flake-parts,
+    ...
+  }:
     flake-parts.lib.mkFlake {inherit inputs;} {
       # auto import all nix code from `./modules`
       imports =
@@ -89,16 +95,63 @@
         # Per-system attributes can be defined here. The self' and inputs'
         # module parameters provide easy access to attributes of the same
         # system.
-        devShells.default = pkgs.mkShell {
-          packages = [
-            inputs'.nixos-anywhere.packages.default
+        devShells.default = let
+          nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
+          nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
+          nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
+        in
+          pkgs.mkShell {
+            packages = [
+              pkgs.yq-go
 
-            inputs'.sops-nix.packages.default
-            pkgs.ssh-to-age
-            pkgs.age
-            pkgs.age-plugin-yubikey
-            pkgs.sops
-          ];
+              inputs'.nixos-anywhere.packages.default
+
+              inputs'.sops-nix.packages.default
+              pkgs.ssh-to-age
+              pkgs.age
+              pkgs.age-plugin-yubikey
+              pkgs.sops
+
+              self'.packages.nomad
+
+              (pkgs.writeShellScriptBin "nomad-ui-proxy" (let
+                caddyfile = pkgs.writeText "caddyfile" ''
+                  {
+                    auto_https off
+                    http_port 2016
+                  }
+
+                  localhost:2016 {
+                    reverse_proxy ${nomadAddr} {
+                      transport http {
+                        tls_trusted_ca_certs ${nomadCaCert}
+                        tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                      }
+                    }
+                  }
+                '';
+              in ''
+                ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
+              ''))
+              pkgs.caddy
+            ];
+
+            NOMAD_ADDR = nomadAddr;
+            NOMAD_CACERT = nomadCaCert;
+            NOMAD_CLIENT_CERT = nomadClientCert;
+
+            shellHook = ''
+              set -x
+              REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
+              mkdir -p ''${REPO_SECRETS_DIR}
+              chmod 700 ''${REPO_SECRETS_DIR}
+              export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
+              sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
+            '';
+          };
+
+        packages = {
+          nomad = inputs'.nixpkgsMaster.legacyPackages.nomad_1_6;
         };
       };
       flake = {
