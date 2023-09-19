@@ -38,15 +38,17 @@ in {
     script = let
       mkPopulateCacheSnippet = {arch}: ''
         time nix build -L --refresh --keep-going -j0 \
-          --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
-          github:holochain/holochain#devShells.${arch}.holonix
+          github:holochain/holochain#packages.${arch}.hc-scaffold
 
         time nix build -L --refresh --keep-going -j0 \
+          --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
+          github:holochain/holochain#devShells.${arch}.holonix \
           github:holochain/holochain#packages.${arch}.hc-scaffold
 
         time nix build -L --refresh --keep-going -j0 \
           --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
-          github:holochain/holochain#devShells.${arch}.holonix
+          github:holochain/holochain#devShells.${arch}.holonix \
+          github:holochain/holochain#packages.${arch}.hc-scaffold
       '';
     in
       ''
@@ -61,7 +63,7 @@ in {
 
         while true;
           do
-          set -xeE
+          set -x
       ''
       + mkPopulateCacheSnippet {arch = "x86_64-linux";}
       + mkPopulateCacheSnippet {arch = "x86_64-darwin";}
