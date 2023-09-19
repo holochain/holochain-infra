@@ -1,14 +1,16 @@
 # Nix Cache VM
 
-## Execution
+## Server set up
 
-Run it with
+### Starting the VM
 
 ```
 nix run .#nixosConfigurations.vm-nixcache.config.microvm.declaredRunner
 ```
 
-Connect to SSH
+This will yield a root shell inside the VM.
+
+### Connect via SSH
 
 ```
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o CheckHostIP=no root@localhost -p 2222
@@ -17,7 +19,7 @@ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o CheckHostIP=n
 Watch cache population progress
 
 ```
-journalctl -f -b0 -n100
+journalctl -f -b0 -n100 --unit populate-cache
 ```
 
 ## Client set up

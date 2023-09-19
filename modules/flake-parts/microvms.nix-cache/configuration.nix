@@ -61,7 +61,7 @@ in {
 
         while true;
           do
-          set -x
+          set -xeE
       ''
       + mkPopulateCacheSnippet {arch = "x86_64-linux";}
       + mkPopulateCacheSnippet {arch = "x86_64-darwin";}
