@@ -7,6 +7,7 @@
   ...
 }: let
   storeDumpPath = "/nix/.rw-store/db.dump";
+  svcName = "populate-cache";
 in {
   imports = [
     self.nixosModules.holo-users
@@ -31,7 +32,12 @@ in {
     # "ssh-rsa AAAAB3NzaC1yc2etc/etc/etcjwrsh8e596z6J0l7 example@host"
   ];
 
-  systemd.services.populate-cache = {
+  environment.systemPackages = [
+    pkgs.htop
+    pkgs.glances
+  ];
+
+  systemd.services.${svcName} = {
     wantedBy = ["multi-user.target"];
     partOf = ["nix-cache.target"];
     requires = ["nix-store-load-db.service"];
@@ -40,19 +46,26 @@ in {
     description = "populating nix cache";
     serviceConfig = {
       Type = "simple";
+      DynamicUser = true;
+      User = svcName;
+      WorkingDirectory = "%C/${svcName}";
+      CacheDirectory = svcName;
     };
 
     script = let
       mkPopulateCacheSnippet = {arch}: ''
         time nix build -L --refresh --keep-going -j0 \
+          --out-link result-${arch}-0 \
           github:holochain/holochain#packages.${arch}.hc-scaffold
 
         time nix build -L --refresh --keep-going -j0 \
+          --out-link result-${arch}-1 \
           --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
           github:holochain/holochain#devShells.${arch}.holonix \
           github:holochain/holochain#packages.${arch}.hc-scaffold
 
         time nix build -L --refresh --keep-going -j0 \
+          --out-link result-${arch}-2 \
           --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
           github:holochain/holochain#devShells.${arch}.holonix \
           github:holochain/holochain#packages.${arch}.hc-scaffold
@@ -62,20 +75,33 @@ in {
         echo waiting for WAN connectivity..
         while true; do
           ping -c1 -w1 1.1.1.1 && {
-            echo connected, continuing to populate cache
+            echo connected, poceeding to populate cache
             break
           }
           sleep 1
         done
 
+        set -x
+        export HOME=$(pwd)
+
         while true;
           do
-          set -x
+
+          # we keep the previous result links around so that garbage-collection doesn't clean up their data
+          mkdir -p previous_results
+          find -type l -name "result*" -exec mv {} previous_results/ \;
+
+          # don't bail on failures, keep going with best effort
+          set +e
       ''
       + mkPopulateCacheSnippet {arch = "x86_64-linux";}
       + mkPopulateCacheSnippet {arch = "x86_64-darwin";}
       + mkPopulateCacheSnippet {arch = "aarch64-darwin";}
       + ''
+          set -e
+
+          # it's okay to garbage-collect the previous results now
+          rm -rf previous_results
           sleep 360
         done
       '';

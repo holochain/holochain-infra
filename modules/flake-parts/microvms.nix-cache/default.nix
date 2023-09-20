@@ -19,8 +19,8 @@ in {
         pkgs,
         ...
       }: {
-        microvm.mem = 4096;
-        microvm.vcpu = 2;
+        microvm.mem = 1024 * 8;
+        microvm.vcpu = 4;
 
         microvm.interfaces = [
           {
