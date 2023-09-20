@@ -164,7 +164,7 @@ in {
     mode = "0644";
     text = ''
       $ORIGIN .
-      $TTL 86400      ; 1 day
+      $TTL 60 ; 1 minute
       ${fqdn2domain} IN SOA ns1.${fqdn2domain}. admin.holochain.org. (
                                         2001062504 ; serial
                                         21600      ; refresh (6 hours)
@@ -177,7 +177,10 @@ in {
       $ORIGIN ${fqdn2domain}.
       ns1            A             ${ipv4}
       ${fqdn2domain}.       A             ${ipv4}
+
       *.${fqdn2domain}.     CNAME         ${fqdn2domain}.
+
+      ams2023sep.events.${fqdn2domain}.     A 127.0.0.1
     '';
   };
 
@@ -279,7 +282,7 @@ in {
         }
       '';
     };
-    
+
     # stub for redirecting the holochain-ci cachix to a DNS we're in control of.
     # the use-case is that we can now override this DNS at local events and insert a transparent nix cache
     "cachix.${fqdn2domain}:443" = {
@@ -298,17 +301,6 @@ in {
         # reverse_proxy https://holochain-ci.cachix.org
       '';
     };
-    
-    # "nomad.${fqdn2domain}:443" = {
-    #   useACMEHost = fqdn2domain;
-    #   extraConfig = ''
-    #     reverse_proxy http://127.0.0.1:4646 {
-    #       transport http {
-    #         tls_insecure_skip_verify
-    #       }
-    #     }
-    #   '';
-    # };
   };
 
   sops.secrets.global-server-nomad-key = {

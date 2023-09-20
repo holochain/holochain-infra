@@ -16,6 +16,9 @@
     nixos-anywhere.url = "github:numtide/nixos-anywhere";
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
 
+    microvm.url = "github:astro/microvm.nix";
+    microvm.inputs.nixpkgs.follows = "nixpkgs";
+
     # nix darwin
     darwin.url = "github:steveeJ-forks/nix-darwin/fork-fix-launchd-calendar-interval";
 
