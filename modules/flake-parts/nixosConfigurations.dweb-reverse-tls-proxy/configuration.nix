@@ -175,12 +175,14 @@ in {
 
                               NS      ns1.${fqdn2domain}.
       $ORIGIN ${fqdn2domain}.
-      ns1            A             ${ipv4}
-      ${fqdn2domain}.       A             ${ipv4}
+      ns1                                      A       ${ipv4}
+      ${fqdn2domain}.                          A       ${ipv4}
 
-      *.${fqdn2domain}.     CNAME         ${fqdn2domain}.
+      *.${fqdn2domain}.                        CNAME   ${fqdn2domain}.
 
-      ams2023sep.events.${fqdn2domain}.     A 127.0.0.1
+      testing.events.${fqdn2domain}.           A       127.0.0.1
+      hackathons.events.${fqdn2domain}.        A       10.1.3.37
+      amsterdam2023.events.${fqdn2domain}.     A       10.1.3.187
     '';
   };
 
