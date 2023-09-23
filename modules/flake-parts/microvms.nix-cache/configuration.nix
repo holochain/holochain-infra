@@ -68,14 +68,23 @@ in {
           --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
           github:holochain/holochain#packages.${arch}.hc-scaffold
 
+        time nix build -L --refresh --keep-going -j0 \
+          --out-link result-${arch}-3 \
+          --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
+          github:holochain/holochain#packages.${arch}.hc-scaffold
+
 
         time nix develop --build -L --refresh --keep-going -j0 \
-          --profile result-${arch}-3 \
+          --profile result-${arch}-4 \
           --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
           github:holochain/holochain#devShells.${arch}.holonix
         time nix develop --build -L --refresh --keep-going -j0 \
-          --profile result-${arch}-4 \
+          --profile result-${arch}-5 \
           --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
+          github:holochain/holochain#devShells.${arch}.holonix
+        time nix develop --build -L --refresh --keep-going -j0 \
+          --profile result-${arch}-6 \
+          --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
           github:holochain/holochain#devShells.${arch}.holonix
       '';
     in
