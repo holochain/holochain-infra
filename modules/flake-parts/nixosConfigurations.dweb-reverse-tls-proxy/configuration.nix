@@ -182,6 +182,7 @@ in {
 
       testing.events.${fqdn2domain}.           A       127.0.0.1
       hackathons.events.${fqdn2domain}.        A       10.1.3.37
+      hackathon.events.${fqdn2domain}.         A       10.1.3.37
       amsterdam2023.events.${fqdn2domain}.     A       10.1.3.187
     '';
   };

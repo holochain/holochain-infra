@@ -37,6 +37,10 @@ Once the entry is made re-deploy the server:
 
 ```
 nix run .#deploy-dweb-reverse-tls-proxy
+
+# TODO: understand why this doesn't happen automatically
+# reload the bind service
+nix run .#ssh-dweb-reverse-tls-proxy "systemctl restart bind"
 ```
 
 ### Ensure your SSH key is configured
