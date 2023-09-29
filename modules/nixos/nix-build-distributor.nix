@@ -7,13 +7,14 @@
 
   nix.distributedBuilds = true;
   nix.buildMachines = [
-    # macos-01
+    # macos-01 - system integrity protection enabled
+    # currently broken and needs to be reinstalled
     {
       hostName = "167.235.13.208";
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 4;
+      maxJobs = 0;
       supportedFeatures = config.nix.settings.experimental-features;
     }
     # macos-02
@@ -26,7 +27,7 @@
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
-    # macos-03
+    # macos-03 - system integrity protection enabled
     {
       hostName = "142.132.140.224";
       sshUser = "builder";
@@ -36,7 +37,7 @@
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
-    # macos-04
+    # macos-04 - system integrity protection disabled
     {
       hostName = "167.235.38.111";
       sshUser = "builder";
@@ -45,8 +46,15 @@
       maxJobs = 0;
       supportedFeatures = config.nix.settings.experimental-features;
     }
+    {
+      hostName = "167.235.38.111";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "aarch64-darwin";
+      maxJobs = 4;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
 
-    # currently not required as this machine runs the distributor
     # {
     #   hostName = "95.217.193.35";
     #   sshUser = "builder";
