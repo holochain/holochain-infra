@@ -8,12 +8,13 @@
   nix.distributedBuilds = true;
   nix.buildMachines = [
     # macos-01
+    # currently broken and needs to be reinstalled
     {
       hostName = "167.235.13.208";
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 4;
+      maxJobs = 0;
       supportedFeatures = config.nix.settings.experimental-features;
     }
     # macos-02
@@ -42,11 +43,18 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      maxJobs = 0;
+      maxJobs = 2;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
+    {
+      hostName = "167.235.38.111";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "aarch64-darwin";
+      maxJobs = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
-    # currently not required as this machine runs the distributor
     # {
     #   hostName = "95.217.193.35";
     #   sshUser = "builder";
