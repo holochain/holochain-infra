@@ -44,4 +44,18 @@
       launchctl start org.nixos.nix-daemon
     fi
   '';
+
+  launchd.daemons.oah-gc = {
+    # TODO: after observing this for a while, let it remove some files
+    script = ''
+      while true; do
+        sudo ${pkgs.tree}/bin/tree --du -h /var/db/oah | ${pkgs.coreutils}/bin/tee /var/logs/oah-gc.log
+        sleep 60
+      done
+    '';
+
+    serviceConfig.RunAtLoad = true;
+    # serviceConfig.StartCalendarInterval = {Minute = 30;};
+    # serviceConfig.UserName = cfg.user;
+  };
 }
