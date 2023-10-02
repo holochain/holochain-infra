@@ -43,7 +43,7 @@
 
     # macos-04
     # - m1 cpu
-    # - system integrity protection enabled
+    # - system integrity protection disabled
     {
       hostName = "167.235.38.111";
       sshUser = "builder";
