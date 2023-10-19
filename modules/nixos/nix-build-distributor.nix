@@ -17,14 +17,14 @@
       supportedFeatures = config.nix.settings.experimental-features;
     }
     # macos-02
-    {
-      hostName = "hydra-minion-2.holo.host";
-      sshUser = "builder";
-      protocol = "ssh-ng";
-      system = "x86_64-darwin";
-      maxJobs = 4;
-      supportedFeatures = config.nix.settings.experimental-features;
-    }
+    # {
+    #   hostName = "hydra-minion-2.holo.host";
+    #   sshUser = "builder";
+    #   protocol = "ssh-ng";
+    #   system = "x86_64-darwin";
+    #   maxJobs = 4;
+    #   supportedFeatures = config.nix.settings.experimental-features;
+    # }
 
     # macos-03
     {
