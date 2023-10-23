@@ -1,24 +1,32 @@
-
 Commands that were performed on the machine for a successful deployment:
 
-The determinate systems nix installer is used, see: https://github.com/DeterminateSystems/nix-installer
+### Prerequesites
+
+* SSH access
+    * System Preferences -> Sharing -> [x] Remote Login -> "Allow full disk access for remote users"
+* Change user password (via `passwd`) and user keychain password
+
+### Instructions
+
 
 Login to the remote host and execute the following commands to set up nix and prepare for deployment
 ```command
 # Set up passwordless sudo for the deploy user
 echo "%admin            ALL = (ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
+# The determinate systems nix installer is used, see: https://github.com/DeterminateSystems/nix-installer
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 
 printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
 sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 
+softwareupdate --install-rosetta --agree-to-license
+
+# rename the files that are going to be managed by Nix from here on:
 sudo mv /etc/nix/nix.conf{,.prev}
 sudo mv /etc/zshenv{,.prev}
 sudo mv /etc/zshrc{,.prev}
 sudo mv /etc/bashrc{,.prev}
-
-softwareupdate --install-rosetta --agree-to-license
 ```
 
 Create a flake module for the new host similar to the one under `modules/flake-parts/darwinConfigurations.macos-04`
