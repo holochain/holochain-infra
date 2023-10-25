@@ -281,6 +281,18 @@
         "url": "https://github.com/jost-s.keys"
       }
     },
+    "keys_maackle": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-6HCqVflUInLufn3YhwNDRtn3xAAYo1ZN2e9ayxPc/F4=",
+        "type": "file",
+        "url": "https://github.com/maackle.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/maackle.keys"
+      }
+    },
     "keys_steveej": {
       "flake": false,
       "locked": {
@@ -634,6 +646,7 @@
         "home-manager": "home-manager",
         "keys_artbrock": "keys_artbrock",
         "keys_jost-s": "keys_jost-s",
+        "keys_maackle": "keys_maackle",
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
         "microvm": "microvm",
