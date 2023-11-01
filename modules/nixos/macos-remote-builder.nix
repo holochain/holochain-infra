@@ -50,6 +50,7 @@
     script = ''
       while true; do
         sudo ${pkgs.tree}/bin/tree --du -h /var/db/oah | ${pkgs.coreutils}/bin/tee /var/logs/oah-gc.log
+        find /var/db/oah/ -atime +1d -exec rm -rf {} \;
         sleep 60
       done
     '';
