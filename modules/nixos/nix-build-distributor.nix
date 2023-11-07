@@ -53,9 +53,22 @@
       hostName = "167.235.38.111";
       sshUser = "builder";
       protocol = "ssh-ng";
+      system = "x86_64-darwin";
+      maxJobs = 3;
+      speedFactor = 1;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
+
+    # macos-05
+    # - m2 cpu
+    # - system integrity protection enabled?
+    {
+      hostName = "hydra-minion-3.holo.host";
+      sshUser = "builder";
+      protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 4;
-      speedFactor = 2;
+      maxJobs = 6;
+      speedFactor = 3;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 

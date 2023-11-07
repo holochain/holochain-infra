@@ -4,14 +4,12 @@
   lib,
   ...
 }: let
-  nixPackage = pkgs.nixVersions.nix_2_17;
-
 in {
   # Nix configuration shared between all hosts
 
   imports = [./holo-deploy.nix];
 
-  nix.package = nixPackage;
+  nix.package = lib.mkDefault pkgs.nixVersions.nix_2_17;
 
   nix.settings.extra-platforms =
     lib.mkIf pkgs.stdenv.isDarwin ["x86_64-darwin" "aarch64-darwin"];
@@ -54,7 +52,7 @@ in {
   # Issue: https://github.com/nix-community/home-manager/issues/1341
   environment.systemPackages =
     (with pkgs; [
-      nixPackage
+      config.nix.package
       gnugrep
       gnutar
       gzip
