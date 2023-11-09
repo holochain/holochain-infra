@@ -15,7 +15,8 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      maxJobs = 3;
+      # currently offline
+      maxJobs = 0;
       speedFactor = 1;
       supportedFeatures = config.nix.settings.experimental-features;
     }
@@ -54,7 +55,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      maxJobs = 3;
+      maxJobs = 0;
       speedFactor = 1;
       supportedFeatures = config.nix.settings.experimental-features;
     }
