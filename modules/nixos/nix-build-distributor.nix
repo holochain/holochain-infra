@@ -73,6 +73,18 @@
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
+    # macos-06
+    # - intel CPU
+    {
+      hostName = "208.52.154.135";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "x86_64-darwin";
+      speedFactor = 2;
+      maxJobs = 6;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
+
     # {
     #   hostName = "95.217.193.35";
     #   sshUser = "builder";
