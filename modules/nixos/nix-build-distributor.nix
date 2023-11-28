@@ -15,7 +15,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      # currently offline
+      # has a broken nix installation
       maxJobs = 0;
       speedFactor = 1;
       supportedFeatures = config.nix.settings.experimental-features;
@@ -41,7 +41,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 4;
+      maxJobs = 3;
       speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
@@ -54,9 +54,9 @@
       hostName = "167.235.38.111";
       sshUser = "builder";
       protocol = "ssh-ng";
-      system = "x86_64-darwin";
-      maxJobs = 0;
-      speedFactor = 1;
+      system = "aarch64-darwin";
+      maxJobs = 3;
+      speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
