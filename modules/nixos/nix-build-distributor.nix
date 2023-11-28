@@ -15,7 +15,8 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "x86_64-darwin";
-      maxJobs = 3;
+      # has a broken nix installation
+      maxJobs = 0;
       speedFactor = 1;
       supportedFeatures = config.nix.settings.experimental-features;
     }
@@ -40,7 +41,7 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 4;
+      maxJobs = 3;
       speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
@@ -53,9 +54,9 @@
       hostName = "167.235.38.111";
       sshUser = "builder";
       protocol = "ssh-ng";
-      system = "x86_64-darwin";
+      system = "aarch64-darwin";
       maxJobs = 3;
-      speedFactor = 1;
+      speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
@@ -69,6 +70,18 @@
       system = "aarch64-darwin";
       maxJobs = 6;
       speedFactor = 3;
+      supportedFeatures = config.nix.settings.experimental-features;
+    }
+
+    # macos-06
+    # - intel CPU
+    {
+      hostName = "208.52.154.135";
+      sshUser = "builder";
+      protocol = "ssh-ng";
+      system = "x86_64-darwin";
+      speedFactor = 2;
+      maxJobs = 6;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 

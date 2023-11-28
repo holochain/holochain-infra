@@ -58,5 +58,5 @@ Finalize the ssh authentication setup:
 
 Verify that the new remote builder works:
 ```command
-nix run .#ssh-linux-builder-01 "nix store ping --store 'ssh-ng://builder@IP_OF_NEW_BUILDER'"
+nix run .#ssh-linux-builder-01 "timeout 10s ssh -o StrictHostKeyChecking=accept-new builder@IP_OF_NEW_BUILDER; nix store ping --store 'ssh-ng://builder@IP_OF_NEW_BUILDER'"
 ```
