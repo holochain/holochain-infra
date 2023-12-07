@@ -8,6 +8,7 @@
   imports = [
     ./shared.nix
     ./shared-nix-settings.nix
+    ./shared-darwin.nix
   ];
 
   nix.settings.trusted-users = [
