@@ -19,6 +19,7 @@
 
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
+    ../../nixos/shared-linux.nix
   ];
 
   networking.hostName = "linux-builder-01"; # Define your hostname.

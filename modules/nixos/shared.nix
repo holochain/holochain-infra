@@ -2,12 +2,20 @@
   config,
   pkgs,
   lib,
+  system,
   ...
 }: let
 in {
   # Nix configuration shared between all hosts
 
-  imports = [./holo-deploy.nix];
+  imports = [
+    ./holo-deploy.nix
+  ]
+  # TODO: figure out why this results in infinite recursion
+  # ++ pkgs.stdenv.isLinux [
+  #   ./shared-linux.nix
+  # ]
+  ;
 
   nix.package = lib.mkDefault pkgs.nixVersions.nix_2_17;
 
@@ -32,7 +40,7 @@ in {
   nix.gc =
     {
       automatic = true;
-      options = lib.mkForce ''--max-freed "$((96* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
+      options = lib.mkForce ''--max-freed "$((128* 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
     }
     // lib.optionalAttrs pkgs.stdenv.isLinux (lib.mkForce {
       # run at all minutes that are a multiple of 7
@@ -80,4 +88,4 @@ in {
     else if config.deployUser == "root"
     then "/root"
     else "/home/${config.deployUser}";
-}
+} 
