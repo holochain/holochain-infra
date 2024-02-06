@@ -86,7 +86,7 @@
         map (m: "${./.}/modules/flake-parts/${m}")
         (builtins.attrNames (builtins.readDir ./modules/flake-parts));
 
-      systems = ["aarch64-darwin" "x86_64-darwin" "x86_64-linux"];
+      systems = ["aarch64-darwin" "x86_64-darwin" "x86_64-linux" "aarch64-linux"];
 
       perSystem = {
         config,
