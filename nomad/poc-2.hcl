@@ -1,21 +1,37 @@
 /*
-    poc-2: distributed holochain gossip test
+    poc-2: run a cargo test that has a server and a client role
 
-    - public reachable node runs the bootstrap and turn servers
-    - nat'ed conductors are configured to use these public services
-    - a simple happ generates data and ensures it is getting data back from others
+    - a public reachable node runs the server role
+    - defined number of nat'ed nodes run the client roles, getting the server's IP and port via environment variables
+
+    - improvement TODOs:
+        - add prestart tasks that only compile the binaries
+            - server
+            - clients
+        - start run the clients when the server is ready
 */
+
+variables {
+    GIT_URL = "https://github.com/steveej-forks/holochain.git"
+    GIT_BRANCH = "pr_distributed-test-poc"
+    agents = 5
+    agents_readiness_timeout_secs = 720
+}
 
 job "poc-2" {
     type = "batch"
 
-    group "servers" {
+    group "server" {
         network {
-            port "holochainBootstrap" {}
-            port "holochainSignal" {}
+            port "holochainTestRemoteV1" {}
         }
 
-        task "holochain-services" {
+        task "test-remotev1-distributed-server" {
+            env {
+                GIT_URL = "${var.GIT_URL}"
+                GIT_BRANCH = "${var.GIT_BRANCH}"
+            }
+
             constraint {
                 attribute = "${meta.features}"
                 operator = "set_contains"
@@ -24,125 +40,104 @@ job "poc-2" {
 
             service {
                 provider = "nomad"
-                name = "holochainBootstrap"
-                port = "holochainBootstrap"
+                name = "holochainTestRemoteV1"
+                port = "holochainTestRemoteV1"
+
+                // check {
+                //     name     = "remote_v1_server_up"
+                //     type     = "tcp"
+                //     port     = "holochainTestRemoteV1"
+                //     interval = "10s"
+                //     timeout  = "2s"
+                // }
             }
 
-            service {
-                provider = "nomad"
-                name = "holochainSignal"
-                port = "holochainSignal"
+            template {
+                data = file("nomad/poc-2/init.sh")
+                destination = "local/init.sh"
+                perms = "555"
             }
 
             driver = "raw_exec"
             config {
                 command = "/usr/bin/env"
-                args = ["bash", "-c", 
-                <<ENDOFSCRIPT
-                set -xe
-                env
+                args = ["bash", "-c",
+                    <<ENDOFSCRIPT
+                    set -xeu
 
-                # git ls-remote https://github.com/holochain/holochain.git --branch develop
+                    source local/init.sh
+                    env
 
-                nix shell -vL github:holochain/holochain#holochain \
-                    --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
-                    --override-input versions/holochain 'github:holochain/holochain/a585a619d68bd47d2e995a773cdf76dea08fdca3' \
-                    --command \
-                    hc-run-local-services \
-                    --help
+                    export TEST_SHARED_VALUES_REMOTEV1_ROLE="server"
+                    export TEST_SHARED_VALUES_REMOTEV1_URL="ws://${NOMAD_HOST_IP_holochainTestRemoteV1}:${NOMAD_HOST_PORT_holochainTestRemoteV1}"
 
-                export RUST_LOG=debug
-                nix shell -vL github:holochain/holochain#holochain \
-                    --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
-                    --override-input versions/holochain 'github:holochain/holochain/a585a619d68bd47d2e995a773cdf76dea08fdca3' \
-                    --command \
-                    hc-run-local-services \
-                        --bootstrap-interface 0.0.0.0 \
-                        --bootstrap-port ''${NOMAD_PORT_holochainBootstrap} \
-                        --signal-interfaces 0.0.0.0 \
-                        --signal-port ''${NOMAD_PORT_holochainSignal}
-                ENDOFSCRIPT
+                    nix develop -vL .#coreDev --command \
+                        cargo nextest run --locked -p holochain_test_utils --no-capture --features slow_tests --status-level=pass --retries=99999999 discovery_distributed
+                    ENDOFSCRIPT
                 ]
             }
         }
+
     }
 
+    group "clients" {
+        count = var.agents
 
+        restart {
+            attempts = 0
+            mode = "fail"
+        }
 
-    task "holochain-conductor" {
         constraint {
-            attribute = "${meta.features}"
-            operator = "set_contains"
-            value = "ipv4-nat,nix"
+            distinct_hosts = true
         }
 
-        template {
-            data = <<EOH
-                {{ range nomadService "holochain-boostrap" }}
-                BOOTSTRAP_HOST="{{ .Address }}"
-                BOOTSTRAP_PORT="{{ .Port }}"
-                {{ end }}
-                {{ range nomadService "holochain-signal" }}
-                SIGNAL_HOST="{{ .Address }}"
-                SIGNAL_PORT="{{ .Port }}"
-                {{ end }}
-                EOH
-            destination = "local/env.txt"
-            env         = true
-        }
+        task "test-remotev1-distributed-clients" {
+            constraint {
+                attribute = "${meta.features}"
+                operator = "set_contains"
+                value = "ipv4-nat,nix"
+            }
 
-        driver = "raw_exec"
-        config {
-            command = "/usr/bin/env"
-            args = ["bash", "-c", 
-                <<ENDOFSCRIPT
-                set -xe
-                nix shell -vL github:holochain/holochain#holochain \
-                    --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
-                    --override-input versions/holochain 'github:holochain/holochain/a585a619d68bd47d2e995a773cdf76dea08fdca3' \
-                    --command \
-                    holochain \
-                    --help
-                ENDOFSCRIPT
+            env {
+                GIT_URL = "${var.GIT_URL}"
+                GIT_BRANCH = "${var.GIT_BRANCH}"
+            }
 
-                <<ENDOFCFG
-                ---
-                environment_path: /path/to/env
-                signing_service_uri: ws://localhost:9001
-                encryption_service_uri: ws://localhost:9002
-                decryption_service_uri: ws://localhost:9003
+            template {
+                data = <<-EOH
+                    {{ range nomadService "holochainTestRemoteV1" }}
+                    TEST_SHARED_VALUES_REMOTEV1_ROLE="client"
+                    TEST_SHARED_VALUES_REMOTEV1_URL="ws://{{ .Address }}:{{ .Port }}"
+                    TEST_AGENT_READINESS_REQUIRED_AGENTS=${var.agents}
+                    TEST_AGENT_READINESS_TIMEOUT_SECS=${var.agents_readiness_timeout_secs}
+                    {{ end }}
+                    EOH
+                destination = "local/env.txt"
+                env         = true
+            }
 
-                keystore:
-                type: lair_server_in_proc
+            template {
+                data = file("nomad/poc-2/init.sh")
+                destination = "local/init.sh"
+                perms = "555"
+            }
 
-                dpki:
-                instance_id: some_id
-                init_params: some_params
+            driver = "raw_exec"
+            config {
+                command = "/usr/bin/env"
+                args = ["bash", "-c",
+                    <<ENDOFSCRIPT
+                    set -xe
 
-                admin_interfaces:
-                - driver:
-                    type: websocket
-                    port: 1234
+                    source local/init.sh
+                    env
 
-                network:
-                bootstrap_service: https://bootstrap-staging.holo.host
-                transport_pool:
-                    - type: webrtc
-                    signal_url: wss://signal.holotest.net
-                tuning_params:
-                    gossip_loop_iteration_delay_ms: 42
-                    default_rpc_single_timeout_ms: 42
-                    default_rpc_multi_remote_agent_count: 42
-                    default_rpc_multi_remote_request_grace_ms: 42
-                    agent_info_expires_after_ms: 42
-                    tls_in_mem_session_storage: 42
-                    proxy_keepalive_ms: 42
-                    proxy_to_expire_ms: 42
-                network_type: quic_bootstrap
-
-                db_sync_strategy: Fast
-                ENDOFCFG
-            ]
+                    nix develop -vL .#coreDev --command \
+                        cargo nextest run --locked -p holochain_test_utils --no-capture --features slow_tests --status-level=pass --retries=0 discovery_distributed
+                    ENDOFSCRIPT
+                ]
+            }
         }
     }
 }
