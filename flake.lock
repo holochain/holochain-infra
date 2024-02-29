@@ -281,18 +281,6 @@
         "url": "https://github.com/jost-s.keys"
       }
     },
-    "keys_maackle": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-6HCqVflUInLufn3YhwNDRtn3xAAYo1ZN2e9ayxPc/F4=",
-        "type": "file",
-        "url": "https://github.com/maackle.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/maackle.keys"
-      }
-    },
     "keys_steveej": {
       "flake": false,
       "locked": {
@@ -529,11 +517,11 @@
     },
     "nixpkgsGithubActionRunners": {
       "locked": {
-        "lastModified": 1699099776,
-        "narHash": "sha256-X09iKJ27mGsGambGfkKzqvw5esP1L/Rf8H3u3fCqIiU=",
+        "lastModified": 1709150264,
+        "narHash": "sha256-HofykKuisObPUfj0E9CJVfaMhawXkYx3G8UIFR/XQ38=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "85f1ba3e51676fa8cc604a3d863d729026a6b8eb",
+        "rev": "9099616b93301d5cf84274b184a3a5ec69e94e08",
         "type": "github"
       },
       "original": {
@@ -646,7 +634,6 @@
         "home-manager": "home-manager",
         "keys_artbrock": "keys_artbrock",
         "keys_jost-s": "keys_jost-s",
-        "keys_maackle": "keys_maackle",
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
         "microvm": "microvm",

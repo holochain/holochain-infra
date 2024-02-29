@@ -41,10 +41,11 @@
       flake = false;
     };
 
-    keys_maackle = {
-      url = "https://github.com/maackle.keys";
-      flake = false;
-    };
+    # hash mismatch 2024/02/29
+    # keys_maackle = {
+    #   url = "https://github.com/maackle.keys";
+    #   flake = false;
+    # };
     
     # hash mismatch 20230821
     # keys_neonphog = {
