@@ -18,6 +18,10 @@ job "inspector" {
     operator  = "is_set"
   }
 
+  constraint {
+      distinct_hosts = true
+  }
+
   type = "system"
 
   task "sleeper" {
