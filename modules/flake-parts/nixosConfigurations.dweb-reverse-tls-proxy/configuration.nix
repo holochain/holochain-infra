@@ -263,6 +263,28 @@ in {
   users.users.caddy.extraGroups = ["acme"];
   services.caddy.enable = true;
   services.caddy.virtualHosts = {
+    "s3.${fqdn2domain}:443" = {
+      useACMEHost = fqdn2domain;
+      extraConfig = ''
+        reverse_proxy "http://${config.services.minio.listenAddress}" {
+          transport http {
+            keepalive 1d
+          }
+        }
+      '';
+    };
+
+    "s3-console.${fqdn2domain}:443" = {
+      useACMEHost = fqdn2domain;
+      extraConfig = ''
+        reverse_proxy "http://${config.services.minio.consoleAddress}" {
+          transport http {
+            keepalive 1d
+          }
+        }
+      '';
+    };
+
     "steveej.${fqdn2domain}:443" = {
       useACMEHost = fqdn2domain;
       extraConfig = ''
@@ -304,6 +326,19 @@ in {
         # reverse_proxy https://holochain-ci.cachix.org
       '';
     };
+  };
+
+  services.minio = {
+    enable = true;
+    rootCredentialsFile = config.sops.secrets.tf-eval-minio-root.path;
+    listenAddress = "127.0.0.1:9000";
+    consoleAddress = "127.0.0.1:9001";
+  };
+
+  sops.secrets.tf-eval-minio-root = {
+    sopsFile = ../../../secrets/dweb-reverse-tls-proxy/minio.yaml;
+    owner = config.users.extraUsers.minio.name;
+    group = config.users.groups.minio.name;
   };
 
   sops.secrets.global-server-nomad-key = {
