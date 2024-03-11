@@ -184,6 +184,8 @@ in {
       hackathons.events.${fqdn2domain}.        A       10.1.3.37
       hackathon.events.${fqdn2domain}.         A       10.1.3.37
       amsterdam2023.events.${fqdn2domain}.     A       10.1.3.187
+
+      sj-bm-hostkey0.dev.${fqdn2domain}.       A       185.130.224.33
     '';
   };
 
