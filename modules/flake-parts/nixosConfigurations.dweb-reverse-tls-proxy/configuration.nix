@@ -188,7 +188,8 @@ in {
 
       sj-bm-hostkey0.dev.${fqdn2domain}.       A       185.130.224.33
 
-      turn.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-infra-holochain-org.config.hostName}
+      turn.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.holochain-turn-server.coturn-listening-ip}
+      signal.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.tx5-signal-server.address}
     '';
   };
 

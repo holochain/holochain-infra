@@ -9,6 +9,9 @@
   ipv4 = "37.27.24.128";
   ipv6Prefix = "2a01:4f9:c012:b61f";
   ipv6PrefixLength = "64";
+
+  signalIpv4 = "95.217.30.224";
+  signalIpv4Prefix = 32;
 in {
   imports = [
     inputs.disko.nixosModules.disko
@@ -23,6 +26,7 @@ in {
     ../../nixos/shared-nix-settings.nix
 
     self.nixosModules.holochain-turn-server
+    self.nixosModules.tx5-signal-server
   ];
 
   networking.hostName = "turn-infra-holochain-org"; # Define your hostname.
@@ -45,7 +49,11 @@ in {
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  systemd.network.networks."10-uplink".networkConfig.Address = "${ipv6Prefix}::1/${ipv6PrefixLength}";
+  # FIXME: is there a better way to do this?
+  environment.etc."systemd/network/10-cloud-init-eth0.network.d/00-floating-ips.conf".text = ''
+    [Network]
+    Address = ${signalIpv4}/${builtins.toString signalIpv4Prefix}
+  '';
 
   disko.devices.disk.sda = {
     device = "/dev/sda";
@@ -89,5 +97,33 @@ in {
     enable = true;
     turn-url = "turn.infra.holochain.org";
     coturn-listening-ip = ipv4;
+    username = "test";
+    credential = "test";
+  };
+
+  services.tx5-signal-server = {
+    enable = true;
+    address = signalIpv4;
+    port = 443;
+    iceServers = [
+      {
+        urls = [
+          "stun:${config.services.holochain-turn-server.turn-url}:80"
+        ];
+      }
+      {
+        urls = [
+          "turn:${config.services.holochain-turn-server.turn-url}:80"
+          "turn:${config.services.holochain-turn-server.turn-url}:80?transport=tcp"
+          "turns:${config.services.holochain-turn-server.turn-url}:443?transport=tcp"
+        ];
+
+        inherit
+          (config.services.holochain-turn-server)
+          username
+          credential
+          ;
+      }
+    ];
   };
 }

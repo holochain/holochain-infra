@@ -643,7 +643,8 @@
         "nixpkgsMaster": "nixpkgsMaster",
         "nixpkgsUnstable": "nixpkgsUnstable",
         "sops-nix": "sops-nix",
-        "srvos": "srvos"
+        "srvos": "srvos",
+        "tx5": "tx5"
       }
     },
     "sops-nix": {
@@ -720,6 +721,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "tx5": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1708794983,
+        "narHash": "sha256-XFZcI344QhuNJSkzsTIta8Ytkz/MpZNe+1Makt3SwcQ=",
+        "owner": "holochain",
+        "repo": "tx5",
+        "rev": "989ac62d3967133814d89e2b1b4afa2c967776dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "holochain",
+        "repo": "tx5",
         "type": "github"
       }
     }

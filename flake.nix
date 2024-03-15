@@ -74,6 +74,9 @@
     };
 
     cachix_for_watch_store.url = "github:cachix/cachix/v1.5";
+
+    tx5.url = "github:holochain/tx5";
+    tx5.flake = false;
   };
 
   outputs = inputs @ {

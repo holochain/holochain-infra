@@ -68,6 +68,23 @@
           type = lib.types.int;
           default = 65535; # which is default but here listing explicitly
         };
+
+        verbose = lib.mkEnableOption "verbose logging";
+
+        acme-redirect = lib.mkOption {
+          type = lib.types.str;
+          default = "http://acme-${cfg.turn-url}/.well-known/acme-challenge/";
+        };
+
+        username = lib.mkOption {
+          type = lib.types.str;
+          default = "test";
+        };
+
+        credential = lib.mkOption {
+          type = lib.types.str;
+          default = "test";
+        };
       };
 
       config = lib.mkIf cfg.enable {
@@ -104,16 +121,21 @@
           no-cli = false;
           min-port = cfg.coturn-min-port;
           max-port = cfg.coturn-max-port;
-          extraConfig = ''
-            verbose
-            no-software-attribute
-            no-multicast-peers
-            no-tlsv1
-            no-tlsv1_1
-            user=test:test
-            prometheus
-            acme-redirect=http://acme-${cfg.turn-url}/.well-known/acme-challenge/
-          '';
+          extraConfig =
+            ''
+              no-software-attribute
+              no-multicast-peers
+              no-tlsv1
+              no-tlsv1_1
+              user=${cfg.username}:${cfg.credential}
+              prometheus
+            ''
+            + lib.strings.optionalString cfg.verbose ''
+              verbose
+            ''
+            + lib.strings.optionalString (cfg.acme-redirect != null) ''
+              acme-redirect=${cfg.acme-redirect}
+            '';
         };
 
         systemd.services.coturn.serviceConfig = {

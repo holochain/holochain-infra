@@ -17,11 +17,12 @@
 
     packages = {
       reverse-proxy-nix-cache = let
+      in
+        pkgs.writeShellScriptBin "reverse-proxy-nix-cache" ''
+          sudo ${pkgs.caddy}/bin/caddy reverse-proxy --from :80 --to :5000
+        '';
 
-      in pkgs.writeShellScriptBin "reverse-proxy-nix-cache" ''
-        sudo ${pkgs.caddy}/bin/caddy reverse-proxy --from :80 --to :5000
-      '';
-
+      tx5-signal-srv = pkgs.callPackage ./tx5-signal-srv.nix {};
     };
   };
   flake = {
