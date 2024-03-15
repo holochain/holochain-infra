@@ -1,0 +1,6 @@
+{
+    "nixEnvSelector.nixFile": "${workspaceRoot}/flake.nix",
+    "[nix]": {
+        "editor.defaultFormatter": "kamadorueda.alejandra"
+    },
+}
