@@ -309,6 +309,12 @@ in {
         # reverse_proxy https://holochain-ci.cachix.org
       '';
     };
+
+    "acme-turn.${fqdn2domain}:80" = {
+      extraConfig = ''
+        reverse_proxy http://turn.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-infra-holochain-org.config.services.holochain-turn-server.nginx-http-port}
+      '';
+    };
   };
 
   sops.secrets.global-server-nomad-key = {
