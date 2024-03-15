@@ -46,7 +46,7 @@
     #   url = "https://github.com/maackle.keys";
     #   flake = false;
     # };
-    
+
     # hash mismatch 20230821
     # keys_neonphog = {
     #   url = "https://github.com/neonphog.keys";
@@ -73,7 +73,7 @@
       flake = false;
     };
 
-    cachix_for_watch_store.url = github:cachix/cachix/v1.5;
+    cachix_for_watch_store.url = "github:cachix/cachix/v1.5";
   };
 
   outputs = inputs @ {
