@@ -9,7 +9,6 @@
   ipv4 = "37.27.24.128";
   ipv6Prefix = "2a01:4f9:c012:b61f";
   ipv6PrefixLength = "64";
-  fqdn2domain = "infra.holochain.org";
 in {
   imports = [
     inputs.disko.nixosModules.disko
@@ -22,6 +21,8 @@ in {
     self.nixosModules.holo-users
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
+
+    self.nixosModules.holochain-turn-server
   ];
 
   networking.hostName = "turn-infra-holochain-org"; # Define your hostname.
@@ -83,4 +84,10 @@ in {
   };
 
   system.stateVersion = "23.05";
+
+  services.holochain-turn-server = {
+    enable = true;
+    turn-url = "turn.infra.holochain.org";
+    coturn-listening-ip = ipv4;
+  };
 }
