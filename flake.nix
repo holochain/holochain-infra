@@ -156,6 +156,8 @@
 
         packages = {
           nomad = inputs'.nixpkgsMaster.legacyPackages.nomad_1_6;
+
+          nixos-anywhere = inputs'.nixos-anywhere.packages.default;
         };
       };
       flake = {
