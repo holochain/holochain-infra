@@ -1,3 +1,5 @@
+This machine is of type CCX23
+
 # Installation
 
 ```

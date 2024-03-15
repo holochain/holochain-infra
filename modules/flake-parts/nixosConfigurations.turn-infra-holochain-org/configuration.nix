@@ -38,12 +38,10 @@ in {
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
   ];
 
-  boot.loader.grub = {
-    efiSupport = false;
-    device = "/dev/sda";
-  };
-  # boot.loader.systemd-boot.enable = true;
-  # boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.enable = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   systemd.network.networks."10-uplink".networkConfig.Address = "${ipv6Prefix}::1/${ipv6PrefixLength}";
@@ -52,22 +50,19 @@ in {
     device = "/dev/sda";
     type = "disk";
     content = {
-      type = "table";
-      format = "gpt";
-      partitions = [
-        {
-          name = "boot";
-          start = "0";
-          end = "1M";
-          part-type = "primary";
-          flags = ["bios_grub"];
-        }
-        {
-          name = "root";
-          start = "1M";
-          end = "100%";
-          part-type = "primary";
-          bootable = true;
+      type = "gpt";
+      partitions = {
+        ESP = {
+          type = "EF00";
+          size = "1G";
+          content = {
+            type = "filesystem";
+            format = "vfat";
+            mountpoint = "/boot";
+          };
+        };
+        root = {
+          size = "100%";
           content = {
             type = "btrfs";
             extraArgs = ["-f"]; # Override existing partition
@@ -78,11 +73,12 @@ in {
               };
               "/nix" = {
                 mountOptions = ["noatime"];
+                mountpoint = "/nix";
               };
             };
           };
-        }
-      ];
+        };
+      };
     };
   };
 
