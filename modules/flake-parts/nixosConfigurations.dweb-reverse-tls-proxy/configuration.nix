@@ -152,6 +152,7 @@ in {
 
   ### BIND and ACME
 
+  # FIXME: changes to the bind zone require a manual `systemctl restart bind`
   system.activationScripts.bind-zones.text = ''
     mkdir -p /etc/bind/zones
     chown named:named /etc/bind/zones
@@ -186,6 +187,8 @@ in {
       amsterdam2023.events.${fqdn2domain}.     A       10.1.3.187
 
       sj-bm-hostkey0.dev.${fqdn2domain}.       A       185.130.224.33
+
+      turn.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-infra-holochain-org.config.hostName}
     '';
   };
 
