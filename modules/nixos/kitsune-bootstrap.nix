@@ -87,7 +87,7 @@ in {
       };
 
       # staging server has higher retry limits
-      certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+      # certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
     };
   };
 }

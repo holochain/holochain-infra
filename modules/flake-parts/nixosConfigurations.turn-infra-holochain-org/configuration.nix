@@ -6,12 +6,17 @@
   pkgs,
   ...
 }: let
-  turnIpv4 = "37.27.24.128";
   ipv6Prefix = "2a01:4f9:c012:b61f";
   ipv6PrefixLength = "64";
 
+  turnIpv4 = "37.27.24.128";
+  turnFqdn = "turn.infra.holochain.org";
+
   signalIpv4 = "95.217.30.224";
-  signalIpv4Prefix = 32;
+  signalFqdn = "signal.infra.holochain.org";
+
+  bootstrapIpv4 = "95.216.179.59";
+  bootstrapFqdn = "bootstrap.infra.holochain.org";
 in {
   imports = [
     inputs.disko.nixosModules.disko
@@ -27,6 +32,7 @@ in {
 
     self.nixosModules.holochain-turn-server
     self.nixosModules.tx5-signal-server
+    self.nixosModules.kitsune-bootstrap
   ];
 
   networking.hostName = "turn-infra-holochain-org"; # Define your hostname.
@@ -47,12 +53,13 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages;
 
   # FIXME: is there a better way to do this?
   environment.etc."systemd/network/10-cloud-init-eth0.network.d/00-floating-ips.conf".text = ''
     [Network]
-    Address = ${signalIpv4}/${builtins.toString signalIpv4Prefix}
+    Address = ${signalIpv4}/32
+    Address = ${bootstrapIpv4}/32
   '';
 
   disko.devices.disk.sda = {
@@ -95,10 +102,14 @@ in {
 
   services.holochain-turn-server = {
     enable = true;
-    url = "turn.infra.holochain.org";
+    url = turnFqdn;
     address = turnIpv4;
     username = "test";
     credential = "test";
+    extraCoturnAttrs = {
+      cli-ip = "127.0.0.1";
+      cli-password = "$5$4c2b9a49c5e013ae$14f901c5f36d4c8d5cf0c7383ecb0f26b052134293152bd1191412641a20ddf5";
+    };
   };
 
   services.tx5-signal-server = {
@@ -106,7 +117,7 @@ in {
     address = signalIpv4;
     port = 8443;
     tls-port = 443;
-    url = "signal.infra.holochain.org";
+    url = signalFqdn;
     iceServers = [
       {
         urls = [
@@ -127,5 +138,13 @@ in {
           ;
       }
     ];
+  };
+
+  services.kitsune-bootstrap = {
+    enable = true;
+    address = bootstrapIpv4;
+    port = 8444;
+    tls-port = 443;
+    url = bootstrapFqdn;
   };
 }

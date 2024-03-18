@@ -2,7 +2,7 @@
   description = "The new, performant, and simplified version of Holochain on Rust (sometimes called Holochain RSM for Refactored State Model) ";
 
   inputs = {
-    nixpkgs = {url = "github:nixos/nixpkgs/release-23.05";};
+    nixpkgs.follows = "nixpkgs-23-11";
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
@@ -169,7 +169,7 @@
           };
 
         packages = {
-          nomad = inputs'.nixpkgsMaster.legacyPackages.nomad_1_6;
+          nomad = inputs'.nixpkgs.legacyPackages.nomad_1_6;
 
           nixos-anywhere = inputs'.nixos-anywhere.packages.default;
         };

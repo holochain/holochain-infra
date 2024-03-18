@@ -37,36 +37,31 @@ in {
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
   ];
 
-  boot.loader.grub = {
-    efiSupport = false;
-    device = "/dev/sda";
-  };
-  # boot.loader.systemd-boot.enable = true;
-  # boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  systemd.network.networks."10-uplink".networkConfig.Address = "${ipv6Prefix}::1/64";
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub.efiSupport = true;
+  boot.loader.grub.efiInstallAsRemovable = false;
 
   disko.devices.disk.sda = {
     device = "/dev/sda";
     type = "disk";
     content = {
-      type = "table";
-      format = "gpt";
-      partitions = [
-        {
-          name = "boot";
-          start = "0";
-          end = "1M";
-          part-type = "primary";
-          flags = ["bios_grub"];
-        }
-        {
-          name = "root";
-          start = "1M";
-          end = "100%";
-          part-type = "primary";
-          bootable = true;
+      type = "gpt";
+      partitions = {
+        boot = {
+          size = "1M";
+          type = "EF02"; # for grub MBR
+        };
+        ESP = {
+          type = "EF00";
+          size = "1G";
+          content = {
+            type = "filesystem";
+            format = "vfat";
+            mountpoint = "/boot";
+          };
+        };
+        root = {
+          size = "100%";
           content = {
             type = "btrfs";
             extraArgs = ["-f"]; # Override existing partition
@@ -77,15 +72,16 @@ in {
               };
               "/nix" = {
                 mountOptions = ["noatime"];
+                mountpoint = "/nix";
               };
             };
           };
-        }
-      ];
+        };
+      };
     };
   };
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 
   ### ZeroTier
   services.zerotierone = {
@@ -94,6 +90,7 @@ in {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "zerotierone"
+      "nomad"
     ];
 
   sops.secrets.zerotieroneNetworks = {
@@ -188,8 +185,9 @@ in {
 
       sj-bm-hostkey0.dev.${fqdn2domain}.       A       185.130.224.33
 
-      turn.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.holochain-turn-server.coturn-listening-ip}
+      turn.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.holochain-turn-server.address}
       signal.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.tx5-signal-server.address}
+      bootstrap.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.kitsune-bootstrap.address}
     '';
   };
 
@@ -326,7 +324,7 @@ in {
 
   services.nomad = {
     enable = true;
-    package = self.packages.${pkgs.system}.nomad;
+    package = pkgs.nomad_1_6;
     enableDocker = false;
     dropPrivileges = false;
 

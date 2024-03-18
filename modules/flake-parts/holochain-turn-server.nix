@@ -85,6 +85,12 @@
           type = lib.types.str;
           default = "test";
         };
+
+        extraCoturnAttrs = lib.mkOption {
+          description = "extra attributes assigned to services.coturn";
+          type = lib.types.attrs;
+          default = {};
+        };
       };
 
       config = lib.mkIf cfg.enable {
@@ -109,34 +115,36 @@
           }
         ];
 
-        services.coturn = {
-          enable = true;
-          listening-port = 80;
-          tls-listening-port = 443;
-          listening-ips = [cfg.address];
-          lt-cred-mech = true; # Use long-term credential mechanism.
-          realm = cfg.url;
-          cert = "${cfg.turn-cert-dir}/fullchain.pem";
-          pkey = "${cfg.turn-cert-dir}/key.pem";
-          no-cli = false;
-          min-port = cfg.coturn-min-port;
-          max-port = cfg.coturn-max-port;
-          extraConfig =
-            ''
-              no-software-attribute
-              no-multicast-peers
-              no-tlsv1
-              no-tlsv1_1
-              user=${cfg.username}:${cfg.credential}
-              prometheus
-            ''
-            + lib.strings.optionalString cfg.verbose ''
-              verbose
-            ''
-            + lib.strings.optionalString (cfg.acme-redirect != null) ''
-              acme-redirect=${cfg.acme-redirect}
-            '';
-        };
+        services.coturn =
+          {
+            enable = true;
+            listening-port = 80;
+            tls-listening-port = 443;
+            listening-ips = [cfg.address];
+            lt-cred-mech = true; # Use long-term credential mechanism.
+            realm = cfg.url;
+            cert = "${cfg.turn-cert-dir}/fullchain.pem";
+            pkey = "${cfg.turn-cert-dir}/key.pem";
+            no-cli = false;
+            min-port = cfg.coturn-min-port;
+            max-port = cfg.coturn-max-port;
+            extraConfig =
+              ''
+                no-software-attribute
+                no-multicast-peers
+                no-tlsv1
+                no-tlsv1_1
+                user=${cfg.username}:${cfg.credential}
+                prometheus
+              ''
+              + lib.strings.optionalString cfg.verbose ''
+                verbose
+              ''
+              + lib.strings.optionalString (cfg.acme-redirect != null) ''
+                acme-redirect=${cfg.acme-redirect}
+              '';
+          }
+          // cfg.extraCoturnAttrs;
 
         systemd.services.coturn.serviceConfig = {
           LimitNOFILESoft = 10000;
@@ -167,15 +175,15 @@
         security.acme = {
           acceptTerms = true;
           defaults = {
-            # staging server has higher retry limits
-            # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
-
             email = "acme@holo.host";
-            # after certificate renewal by acme coturn.service needs to reload this new cert, too
-            # see https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/security/acme/default.nix#L322
           };
 
+          # after certificate renewal by acme coturn.service needs to reload this new cert, too
+          # see https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/security/acme/default.nix#L322
           certs."${cfg.url}".reloadServices = ["coturn"];
+
+          # staging server has higher retry limits
+          # certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
         };
       };
     };

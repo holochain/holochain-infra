@@ -109,11 +109,11 @@ in {
     security.acme = {
       acceptTerms = true;
       defaults = {
-        # staging server has higher retry limits
-        # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
-
         email = "acme@holo.host";
       };
+
+      # staging server has higher retry limits
+      # certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
     };
   };
 }
