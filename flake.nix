@@ -82,6 +82,12 @@
 
     tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.7-alpha";
     tx5.flake = false;
+
+    holochain-versions.url = "github:holochain/holochain?dir=versions/weekly";
+    holochain = {
+      url = "github:holochain/holochain";
+      inputs.versions.follows = "holochain-versions";
+    };
   };
 
   outputs = inputs @ {
