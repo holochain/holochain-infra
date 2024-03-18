@@ -22,6 +22,26 @@
         "type": "github"
       }
     },
+    "crane": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-23-11"
+        ]
+      },
+      "locked": {
+        "lastModified": 1710003968,
+        "narHash": "sha256-g8+K+mLiNG5uch35Oy9oDQBAmGSkCcqrd0Jjme7xiG0=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "10484f86201bb94bd61ecc5335b1496794fedb78",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -449,6 +469,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-23-11": {
+      "locked": {
+        "lastModified": 1710748499,
+        "narHash": "sha256-uDgiy47Rj02WG0fGidqrmBKg5oYRPi5StDbd5cMZVw4=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "5145d90b09038a58ca2a9db773e8a5e09372816a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "dir": "lib",
@@ -581,11 +617,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1695975771,
-        "narHash": "sha256-+AGkCM+ZHal3gk6AjOo+vnUMv0I9Kqmas01v2ldEIpQ=",
+        "lastModified": 1705957679,
+        "narHash": "sha256-Q8LJaVZGJ9wo33wBafvZSzapYsjOaNjP/pOnSiKVGHY=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c710fc3c3e41e7b7e02dc40885f55aa341461678",
+        "rev": "9a333eaa80901efe01df07eade2c16d183761fa3",
         "type": "github"
       },
       "original": {
@@ -628,6 +664,7 @@
     "root": {
       "inputs": {
         "cachix_for_watch_store": "cachix_for_watch_store",
+        "crane": "crane",
         "darwin": "darwin",
         "disko": "disko",
         "flake-parts": "flake-parts",
@@ -639,6 +676,7 @@
         "microvm": "microvm",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-23-11": "nixpkgs-23-11",
         "nixpkgsGithubActionRunners": "nixpkgsGithubActionRunners",
         "nixpkgsMaster": "nixpkgsMaster",
         "nixpkgsUnstable": "nixpkgsUnstable",

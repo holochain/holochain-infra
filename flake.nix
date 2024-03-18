@@ -6,6 +6,7 @@
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
+    nixpkgs-23-11 = {url = "github:nixos/nixpkgs/release-23.11";};
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -31,6 +32,11 @@
     # secret management
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs-23-11";
+    };
 
     keys_steveej = {
       url = "https://github.com/steveej.keys";
