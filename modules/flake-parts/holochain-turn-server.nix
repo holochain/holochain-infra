@@ -168,7 +168,7 @@
           acceptTerms = true;
           defaults = {
             # staging server has higher retry limits
-            server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+            # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
 
             email = "acme@holo.host";
             # after certificate renewal by acme coturn.service needs to reload this new cert, too
