@@ -69,11 +69,10 @@
       flake = false;
     };
 
-    # NAR mismatch as of 2023/07/21
-    # keys_zippy = {
-    #   url = "https://github.com/zippy.keys";
-    #   flake = false;
-    # };
+    keys_zippy = {
+      url = "https://github.com/zippy.keys";
+      flake = false;
+    };
     keys_artbrock = {
       url = "https://github.com/artbrock.keys";
       flake = false;

@@ -325,6 +325,18 @@
         "url": "https://github.com/ThetaSinner.keys"
       }
     },
+    "keys_zippy": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-0OoNLGRMmWmezTJGQdbQno6BCYHnuuuUKVfY48chkOw=",
+        "type": "file",
+        "url": "https://github.com/zippy.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/zippy.keys"
+      }
+    },
     "lowdown-src": {
       "flake": false,
       "locked": {
@@ -673,6 +685,7 @@
         "keys_jost-s": "keys_jost-s",
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
+        "keys_zippy": "keys_zippy",
         "microvm": "microvm",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs_3",
