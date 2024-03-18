@@ -15,30 +15,21 @@ in {
       type = lib.types.package;
     };
 
-    user = lib.mkOption {
-      # TODO - change to tx5
-      default = "root";
-      type = lib.types.str;
-    };
-
-    group = lib.mkOption {
-      # TODO - change to tx5
-      default = "root";
-      type = lib.types.str;
-    };
-
-    # TODO: consume this
-    listenAddr = lib.mkOption {
-      default = "";
-      type = lib.types.str;
-    };
-
     address = lib.mkOption {
       description = "address to bind";
       type = lib.types.str;
     };
 
-    # TODO: distinguish between tls port and plain port. tx5 will listen on the latter and it'll be fronted by a reverse TLS proxy
+    tls-port = lib.mkOption {
+      description = "port to bind for incoming TLS connections";
+      type = lib.types.int;
+    };
+
+    url = lib.mkOption {
+      description = "url for incoming TLS connections to the signal server";
+      type = lib.types.str;
+    };
+
     port = lib.mkOption {
       description = "port to bind";
       type = lib.types.int;
@@ -52,7 +43,7 @@ in {
 
     demo = lib.mkEnableOption "enable demo broadcasting as a stand-in for bootstrapping";
 
-    configText = lib.mkOption {
+    configTextFile = lib.mkOption {
       default = builtins.toFile "tx5.config.json" (builtins.toJSON {
         port = cfg.port;
         iceServers.iceServers = cfg.iceServers;
@@ -66,26 +57,63 @@ in {
       after = ["network.target"];
       wantedBy = ["multi-user.target"];
 
+      environment = {
+        TMPDIR = "%T";
+        CONFIG_PATH = "%T/config.json";
+      };
+
       serviceConfig = {
-        User = cfg.user;
-        Group = cfg.group;
-        ExecStart = "${cfg.package}/bin/tx5-signal-srv --config ${cfg.configText}"; # TODO - point to dynamically created config
+        DynamicUser = true;
+        PrivateTmp = true;
+        ExecStartPre = pkgs.writeShellScript "tx5-start-pre" ''
+          set -xue
+          export PATH=${lib.makeBinPath [pkgs.coreutils]}
+
+          cp ${cfg.configTextFile} $CONFIG_PATH
+          chmod 0400 $CONFIG_PATH
+        '';
+
+        ExecStart = "${cfg.package}/bin/tx5-signal-srv --config $CONFIG_PATH";
         Restart = "always";
       };
     };
 
-    # TODO: set up a separate user or let systemd do this
-    #users.groups.tx5 = { };
-    #users.users.tx5 = {
-    #  isSystemUser = true;
-    #  group = "tx5";
-    #  home = "${cfg.working-directory}";
-    #  # ensures directory is owned by user
-    #  createHome = true;
-    #};
+    services.nginx = {
+      enable = true;
+      virtualHosts."${cfg.url}" = {
+        serverName = cfg.url;
+        enableACME = true;
+        addSSL = true;
 
-    #systemd.tmpfiles.rules = [
-    #  "d ${cfg.working-directory}/uis 0755 tx5 tx5 - -"
-    #];
+        listen = [
+          {
+            addr = "${cfg.address}";
+            port = 80;
+            ssl = false;
+          }
+
+          {
+            addr = "${cfg.address}";
+            port = 443;
+            ssl = true;
+          }
+        ];
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${builtins.toString cfg.port}";
+          proxyWebsockets = true;
+        };
+      };
+    };
+
+    security.acme = {
+      acceptTerms = true;
+      defaults = {
+        # staging server has higher retry limits
+        # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+
+        email = "acme@holo.host";
+      };
+    };
   };
 }
