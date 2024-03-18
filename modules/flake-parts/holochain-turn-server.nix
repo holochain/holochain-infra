@@ -42,14 +42,14 @@
     in {
       options.services.holochain-turn-server = {
         enable = lib.mkEnableOption "holochain turn server";
-        turn-url = lib.mkOption {
+        url = lib.mkOption {
           type = lib.types.str;
         };
         turn-cert-dir = lib.mkOption {
           type = lib.types.str;
-          default = config.security.acme.certs.${cfg.turn-url}.directory;
+          default = config.security.acme.certs.${cfg.url}.directory;
         };
-        coturn-listening-ip = lib.mkOption {
+        address = lib.mkOption {
           type = lib.types.str;
         };
 
@@ -73,7 +73,7 @@
 
         acme-redirect = lib.mkOption {
           type = lib.types.str;
-          default = "http://acme-${cfg.turn-url}/.well-known/acme-challenge/";
+          default = "http://acme-${cfg.url}/.well-known/acme-challenge/";
         };
 
         username = lib.mkOption {
@@ -113,9 +113,9 @@
           enable = true;
           listening-port = 80;
           tls-listening-port = 443;
-          listening-ips = [cfg.coturn-listening-ip];
+          listening-ips = [cfg.address];
           lt-cred-mech = true; # Use long-term credential mechanism.
-          realm = cfg.turn-url;
+          realm = cfg.url;
           cert = "${cfg.turn-cert-dir}/fullchain.pem";
           pkey = "${cfg.turn-cert-dir}/key.pem";
           no-cli = false;
@@ -147,14 +147,20 @@
 
         services.nginx = {
           enable = true;
-          defaultHTTPListenPort = cfg.nginx-http-port;
 
           # the sole purpose of nginx here is TLS certificate renewal from letsencrypt
           # coturn redirects ACME, i.e. HTTP GET requests matching '^/.well-known/acme-challenge/(.*)'
           # to acme-turn.holo.host, which is intercepted by a reverse-proxy and redirected to port ${cfg.nginx-http-port} on this host
-          virtualHosts."${cfg.turn-url}" = {
+          virtualHosts."${cfg.url}" = {
+            listen = [
+              {
+                addr = "${cfg.address}";
+                port = cfg.nginx-http-port;
+                ssl = false;
+              }
+            ];
             enableACME = true;
-            serverName = cfg.turn-url;
+            serverName = cfg.url;
           };
         };
 
@@ -162,13 +168,14 @@
           acceptTerms = true;
           defaults = {
             # staging server has higher retry limits
-            # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+            server = "https://acme-staging-v02.api.letsencrypt.org/directory";
 
             email = "acme@holo.host";
             # after certificate renewal by acme coturn.service needs to reload this new cert, too
             # see https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/security/acme/default.nix#L322
-            reloadServices = ["coturn"];
           };
+
+          certs."${cfg.url}".reloadServices = ["coturn"];
         };
       };
     };

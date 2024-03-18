@@ -6,7 +6,7 @@
   pkgs,
   ...
 }: let
-  ipv4 = "37.27.24.128";
+  turnIpv4 = "37.27.24.128";
   ipv6Prefix = "2a01:4f9:c012:b61f";
   ipv6PrefixLength = "64";
 
@@ -31,7 +31,7 @@ in {
 
   networking.hostName = "turn-infra-holochain-org"; # Define your hostname.
 
-  hostName = ipv4;
+  hostName = turnIpv4;
 
   nix.settings.max-jobs = 8;
 
@@ -95,8 +95,8 @@ in {
 
   services.holochain-turn-server = {
     enable = true;
-    turn-url = "turn.infra.holochain.org";
-    coturn-listening-ip = ipv4;
+    url = "turn.infra.holochain.org";
+    address = turnIpv4;
     username = "test";
     credential = "test";
   };
@@ -104,18 +104,20 @@ in {
   services.tx5-signal-server = {
     enable = true;
     address = signalIpv4;
-    port = 443;
+    port = 8443;
+    tls-port = 443;
+    url = "signal.infra.holochain.org";
     iceServers = [
       {
         urls = [
-          "stun:${config.services.holochain-turn-server.turn-url}:80"
+          "stun:${config.services.holochain-turn-server.url}:80"
         ];
       }
       {
         urls = [
-          "turn:${config.services.holochain-turn-server.turn-url}:80"
-          "turn:${config.services.holochain-turn-server.turn-url}:80?transport=tcp"
-          "turns:${config.services.holochain-turn-server.turn-url}:443?transport=tcp"
+          "turn:${config.services.holochain-turn-server.url}:80"
+          "turn:${config.services.holochain-turn-server.url}:80?transport=tcp"
+          "turns:${config.services.holochain-turn-server.url}:443?transport=tcp"
         ];
 
         inherit
