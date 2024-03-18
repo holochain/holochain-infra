@@ -8,14 +8,15 @@
 in {
   # Nix configuration shared between all hosts
 
-  imports = [
-    ./holo-deploy.nix
-  ]
-  # TODO: figure out why this results in infinite recursion
-  # ++ pkgs.stdenv.isLinux [
-  #   ./shared-linux.nix
-  # ]
-  ;
+  imports =
+    [
+      ./holo-deploy.nix
+    ]
+    # TODO: figure out why this results in infinite recursion
+    # ++ pkgs.stdenv.isLinux [
+    #   ./shared-linux.nix
+    # ]
+    ;
 
   nix.package = lib.mkDefault pkgs.nixVersions.nix_2_17;
 
@@ -88,4 +89,4 @@ in {
     else if config.deployUser == "root"
     then "/root"
     else "/home/${config.deployUser}";
-} 
+}
