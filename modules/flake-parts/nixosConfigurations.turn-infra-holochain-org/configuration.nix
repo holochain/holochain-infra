@@ -1,13 +1,10 @@
 {
   config,
-  lib,
   inputs,
   self,
   pkgs,
   ...
 }: let
-  ipv6Prefix = "2a01:4f9:c012:b61f";
-  ipv6PrefixLength = "64";
 
   turnIpv4 = "37.27.24.128";
   turnFqdn = "turn.infra.holochain.org";

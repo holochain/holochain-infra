@@ -7,7 +7,6 @@
   ...
 }: let
   ipv4 = "5.78.43.185";
-  ipv6Prefix = "2a01:4ff:1f0:872a";
   fqdn2domain = "infra.holochain.org";
 in {
   imports = [

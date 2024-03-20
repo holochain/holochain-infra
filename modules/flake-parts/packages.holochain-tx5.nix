@@ -1,18 +1,13 @@
 {
   # System independent arguments.
-  self,
   lib,
   inputs,
-  inputs',
   ...
 }: {
   perSystem = {
     # Arguments specific to the `perSystem` context.
-    config,
     self',
-    inputs',
     pkgs,
-    system,
     ...
   }: {
     # system specific outputs like, apps, checks, packages

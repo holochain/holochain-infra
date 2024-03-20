@@ -2,15 +2,10 @@
   # System independent arguments.
   self,
   lib,
-  inputs,
   ...
 }: {
   perSystem = {
     # Arguments specific to the `perSystem` context.
-    config,
-    self',
-    inputs',
-    pkgs,
     ...
   }: {
     # system specific outputs like, apps, checks, packages
@@ -21,9 +16,9 @@
     # system independent outputs like nixosModules, nixosConfigurations, etc.
 
     # nixosConfigurations.example-host = ...
-    overlays.coturn = final: previous: {
+    overlays.coturn = _final: previous: {
       coturn = previous.coturn.overrideAttrs (
-        super: {
+        _super: {
           # coturn for NixOS needs to be built without libev_ok, otherwise acme-redirect won't work
           LIBEV_OK = "0";
           meta.platforms = lib.platforms.linux;
@@ -33,9 +28,7 @@
 
     nixosModules.holochain-turn-server = {
       config,
-      pkgs,
       lib,
-      system,
       ...
     }: let
       cfg = config.services.holochain-turn-server;
