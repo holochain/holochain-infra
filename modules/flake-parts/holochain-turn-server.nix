@@ -176,7 +176,7 @@
           # see https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/security/acme/default.nix#L322
           certs."${cfg.url}".reloadServices = ["coturn"];
 
-          # staging server has higher retry limits
+          # staging server has higher retry limits. uncomment the following when debugging ACME challenges.
           # certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
         };
       };

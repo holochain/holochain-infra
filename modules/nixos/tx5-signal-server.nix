@@ -112,7 +112,7 @@ in {
         email = "acme@holo.host";
       };
 
-      # staging server has higher retry limits
+      # staging server has higher retry limits. uncomment the following when debugging ACME challenges.
       # certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
     };
   };
