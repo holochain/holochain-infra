@@ -1,15 +1,5 @@
-{
-  self,
-  lib,
-  ...
-}: {
-  perSystem = {
-    config,
-    self',
-    inputs',
-    pkgs,
-    ...
-  }: {
+{...}: {
+  perSystem = {pkgs, ...}: {
     # define formatter used by `nix fmt`
     formatter = pkgs.alejandra;
   };

@@ -2,7 +2,6 @@
   self,
   config,
   lib,
-  magicPaths,
   pkgs,
   ...
 }: let
