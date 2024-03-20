@@ -1,8 +1,6 @@
 {
-  self,
   lib,
   inputs,
-  config,
   ...
 }: let
   system = "aarch64-darwin";

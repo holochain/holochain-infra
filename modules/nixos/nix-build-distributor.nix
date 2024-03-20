@@ -20,7 +20,7 @@
       speedFactor = 1;
       supportedFeatures = config.nix.settings.experimental-features;
     }
-    
+
     # macos-02
     # - intel CPU
     {
@@ -45,7 +45,6 @@
       speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
-
 
     # macos-04
     # - m1 cpu
