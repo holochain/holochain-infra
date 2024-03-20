@@ -36,28 +36,34 @@
       options.services.holochain-turn-server = {
         enable = lib.mkEnableOption "holochain turn server";
         url = lib.mkOption {
+          description = "publicly visible url for the turn server";
           type = lib.types.str;
         };
         turn-cert-dir = lib.mkOption {
+          description = "directory where fullchain.pem and key.pem are expected to exist";
           type = lib.types.str;
           default = config.security.acme.certs.${cfg.url}.directory;
         };
         address = lib.mkOption {
+          description = "address coturn should listen on";
           type = lib.types.str;
         };
 
         nginx-http-port = lib.mkOption {
+          description = "port for nginx to listen on for answering ACME challenges";
           type = lib.types.int;
           # skipping 81 because it's the default coturn alternative http port
           default = 82;
         };
 
         coturn-min-port = lib.mkOption {
+          description = "lower port for coturn's range";
           type = lib.types.int;
           default = 20000;
         };
 
         coturn-max-port = lib.mkOption {
+          description = "upper port for coturn's range";
           type = lib.types.int;
           default = 65535; # which is default but here listing explicitly
         };
@@ -65,16 +71,19 @@
         verbose = lib.mkEnableOption "verbose logging";
 
         acme-redirect = lib.mkOption {
+          description = "value passed to acme-redirect configuration option";
           type = lib.types.str;
           default = "http://acme-${cfg.url}/.well-known/acme-challenge/";
         };
 
         username = lib.mkOption {
+          description = "user for establishing turn connections to coturn";
           type = lib.types.str;
           default = "test";
         };
 
         credential = lib.mkOption {
+          description = "credential for establishing turn connections to coturn";
           type = lib.types.str;
           default = "test";
         };
