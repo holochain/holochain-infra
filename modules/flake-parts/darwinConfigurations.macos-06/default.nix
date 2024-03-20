@@ -1,8 +1,6 @@
 {
-  self,
   lib,
   inputs,
-  config,
   ...
 }: let
   system = "x86_64-darwin";

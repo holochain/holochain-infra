@@ -2,10 +2,8 @@
   config,
   pkgs,
   lib,
-  system,
   ...
-}: let
-in {
+}: {
   # Nix configuration shared between all hosts
 
   imports =
