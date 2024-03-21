@@ -15,7 +15,7 @@ job "commander" {
   constraint {
     attribute = "${meta.HOLO_NIXPKGS_CHANNEL}"
     operator  = "regexp"
-    value     = ".*holo-nixpkgs/1694.*"
+    value     = ".*holo-nixpkgs/2021.*"
   }
 
   type = "sysbatch"
@@ -31,13 +31,13 @@ job "commander" {
       command = "/usr/bin/env"
       args = ["bash", "-c",
         <<-ENDOFSCRIPT
-          set -e
+          set -xe
           export NIX_PATH=nixpkgs=/nix/var/nix/profiles/per-user/root/channels/holo-nixpkgs/nixpkgs/
           nix-shell \
             -p nixos-rebuild \
             -p curl \
             -p sudo \
-            --command "/run/wrappers/bin/sudo /usr/bin/env hpos-update 1691"
+            --command "/run/wrappers/bin/sudo /usr/bin/env hpos-update 2021"
 
           # /run/wrappers/bin/sudo /usr/bin/env systemctl start holo-nixpkgs-auto-upgrade.service
         ENDOFSCRIPT
