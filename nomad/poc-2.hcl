@@ -65,6 +65,7 @@ job "poc-2" {
                     <<ENDOFSCRIPT
                     set -xeu
 
+                    # source the init script to inherit its PWD
                     source local/init.sh
                     env
 
