@@ -5,7 +5,7 @@ pwd
 ls -lha
 
 # this directory is persisted across job runs and can be used to persist state over time.
-export JOB_STATE_DIRECTORY="${STATE_DIRECTORY}/${NOMAD_JOB_ID}"
+JOB_STATE_DIRECTORY="${STATE_DIRECTORY}/${NOMAD_JOB_ID}"
 mkdir -p "${JOB_STATE_DIRECTORY}"
 cd "${JOB_STATE_DIRECTORY}"
 
