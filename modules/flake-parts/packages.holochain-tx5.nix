@@ -16,8 +16,8 @@
       system = pkgs.system;
       craneLib = inputs.crane.lib.${system};
       cranePkgs = inputs.crane.inputs.nixpkgs.legacyPackages.${system};
-    in {
-      tx5 = craneLib.buildPackage {
+
+      tx5Args = {
         pname = "tx5";
         src = inputs.tx5;
         version = inputs.tx5.rev;
@@ -30,11 +30,15 @@
 
         doCheck = false;
       };
+      tx5Deps = lib.makeOverridable craneLib.buildDepsOnly tx5Args;
+    in {
+      tx5 = lib.makeOverridable craneLib.buildPackage (tx5Args // {
+        cargoArtifacts = tx5Deps;
+    });
 
-      tx5-signal-srv = pkgs.runCommandNoCC "tx5-signal-srv" {} ''
-        mkdir -p $out/bin
-        cp ${self'.packages.tx5}/bin/tx5-signal-srv $out/bin/
-      '';
+      tx5-signal-srv = self'.packages.tx5.override {
+        cargoExtraArgs = "--bin tx5-signal-srv";
+      };
     };
   };
   flake = {
