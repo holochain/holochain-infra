@@ -2,7 +2,8 @@
   description = "The new, performant, and simplified version of Holochain on Rust (sometimes called Holochain RSM for Refactored State Model) ";
 
   inputs = {
-    nixpkgs = {url = "github:nixos/nixpkgs/release-23.05";};
+    nixpkgs.follows = "nixpkgs-23-11";
+    nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
@@ -31,6 +32,11 @@
     # secret management
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs-23-11";
+    };
 
     keys_steveej = {
       url = "https://github.com/steveej.keys";
@@ -63,17 +69,30 @@
       flake = false;
     };
 
-    # NAR mismatch as of 2023/07/21
-    # keys_zippy = {
-    #   url = "https://github.com/zippy.keys";
-    #   flake = false;
-    # };
+    keys_zippy = {
+      url = "https://github.com/zippy.keys";
+      flake = false;
+    };
     keys_artbrock = {
       url = "https://github.com/artbrock.keys";
       flake = false;
     };
 
-    cachix_for_watch_store.url = github:cachix/cachix/v1.5;
+    cachix_for_watch_store.url = "github:cachix/cachix/v1.5";
+
+    tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.7-alpha";
+    tx5.flake = false;
+
+    holochain-versions.url = "github:holochain/holochain?dir=versions/weekly";
+    holochain = {
+      url = "github:holochain/holochain";
+      inputs.versions.follows = "holochain-versions";
+    };
+
+    coturn = {
+      flake = false;
+      url = "github:steveej-forks/coturn/debug-cli-login";
+    };
   };
 
   outputs = inputs @ {
@@ -155,7 +174,9 @@
           };
 
         packages = {
-          nomad = inputs'.nixpkgsMaster.legacyPackages.nomad_1_6;
+          nomad = inputs'.nixpkgs.legacyPackages.nomad_1_6;
+
+          nixos-anywhere = inputs'.nixos-anywhere.packages.default;
         };
       };
       flake = {

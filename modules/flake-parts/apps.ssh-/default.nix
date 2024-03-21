@@ -6,6 +6,7 @@
 }: {
   perSystem = {pkgs, ...}: let
     mkSsh = {
+      attrName,
       hostName,
       deployUser,
     }:
