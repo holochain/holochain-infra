@@ -88,6 +88,11 @@
       url = "github:holochain/holochain";
       inputs.versions.follows = "holochain-versions";
     };
+
+    coturn = {
+      flake = false;
+      url = "github:steveej-forks/coturn/debug-cli-login";
+    };
   };
 
   outputs = inputs @ {

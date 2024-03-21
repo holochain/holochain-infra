@@ -56,6 +56,23 @@
         "type": "github"
       }
     },
+    "coturn": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1711026554,
+        "narHash": "sha256-fvxj4G7GmkyuS67QiFcEX8+UlxvjtyfAbilfE9cin5Q=",
+        "owner": "steveej-forks",
+        "repo": "coturn",
+        "rev": "fed3efd2c4447e5e5966eed5cc32a43d768172ad",
+        "type": "github"
+      },
+      "original": {
+        "owner": "steveej-forks",
+        "ref": "debug-cli-login",
+        "repo": "coturn",
+        "type": "github"
+      }
+    },
     "crane": {
       "inputs": {
         "nixpkgs": [
@@ -999,6 +1016,7 @@
     "root": {
       "inputs": {
         "cachix_for_watch_store": "cachix_for_watch_store",
+        "coturn": "coturn",
         "crane": "crane",
         "darwin": "darwin",
         "disko": "disko",

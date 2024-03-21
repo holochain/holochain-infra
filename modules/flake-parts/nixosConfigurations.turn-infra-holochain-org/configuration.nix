@@ -103,6 +103,7 @@ in {
     address = turnIpv4;
     username = "test";
     credential = "test";
+    verbose = false;
     extraCoturnAttrs = {
       cli-ip = "127.0.0.1";
       cli-password = "$5$4c2b9a49c5e013ae$14f901c5f36d4c8d5cf0c7383ecb0f26b052134293152bd1191412641a20ddf5";

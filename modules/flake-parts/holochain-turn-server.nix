@@ -11,6 +11,7 @@
     overlays.coturn = _final: previous: {
       coturn = previous.coturn.overrideAttrs (
         _super: {
+          src = self.inputs.coturn;
           # coturn for NixOS needs to be built without libev_ok, otherwise acme-redirect won't work
           LIBEV_OK = "0";
           meta.platforms = lib.platforms.linux;
