@@ -1,3 +1,4 @@
 result*
 .decrypted~keys.yaml
 .storage
+.direnv

@@ -1,8 +1,6 @@
 {
   inputs,
   pkgs,
-  config,
-  lib,
   magicPaths,
   ...
 }: {

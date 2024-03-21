@@ -13,12 +13,7 @@ in {
       # Include the microvm module
       inputs.microvm.nixosModules.microvm
       # Add more modules here
-      ({
-        config,
-        lib,
-        pkgs,
-        ...
-      }: {
+      ({config, ...}: {
         microvm.mem = 1024 * 8;
         microvm.vcpu = 4;
 

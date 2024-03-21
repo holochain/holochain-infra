@@ -2,22 +2,21 @@
   config,
   pkgs,
   lib,
-  system,
   ...
-}: let
-in {
+}: {
   # Nix configuration shared between all hosts
 
-  imports = [
-    ./holo-deploy.nix
-  ]
-  # TODO: figure out why this results in infinite recursion
-  # ++ pkgs.stdenv.isLinux [
-  #   ./shared-linux.nix
-  # ]
-  ;
+  imports =
+    [
+      ./holo-deploy.nix
+    ]
+    # TODO: figure out why this results in infinite recursion
+    # ++ pkgs.stdenv.isLinux [
+    #   ./shared-linux.nix
+    # ]
+    ;
 
-  nix.package = lib.mkDefault pkgs.nixVersions.nix_2_17;
+  nix.package = lib.mkDefault pkgs.nixVersions.nix_2_18;
 
   nix.settings.extra-platforms =
     lib.mkIf pkgs.stdenv.isDarwin ["x86_64-darwin" "aarch64-darwin"];
@@ -88,4 +87,4 @@ in {
     else if config.deployUser == "root"
     then "/root"
     else "/home/${config.deployUser}";
-} 
+}

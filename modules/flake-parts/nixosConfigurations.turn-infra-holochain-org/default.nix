@@ -4,7 +4,7 @@
   inputs,
   ...
 }: {
-  flake.nixosConfigurations.linux-builder-01 = inputs.nixpkgs.lib.nixosSystem rec {
+  flake.nixosConfigurations.turn-infra-holochain-org = inputs.nixpkgs.lib.nixosSystem {
     modules = [./configuration.nix];
     system = "x86_64-linux";
     specialArgs = self.specialArgs;

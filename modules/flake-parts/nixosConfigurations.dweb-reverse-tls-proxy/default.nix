@@ -1,5 +1,4 @@
 {
-  config,
   self,
   lib,
   inputs,
