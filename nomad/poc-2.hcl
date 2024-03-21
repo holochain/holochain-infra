@@ -12,7 +12,7 @@
 */
 
 variables {
-    GIT_URL = "https://github.com/steveej-forks/holochain.git"
+    GIT_URL = "https://github.com/holochain/holochain.git"
     GIT_BRANCH = "pr_distributed-test-poc"
     agents = 5
     agents_readiness_timeout_secs = 720
@@ -71,6 +71,9 @@ job "poc-2" {
                     export TEST_SHARED_VALUES_REMOTEV1_ROLE="server"
                     export TEST_SHARED_VALUES_REMOTEV1_URL="ws://${NOMAD_HOST_IP_holochainTestRemoteV1}:${NOMAD_HOST_PORT_holochainTestRemoteV1}"
 
+                    # use practically infinite retries to bring the server back up after every run
+                    # will not retry in case of compilation errors, only for runs.
+                    # the test success is determined by the clients and the dev will purge the whole job (including this server) once the test is considered completed.
                     nix develop -vL .#coreDev --command \
                         cargo nextest run --locked -p holochain_test_utils --no-capture --features slow_tests --status-level=pass --retries=99999999 discovery_distributed
                     ENDOFSCRIPT
@@ -130,6 +133,7 @@ job "poc-2" {
                     <<ENDOFSCRIPT
                     set -xe
 
+                    # source the init script to inherit its PWD
                     source local/init.sh
                     env
 
