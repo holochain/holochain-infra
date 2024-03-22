@@ -5,14 +5,16 @@
   pkgs,
   ...
 }: let
+  hostName = "turn-0";
+
   turnIpv4 = "37.27.24.128";
-  turnFqdn = "turn.infra.holochain.org";
+  turnFqdn = "${hostName}.infra.holochain.org";
 
   signalIpv4 = "95.217.30.224";
-  signalFqdn = "signal.infra.holochain.org";
+  signalFqdn = "signal-0.infra.holochain.org";
 
   bootstrapIpv4 = "95.216.179.59";
-  bootstrapFqdn = "bootstrap.infra.holochain.org";
+  bootstrapFqdn = "bootstrap-0.infra.holochain.org";
 in {
   imports = [
     inputs.disko.nixosModules.disko
@@ -31,7 +33,7 @@ in {
     self.nixosModules.kitsune-bootstrap
   ];
 
-  networking.hostName = "turn-infra-holochain-org"; # Define your hostname.
+  networking.hostName = hostName; # Define your hostname.
 
   hostName = turnIpv4;
 

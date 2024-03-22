@@ -86,8 +86,9 @@ in {
   services.zerotierone = {
     enable = lib.mkDefault true;
   };
+
   nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
+    builtins.elem (builtins.trace (lib.getName pkg) (lib.getName pkg)) [
       "zerotierone"
       "nomad"
     ];
@@ -184,9 +185,17 @@ in {
 
       sj-bm-hostkey0.dev.${fqdn2domain}.       A       185.130.224.33
 
-      turn.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.holochain-turn-server.address}
-      signal.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.tx5-signal-server.address}
-      bootstrap.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-infra-holochain-org.config.services.kitsune-bootstrap.address}
+      turn-0.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-0.config.services.holochain-turn-server.address}
+      signal-0.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-0.config.services.tx5-signal-server.address}
+      bootstrap-0.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-0.config.services.kitsune-bootstrap.address}
+
+      turn-1.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-1.config.services.holochain-turn-server.address}
+      signal-1.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-1.config.services.tx5-signal-server.address}
+      bootstrap-1.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-1.config.services.kitsune-bootstrap.address}
+
+      turn-2.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-2.config.services.holochain-turn-server.address}
+      signal-2.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-2.config.services.tx5-signal-server.address}
+      bootstrap-2.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-2.config.services.kitsune-bootstrap.address}
     '';
   };
 
@@ -308,9 +317,21 @@ in {
       '';
     };
 
-    "acme-turn.${fqdn2domain}:80" = {
+    "acme-turn-0.${fqdn2domain}:80" = {
       extraConfig = ''
-        reverse_proxy http://turn.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-infra-holochain-org.config.services.holochain-turn-server.nginx-http-port}
+        reverse_proxy http://turn-0.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-0.config.services.holochain-turn-server.nginx-http-port}
+      '';
+    };
+
+    "acme-turn-1.${fqdn2domain}:80" = {
+      extraConfig = ''
+        reverse_proxy http://turn-1.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-1.config.services.holochain-turn-server.nginx-http-port}
+      '';
+    };
+
+    "acme-turn-2.${fqdn2domain}:80" = {
+      extraConfig = ''
+        reverse_proxy http://turn-2.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-2.config.services.holochain-turn-server.nginx-http-port}
       '';
     };
   };
