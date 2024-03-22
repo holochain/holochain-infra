@@ -21,6 +21,7 @@ in {
     inputs.srvos.nixosModules.server
     inputs.srvos.nixosModules.mixins-terminfo
     inputs.srvos.nixosModules.hardware-hetzner-cloud
+    self.nixosModules.hardware-hetzner-cloud-ccx
 
     inputs.sops-nix.nixosModules.sops
 
@@ -47,11 +48,6 @@ in {
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
   ];
 
-  boot.loader.grub.enable = false;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.kernelPackages = pkgs.linuxPackages;
 
   # FIXME: is there a better way to do this?
   environment.etc."systemd/network/10-cloud-init-eth0.network.d/00-floating-ips.conf".text = ''
@@ -59,42 +55,6 @@ in {
     Address = ${signalIpv4}/32
     Address = ${bootstrapIpv4}/32
   '';
-
-  disko.devices.disk.sda = {
-    device = "/dev/sda";
-    type = "disk";
-    content = {
-      type = "gpt";
-      partitions = {
-        ESP = {
-          type = "EF00";
-          size = "1G";
-          content = {
-            type = "filesystem";
-            format = "vfat";
-            mountpoint = "/boot";
-          };
-        };
-        root = {
-          size = "100%";
-          content = {
-            type = "btrfs";
-            extraArgs = ["-f"]; # Override existing partition
-            subvolumes = {
-              # Subvolume name is different from mountpoint
-              "/rootfs" = {
-                mountpoint = "/";
-              };
-              "/nix" = {
-                mountOptions = ["noatime"];
-                mountpoint = "/nix";
-              };
-            };
-          };
-        };
-      };
-    };
-  };
 
   system.stateVersion = "23.05";
 
