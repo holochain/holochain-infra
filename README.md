@@ -135,3 +135,13 @@ If the runners are back online then update the default profile
 ```shell
 nix run .#deploy-linux-builder-01 switch
 ```
+
+## TURN stack
+
+* [Adding a new machine]
+
+* Double-check that all TURN/Signal servers are ready:
+
+	```
+	nix run .#turn-readiness-check
+	```
