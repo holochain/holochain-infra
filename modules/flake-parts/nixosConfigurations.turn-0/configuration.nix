@@ -48,7 +48,6 @@ in {
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
   ];
 
-
   # FIXME: is there a better way to do this?
   environment.etc."systemd/network/10-cloud-init-eth0.network.d/00-floating-ips.conf".text = ''
     [Network]
