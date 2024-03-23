@@ -196,6 +196,10 @@ in {
       turn-2.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-2.config.services.holochain-turn-server.address}
       signal-2.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-2.config.services.tx5-signal-server.address}
       bootstrap-2.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-2.config.services.kitsune-bootstrap.address}
+
+      turn-3.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-3.config.services.holochain-turn-server.address}
+      signal-3.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-3.config.services.tx5-signal-server.address}
+      bootstrap-3.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-3.config.services.kitsune-bootstrap.address}
     '';
   };
 
@@ -332,6 +336,12 @@ in {
     "acme-turn-2.${fqdn2domain}:80" = {
       extraConfig = ''
         reverse_proxy http://turn-2.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-2.config.services.holochain-turn-server.nginx-http-port}
+      '';
+    };
+
+    "acme-turn-3.${fqdn2domain}:80" = {
+      extraConfig = ''
+        reverse_proxy http://turn-3.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-3.config.services.holochain-turn-server.nginx-http-port}
       '';
     };
   };
