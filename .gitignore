@@ -1,3 +1,4 @@
+.minio/
 result*
 .decrypted~keys.yaml
 .storage
