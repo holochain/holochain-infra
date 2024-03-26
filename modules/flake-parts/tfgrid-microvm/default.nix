@@ -1,4 +1,3 @@
-# TODO: make sure new kernels/initrds also get copied to `/boot/vmlinuz` and `/boot/initrd.mg`
 {self, ...}: {
   flake.nixosModules = {
     zosVmDir = {
@@ -63,27 +62,6 @@
 
       # changes for format.docker
       networking.useHostResolvConf = false;
-
-      environment.systemPackages = [
-        (pkgs.writeShellScriptBin "nixos-rebuild-helper" ''
-          set -xeEu -o pipefail
-
-          FLAKE="''${FLAKE:-github:holochain/holochain-infra/workorch-zos#tfgrid-devnet-vm0}"
-
-          case "$1" in
-            replace-init)
-              result="$(nix build --refresh --tarball-ttl 0 "''${FLAKE}.config.system.build.toplevel" --print-out-paths --no-link)"
-              ln -sf "''${result}"/init /init
-              ;;
-            switch)
-              exec nixos-rebuild --refresh --flake "''${FLAKE}" switch
-              ;;
-            boot)
-              exec nixos-rebuild --refresh --flake "''${FLAKE}" switch
-              ;;
-          esac
-        '')
-      ];
     };
 
     zosVmDirOverlayAutodetect = {lib, ...}: {

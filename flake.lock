@@ -95,11 +95,11 @@
     },
     "craneNixpkgs": {
       "locked": {
-        "lastModified": 1710806803,
-        "narHash": "sha256-qrxvLS888pNJFwJdK+hf1wpRCSQcqA6W5+Ox202NDa0=",
+        "lastModified": 1715787315,
+        "narHash": "sha256-cYApT0NXJfqBkKcci7D9Kr4CBYZKOQKDYA23q8XNuWg=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b06025f1533a1e07b6db3e75151caa155d1c7eb3",
+        "rev": "33d1e753c82ffc557b4a585c77de43d4c922ebb5",
         "type": "github"
       },
       "original": {
@@ -153,11 +153,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1715935620,
-        "narHash": "sha256-b60zHhqS67LW9nTxl7p6ba2OdXJAMoMclEYHbRPpwKM=",
+        "lastModified": 1692613703,
+        "narHash": "sha256-ByFRYQ8J4YSeAU6N0gUc5nmIjAGoiDU+jMUL73Ns0ZU=",
         "owner": "steveeJ-forks",
         "repo": "nix-darwin",
-        "rev": "9f51e374d7cc7fdf7c9b2578a5757b92d028e2ea",
+        "rev": "72d647c8bda6d8d8a88ba2b63b56ce4e0be57ea7",
         "type": "github"
       },
       "original": {
@@ -947,11 +947,11 @@
     },
     "nixpkgsGithubActionRunners": {
       "locked": {
-        "lastModified": 1714635257,
-        "narHash": "sha256-4cPymbty65RvF1DWQfc+Bc8B233A1BWxJnNULJKQ1EY=",
+        "lastModified": 1709150264,
+        "narHash": "sha256-HofykKuisObPUfj0E9CJVfaMhawXkYx3G8UIFR/XQ38=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "63c3a29ca82437c87573e4c6919b09a24ea61b0f",
+        "rev": "9099616b93301d5cf84274b184a3a5ec69e94e08",
         "type": "github"
       },
       "original": {
@@ -1166,11 +1166,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1712542394,
-        "narHash": "sha256-UZebDBECRSrJqw4K+LxZ6qFdYnScu6q1XCwqtsu1cas=",
+        "lastModified": 1715912155,
+        "narHash": "sha256-UXHk4dKvvm5mSuDDON3lXU5CHKiTRnIjA5mUtDOtKEU=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "ece8bdb3c3b58def25f204b9a1261dee55d7c9c0",
+        "rev": "d3a96b08a7280a5753246129b462eed3662815d5",
         "type": "github"
       },
       "original": {
@@ -1309,17 +1309,16 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1712589330,
+        "lastModified": 1714037252,
         "narHash": "sha256-YP9g3MMj2mRfD+mrOKNOvRTBADXIzawKW0dXVTIes1Y=",
-        "owner": "steveej-forks",
-        "repo": "threefold-rfs",
-        "rev": "fea8812b4085e313ede38380b1345a70e662fb01",
+        "owner": "threefoldtech",
+        "repo": "rfs",
+        "rev": "a2aaa68d0e86dad01b90fb375514d20f2bef7540",
         "type": "github"
       },
       "original": {
-        "owner": "steveej-forks",
-        "ref": "configure-pool-pin-rust",
-        "repo": "threefold-rfs",
+        "owner": "threefoldtech",
+        "repo": "rfs",
         "type": "github"
       }
     },

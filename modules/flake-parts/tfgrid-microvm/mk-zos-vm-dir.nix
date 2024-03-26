@@ -20,6 +20,8 @@ in
             cp -r ${bootFiles}/* $out/boot/
 
             ln -s ${config.system.build.toplevel}/init $out/init
+            ${pkgs.gcc}/bin/strip ${config.system.build.kernel.dev}/vmlinux -o $out/boot/vmlinuz
+            cp ${config.system.build.initialRamdisk}/initrd $out/boot/initrd.img
           '';
         in "${cmd}/.";
         target = "./";

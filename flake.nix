@@ -104,8 +104,7 @@
     };
 
     threefold-rfs = {
-      url = "github:steveej-forks/threefold-rfs/configure-pool-pin-rust";
-      # url = "github:threefoldtech/rfs/configure-pool";
+      url = "github:threefoldtech/rfs";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.crane.follows = "crane";
     };
