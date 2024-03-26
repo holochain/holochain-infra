@@ -374,6 +374,23 @@
         "type": "github"
       }
     },
+    "flake-utils_4": {
+      "inputs": {
+        "systems": "systems_4"
+      },
+      "locked": {
+        "lastModified": 1709126324,
+        "narHash": "sha256-q6EQdSeUZOG26WelxqkmR7kArjgWCdw5sfJVHPH/7j8=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "d465f4819400de7c8d874d50b982301f28a84605",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-utils",
+        "type": "indirect"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -694,6 +711,21 @@
         "type": "github"
       }
     },
+    "nixlib": {
+      "locked": {
+        "lastModified": 1711241261,
+        "narHash": "sha256-knrTvpl81yGFHIpm1SsLDApe0thFkw1cl3ISAMPmP/0=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "b2a1eeef8c185f6bd27432b053ff09d773244cbc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
     "nixos-2305": {
       "locked": {
         "lastModified": 1686478675,
@@ -732,6 +764,27 @@
       "original": {
         "owner": "numtide",
         "repo": "nixos-anywhere",
+        "type": "github"
+      }
+    },
+    "nixos-generators": {
+      "inputs": {
+        "nixlib": "nixlib",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1711327729,
+        "narHash": "sha256-RzOXI1kBlK7HkeZfRjUnsBUJEmlMYgLEG7CziZN0lgs=",
+        "owner": "nix-community",
+        "repo": "nixos-generators",
+        "rev": "d3e8145766dad6b47f6e37ce28731a05144dec26",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixos-generators",
         "type": "github"
       }
     },
@@ -1031,6 +1084,7 @@
         "keys_zippy": "keys_zippy",
         "microvm": "microvm",
         "nixos-anywhere": "nixos-anywhere",
+        "nixos-generators": "nixos-generators",
         "nixpkgs": [
           "nixpkgs-23-11"
         ],
@@ -1040,6 +1094,7 @@
         "nixpkgsUnstable": "nixpkgsUnstable",
         "sops-nix": "sops-nix",
         "srvos": "srvos",
+        "threefold-rfs": "threefold-rfs",
         "tx5": "tx5"
       }
     },
@@ -1057,6 +1112,31 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "a1b17cacfa7a6ed18f553a195a047f4e73e95da9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
+      "inputs": {
+        "flake-utils": [
+          "threefold-rfs",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "threefold-rfs",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1712542394,
+        "narHash": "sha256-UZebDBECRSrJqw4K+LxZ6qFdYnScu6q1XCwqtsu1cas=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "ece8bdb3c3b58def25f204b9a1261dee55d7c9c0",
         "type": "github"
       },
       "original": {
@@ -1165,6 +1245,47 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_4": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "threefold-rfs": {
+      "inputs": {
+        "crane": [
+          "crane"
+        ],
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay_2"
+      },
+      "locked": {
+        "lastModified": 1712589330,
+        "narHash": "sha256-YP9g3MMj2mRfD+mrOKNOvRTBADXIzawKW0dXVTIes1Y=",
+        "owner": "steveej-forks",
+        "repo": "threefold-rfs",
+        "rev": "fea8812b4085e313ede38380b1345a70e662fb01",
+        "type": "github"
+      },
+      "original": {
+        "owner": "steveej-forks",
+        "ref": "configure-pool-pin-rust",
+        "repo": "threefold-rfs",
         "type": "github"
       }
     },

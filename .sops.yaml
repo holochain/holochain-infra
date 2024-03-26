@@ -1,4 +1,4 @@
-# This example uses YAML anchors which allows reuse of multiple keys 
+# This example uses YAML anchors which allows reuse of multiple keys
 # without having to repeat yourself.
 # Also see https://github.com/Mic92/dotfiles/blob/master/nixos/.sops.yaml
 # for a more complex example.
@@ -8,6 +8,7 @@ keys:
   - &jost-s D299483493EAE6B2B3D892B6D33548FA55FF167F
   - &dweb-reverse-proxy age1ygzy9clj0xavlmau0ham7j5nw8yy4z0q8hvkfpdgwc4fcr8nufpqrdxgvx
   - &linux-builder-01 age1kxkr407jz77ljrhgsfwfmv2yvqjprc6unvx389xp2f48xj8r0vqq2wew5r
+  - &tfgrid-shared age194xfar0gfdauu2dcxwqk9lh9d0vjfrzzs2ke0ppanpwv9eqxzs2qp7q7cn
 
 creation_rules:
   - path_regex: ^(.+/|)secrets/[^/]+$
@@ -33,6 +34,7 @@ creation_rules:
       # - *jost-s
       age:
       - *dweb-reverse-proxy
+      - *tfgrid-shared
   - path_regex: ^secrets/nomad/admin/.+$
     key_groups:
     - pgp:
