@@ -5,7 +5,6 @@
   pkgs,
   ...
 }: let
-
   turnIpv4 = "37.27.24.128";
   turnFqdn = "turn.infra.holochain.org";
 
