@@ -32,9 +32,10 @@
       };
       tx5Deps = lib.makeOverridable craneLib.buildDepsOnly tx5Args;
     in {
-      tx5 = lib.makeOverridable craneLib.buildPackage (tx5Args // {
-        cargoArtifacts = tx5Deps;
-    });
+      tx5 = lib.makeOverridable craneLib.buildPackage (tx5Args
+        // {
+          cargoArtifacts = tx5Deps;
+        });
 
       tx5-signal-srv = self'.packages.tx5.override {
         cargoExtraArgs = "--bin tx5-signal-srv";
