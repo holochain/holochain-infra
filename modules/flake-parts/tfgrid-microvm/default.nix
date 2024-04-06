@@ -37,7 +37,7 @@
         "virtio_mmio"
       ];
 
-      boot.loader.grub.enable = true;
+      boot.loader.grub.enable = false;
       boot.initrd.systemd.enable = false;
 
       boot.loader.external.enable = true;
