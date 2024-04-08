@@ -178,6 +178,7 @@
                 inputs'.threefold-rfs.packages.default
 
                 pkgs.jq
+                pkgs.opentofu
               ]
               ++ (
                 let
