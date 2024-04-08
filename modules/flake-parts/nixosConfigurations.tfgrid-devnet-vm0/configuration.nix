@@ -17,6 +17,8 @@ in {
 
   sops.age.keyFile = "/etc/age.key";
 
+  nix.settings.max-jobs = 8;
+
   environment.systemPackages = [
     pkgs.iperf3
     pkgs.man
