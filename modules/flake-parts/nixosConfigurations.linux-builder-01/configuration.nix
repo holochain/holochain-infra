@@ -34,8 +34,6 @@
 
   boot.loader.grub = {
     efiSupport = false;
-    # forcing seems required or else there's an error about duplicated devices
-    devices = lib.mkForce ["/dev/nvme0n1"];
   };
   # boot.loader.systemd-boot.enable = true;
   # boot.loader.efi.canTouchEfiVariables = true;
