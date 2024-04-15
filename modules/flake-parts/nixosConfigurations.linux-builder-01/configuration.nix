@@ -3,6 +3,7 @@
   inputs,
   self,
   pkgs,
+  lib,
   ...
 }: {
   imports = [
@@ -32,9 +33,7 @@
   ];
 
   boot.loader.grub = {
-    version = 2;
     efiSupport = false;
-    device = "/dev/nvme0n1";
   };
   # boot.loader.systemd-boot.enable = true;
   # boot.loader.efi.canTouchEfiVariables = true;
@@ -46,25 +45,18 @@
     device = "/dev/nvme0n1";
     type = "disk";
     content = {
-      type = "table";
-      format = "gpt";
-      partitions = [
-        {
-          name = "boot";
-          start = "0";
-          end = "1M";
-          part-type = "primary";
-          flags = ["bios_grub"];
-        }
-        {
-          name = "root";
-          start = "1M";
-          end = "100%";
-          part-type = "primary";
-          bootable = true;
+      type = "gpt";
+      partitions = {
+        boot = {
+          size = "1M";
+          type = "EF02"; # for grub MBR
+        };
+        root = {
+          size = "100%";
           content = {
             type = "btrfs";
-            extraArgs = "-f"; # Override existing partition
+            extraArgs = ["-f"]; # Override existing partition
+            mountpoint = "/partition-root";
             subvolumes = {
               # Subvolume name is different from mountpoint
               "/rootfs" = {
@@ -72,11 +64,12 @@
               };
               "/nix" = {
                 mountOptions = ["compress=zstd" "noatime"];
+                mountpoint = "/nix";
               };
             };
           };
-        }
-      ];
+        };
+      };
     };
   };
 

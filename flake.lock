@@ -562,7 +562,7 @@
     "keys_thetasinner": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-ZIdphEU9bkjY3OBXRFmwgE7hsiZ59p9oz6Rbks8RoC4=",
+        "narHash": "sha256-dhfzwY2RZ6EbtXAEHHWeC5N1DBdUTQxH8PMqgRblOxc=",
         "type": "file",
         "url": "https://github.com/ThetaSinner.keys"
       },
