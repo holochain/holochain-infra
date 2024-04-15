@@ -559,6 +559,18 @@
         "url": "https://github.com/steveej.keys"
       }
     },
+    "keys_thetasinner": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-dhfzwY2RZ6EbtXAEHHWeC5N1DBdUTQxH8PMqgRblOxc=",
+        "type": "file",
+        "url": "https://github.com/ThetaSinner.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/ThetaSinner.keys"
+      }
+    },
     "keys_zippy": {
       "flake": false,
       "locked": {
@@ -1015,6 +1027,7 @@
         "keys_artbrock": "keys_artbrock",
         "keys_jost-s": "keys_jost-s",
         "keys_steveej": "keys_steveej",
+        "keys_thetasinner": "keys_thetasinner",
         "keys_zippy": "keys_zippy",
         "microvm": "microvm",
         "nixos-anywhere": "nixos-anywhere",

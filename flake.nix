@@ -65,11 +65,10 @@
     #   flake = false;
     # };
 
-    # TODO: re-enable once the change is verified
-    # keys_thetasinner = {
-    #   url = "https://github.com/ThetaSinner.keys";
-    #   flake = false;
-    # };
+    keys_thetasinner = {
+      url = "https://github.com/ThetaSinner.keys";
+      flake = false;
+    };
 
     keys_zippy = {
       url = "https://github.com/zippy.keys";
