@@ -95,11 +95,11 @@
     },
     "craneNixpkgs": {
       "locked": {
-        "lastModified": 1715787315,
-        "narHash": "sha256-cYApT0NXJfqBkKcci7D9Kr4CBYZKOQKDYA23q8XNuWg=",
+        "lastModified": 1710806803,
+        "narHash": "sha256-qrxvLS888pNJFwJdK+hf1wpRCSQcqA6W5+Ox202NDa0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "33d1e753c82ffc557b4a585c77de43d4c922ebb5",
+        "rev": "b06025f1533a1e07b6db3e75151caa155d1c7eb3",
         "type": "github"
       },
       "original": {
@@ -947,11 +947,11 @@
     },
     "nixpkgsGithubActionRunners": {
       "locked": {
-        "lastModified": 1709150264,
-        "narHash": "sha256-HofykKuisObPUfj0E9CJVfaMhawXkYx3G8UIFR/XQ38=",
+        "lastModified": 1714635257,
+        "narHash": "sha256-4cPymbty65RvF1DWQfc+Bc8B233A1BWxJnNULJKQ1EY=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9099616b93301d5cf84274b184a3a5ec69e94e08",
+        "rev": "63c3a29ca82437c87573e4c6919b09a24ea61b0f",
         "type": "github"
       },
       "original": {
@@ -993,13 +993,29 @@
         "type": "github"
       }
     },
+    "nixpkgsPulumi": {
+      "locked": {
+        "lastModified": 1715674170,
+        "narHash": "sha256-Z9UdViH9/Z2JtSG6dinxPgJaWLilGJEYHgoshRf93c8=",
+        "owner": "steveej-forks",
+        "repo": "nixpkgs",
+        "rev": "e18ac83f535c659e34ae49c27e8babeca1f0f202",
+        "type": "github"
+      },
+      "original": {
+        "owner": "steveej-forks",
+        "ref": "pulumi-version-bump",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgsUnstable": {
       "locked": {
-        "lastModified": 1690179384,
-        "narHash": "sha256-+arbgqFTAtoeKtepW9wCnA0njCOyoiDFyl0Q0SBSOtE=",
+        "lastModified": 1715534503,
+        "narHash": "sha256-5ZSVkFadZbFP1THataCaSf0JH2cAH3S29hU9rrxTEqk=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b12803b6d90e2e583429bb79b859ca53c348b39a",
+        "rev": "2057814051972fa1453ddfb0d98badbea9b83c06",
         "type": "github"
       },
       "original": {
@@ -1125,6 +1141,7 @@
         "nixpkgsGithubActionRunners": "nixpkgsGithubActionRunners",
         "nixpkgsMaster": "nixpkgsMaster",
         "nixpkgsNix": "nixpkgsNix",
+        "nixpkgsPulumi": "nixpkgsPulumi",
         "nixpkgsUnstable": "nixpkgsUnstable",
         "sops-nix": "sops-nix",
         "srvos": "srvos",

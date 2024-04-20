@@ -108,6 +108,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.crane.follows = "crane";
     };
+
+    nixpkgsPulumi.url = "github:steveej-forks/nixpkgs/pulumi-version-bump";
   };
 
   outputs = inputs @ {
@@ -138,6 +140,10 @@
           nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
           nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
           nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
+
+
+          pkgsUnstable = inputs'.nixpkgsUnstable.legacyPackages;
+          pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
         in
           pkgs.mkShell {
             packages =
@@ -179,6 +185,13 @@
 
                 pkgs.jq
                 pkgs.opentofu
+
+                pkgsPulumi.pulumictl
+                (pkgsPulumi.pulumi.withPackages(pulumiPackages: with pulumiPackages; [
+                  pulumi-language-go
+                  pulumi-command
+                ]))
+                pkgs.go_1_21
               ]
               ++ (
                 let

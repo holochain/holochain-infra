@@ -1,0 +1,309 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/holochain-infra/dev",
+        "latest": {
+            "manifest": {
+                "time": "2024-05-14T13:09:32.510230353+02:00",
+                "magic": "6cece4896dda855f1f8eeb278295600f55147c3a4c822170dd54c64d426a45f0",
+                "version": "v3.116.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:KNBcfUHWy2o=:v1:YK042d91RPDBfWqV:xVlR2oJkhgzm/F+EivUGASLvrkTNRw=="
+                }
+            },
+            "resources": [
+                {
+                    "urn": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
+                    "custom": false,
+                    "type": "pulumi:pulumi:Stack",
+                    "created": "2024-05-14T11:09:09.654118344Z",
+                    "modified": "2024-05-14T11:09:09.654118344Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1",
+                    "custom": true,
+                    "id": "33cabe9d-e2df-4cc5-bad0-c951c2c0fe05",
+                    "type": "pulumi:providers:random",
+                    "inputs": {
+                        "version": "4.16.1"
+                    },
+                    "outputs": {
+                        "version": "4.16.1"
+                    },
+                    "created": "2024-05-14T11:09:09.687754898Z",
+                    "modified": "2024-05-14T11:09:09.687754898Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider",
+                    "custom": true,
+                    "id": "faec7d12-cb67-4839-9685-4101d51eb1d4",
+                    "type": "pulumi:providers:threefold",
+                    "inputs": {
+                        "key_type": "sr25519",
+                        "mnemonic": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:YvQ6zDb8Mh1ajBfk:OuZyn5K2yFWWwZaflovvLOPEj/VQCy7sfR9JkEHnyEXbYvqtklGsCwj+OJDHQ0dZkT0FFwYxDkyY8vxGGQApBtpuJsejZN7WtDYIFskOE8RU+VdhiV4euDsZduHiHw=="
+                        },
+                        "network": "dev",
+                        "relay_url": "",
+                        "rmb_timeout": "",
+                        "substrate_url": ""
+                    },
+                    "outputs": {
+                        "key_type": "sr25519",
+                        "mnemonic": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:YvQ6zDb8Mh1ajBfk:OuZyn5K2yFWWwZaflovvLOPEj/VQCy7sfR9JkEHnyEXbYvqtklGsCwj+OJDHQ0dZkT0FFwYxDkyY8vxGGQApBtpuJsejZN7WtDYIFskOE8RU+VdhiV4euDsZduHiHw=="
+                        },
+                        "network": "dev",
+                        "relay_url": "",
+                        "rmb_timeout": "",
+                        "substrate_url": ""
+                    },
+                    "parent": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
+                    "propertyDependencies": {
+                        "key_type": [],
+                        "mnemonic": [],
+                        "network": []
+                    },
+                    "additionalSecretOutputs": [
+                        "mnemonic"
+                    ],
+                    "created": "2024-05-14T11:09:09.717076904Z",
+                    "modified": "2024-05-14T11:09:09.717076904Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_seed",
+                    "custom": true,
+                    "id": "BKBxyyFAfDs5vA5yW2YPT8nqHgFzBiqaFQARQL6n68U=",
+                    "type": "random:index/randomBytes:RandomBytes",
+                    "inputs": {
+                        "length": 32
+                    },
+                    "outputs": {
+                        "base64": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:J+g32U904ub/Rrsq:Se7HujccVxigWVhFyVAd+BaVmAogguBLF2NBb3wxDMD9JL8RevQmv2AMFklOnPPgQenJvkpm96UYdHAQpuk="
+                        },
+                        "hex": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:5QBpBGmjkYAD8zud:vIznwpfMw0sfYMC7DF8zkHKFct9HzWhNQoOIDGMciINaWo5fTjxzPSTZ+zwJwspTgmnaJAFhNSqtebGz92wfQpk0TRvbudr9QKK0URyEclXTGA=="
+                        },
+                        "length": 32
+                    },
+                    "parent": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1::33cabe9d-e2df-4cc5-bad0-c951c2c0fe05",
+                    "propertyDependencies": {
+                        "length": []
+                    },
+                    "additionalSecretOutputs": [
+                        "base64",
+                        "hex"
+                    ],
+                    "created": "2024-05-14T11:09:09.719585326Z",
+                    "modified": "2024-05-14T11:09:09.719585326Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_ip_seed",
+                    "custom": true,
+                    "id": "YfHuijJ+",
+                    "type": "random:index/randomBytes:RandomBytes",
+                    "inputs": {
+                        "length": 6
+                    },
+                    "outputs": {
+                        "base64": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:vnZso6qpBZQVgl+8:Cxi2yMyuI0c+2abzrvBu4h5oA8pzF4jXwbs="
+                        },
+                        "hex": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:YpHhjCgd9yR2VuCN:wkrzFeKTHxGg3wovFfYhkpZLKoWmoo6snoO0mvwc"
+                        },
+                        "length": 6
+                    },
+                    "parent": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1::33cabe9d-e2df-4cc5-bad0-c951c2c0fe05",
+                    "propertyDependencies": {
+                        "length": []
+                    },
+                    "additionalSecretOutputs": [
+                        "base64",
+                        "hex"
+                    ],
+                    "created": "2024-05-14T11:09:09.72187069Z",
+                    "modified": "2024-05-14T11:09:09.72187069Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::holochain-infra::threefold:provider:Network::network0",
+                    "custom": true,
+                    "id": "network0",
+                    "type": "threefold:provider:Network",
+                    "inputs": {
+                        "add_wg_access": false,
+                        "description": "example grid network 0",
+                        "ip_range": "10.1.0.0/16",
+                        "mycelium_keys": {
+                            "195": {
+                                "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                "ciphertext": "v1:ICYlaFBowDmWJULc:R3rwpuC0IodV6QQ7wbsvbaow3aZ5G4QBFNE0FVGb01Us+mjzsX4bfEHwFsiR2b+CcGThoXoBSt+pz4nU/fkQPc2k+iIq+U/ZFf5KcQjm/p2/mA=="
+                            }
+                        },
+                        "name": "network0",
+                        "nodes": [
+                            195
+                        ],
+                        "solution_type": ""
+                    },
+                    "outputs": {
+                        "access_wg_config": "",
+                        "add_wg_access": false,
+                        "description": "example grid network 0",
+                        "external_ip": "",
+                        "external_sk": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                        "ip_range": "10.1.0.0/16",
+                        "mycelium_keys": {
+                            "195": {
+                                "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                "ciphertext": "v1:E30htbegpfv64clz:1/gXgl6yqJDp6PjTXZP5oO+0sCgvNZwD487rHSK4jVPBcUWg8WTIwvXrIEvj44cHCRr2+GEYGik7vIdL1hlFcofOiRoCUrUIm9IZ7pGBivnoUw=="
+                            }
+                        },
+                        "name": "network0",
+                        "node_deployment_id": {
+                            "195": 110207
+                        },
+                        "nodes": [
+                            195
+                        ],
+                        "nodes_ip_range": {
+                            "195": "10.1.2.0/24"
+                        },
+                        "public_node_id": 0,
+                        "solution_type": "Network"
+                    },
+                    "parent": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
+                    "dependencies": [
+                        "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_seed"
+                    ],
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider::faec7d12-cb67-4839-9685-4101d51eb1d4",
+                    "propertyDependencies": {
+                        "description": [],
+                        "ip_range": [],
+                        "mycelium_keys": [
+                            "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_seed"
+                        ],
+                        "name": [],
+                        "nodes": []
+                    },
+                    "created": "2024-05-14T11:09:22.154766822Z",
+                    "modified": "2024-05-14T11:09:22.154766822Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::holochain-infra::threefold:provider:Deployment::deployment",
+                    "custom": true,
+                    "id": "deployment",
+                    "type": "threefold:provider:Deployment",
+                    "inputs": {
+                        "name": "steveej_vm0",
+                        "network_name": "network0",
+                        "node_id": 195,
+                        "solution_provider": 0,
+                        "solution_type": "",
+                        "vms": [
+                            {
+                                "cpu": 1,
+                                "description": "description",
+                                "entrypoint": "/init",
+                                "env_vars": {
+                                    "SSH_KEY": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAIODJoJ7Chi8jPTGmKQ5MlB7+TgNGznreeRW/K34v1ey23/FlnIxP9XyyLkzojKALTfAQYgqzrQV3HDSRwhd1rXB7YLq1/CiVWRJvDMTkJiOCV515eiUJGXu1G8e12d/USPNBMEzMJGvqBCIGYen5OxXkyIHIREfePNi5k337G5z9fiuiggxJl9ty6qZ4XIRgFQj9jAoShixP/+99I7XrGWeFQ1BmLZWzi20SQGKvogYnOszDZFqBAHGFnCFYHaTz2jOXXCtQsa27gr8D2iLRFaxvhB7XMK+VbpDcZGjmfRJ701XxFv15GFnFAV71hTaYqj/Ebpw9Vs02+gUp3+tt cardno:17_673_080"
+                                },
+                                "flist": "https://sj-bm-hostkey0.dev.infra.holochain.org/s3/tfgrid-eval/tfgrid-base.20240408.190655.fl",
+                                "flist_checksum": "",
+                                "memory": 512,
+                                "mycelium_ip_seed": {
+                                    "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                    "ciphertext": "v1:zXT2H01FmLnEM83q:5JhI1GSSqn4uHCtIKuXyp7prZ9AA7OvPiEAPRHnS"
+                                },
+                                "name": "steveej_vm0",
+                                "network_name": "network0",
+                                "planetary": false,
+                                "public_ip": false,
+                                "public_ip6": false,
+                                "rootfs_size": 10000
+                            }
+                        ]
+                    },
+                    "outputs": {
+                        "contract_id": 110208,
+                        "ip_range": "10.1.2.0/24",
+                        "name": "steveej_vm0",
+                        "network_name": "network0",
+                        "node_deployment_id": {
+                            "195": 110208
+                        },
+                        "node_id": 195,
+                        "qsfs_computed": [],
+                        "solution_provider": 0,
+                        "solution_type": "vm/steveej_vm0",
+                        "vms": [
+                            {
+                                "cpu": 1,
+                                "description": "description",
+                                "entrypoint": "/init",
+                                "env_vars": {
+                                    "SSH_KEY": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAIODJoJ7Chi8jPTGmKQ5MlB7+TgNGznreeRW/K34v1ey23/FlnIxP9XyyLkzojKALTfAQYgqzrQV3HDSRwhd1rXB7YLq1/CiVWRJvDMTkJiOCV515eiUJGXu1G8e12d/USPNBMEzMJGvqBCIGYen5OxXkyIHIREfePNi5k337G5z9fiuiggxJl9ty6qZ4XIRgFQj9jAoShixP/+99I7XrGWeFQ1BmLZWzi20SQGKvogYnOszDZFqBAHGFnCFYHaTz2jOXXCtQsa27gr8D2iLRFaxvhB7XMK+VbpDcZGjmfRJ701XxFv15GFnFAV71hTaYqj/Ebpw9Vs02+gUp3+tt cardno:17_673_080"
+                                },
+                                "flist": "https://sj-bm-hostkey0.dev.infra.holochain.org/s3/tfgrid-eval/tfgrid-base.20240408.190655.fl",
+                                "flist_checksum": "",
+                                "memory": 512,
+                                "mycelium_ip_seed": {
+                                    "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                    "ciphertext": "v1:NMEqtkgkjqmcElJA:ZMlN4oNxY76myqUF1cQYWd5pRwk56KsvEqkI6QKh"
+                                },
+                                "name": "steveej_vm0",
+                                "network_name": "network0",
+                                "planetary": false,
+                                "public_ip": false,
+                                "public_ip6": false,
+                                "rootfs_size": 10000
+                            }
+                        ],
+                        "vms_computed": [
+                            {
+                                "computed_ip": "",
+                                "computed_ip6": "",
+                                "console_url": "10.1.2.1:20002",
+                                "ip": "10.1.2.2",
+                                "mycelium_ip": "505:8388:c6e0:3d98:ff0f:61f1:ee8a:327e",
+                                "planetary_ip": ""
+                            }
+                        ],
+                        "zdbs_computed": []
+                    },
+                    "parent": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
+                    "dependencies": [
+                        "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_ip_seed",
+                        "urn:pulumi:dev::holochain-infra::threefold:provider:Network::network0"
+                    ],
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider::faec7d12-cb67-4839-9685-4101d51eb1d4",
+                    "propertyDependencies": {
+                        "name": [],
+                        "network_name": [
+                            "urn:pulumi:dev::holochain-infra::threefold:provider:Network::network0"
+                        ],
+                        "node_id": [],
+                        "vms": [
+                            "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_ip_seed",
+                            "urn:pulumi:dev::holochain-infra::threefold:provider:Network::network0"
+                        ]
+                    },
+                    "created": "2024-05-14T11:09:32.510014639Z",
+                    "modified": "2024-05-14T11:09:32.510014639Z"
+                }
+            ]
+        }
+    }
+}
