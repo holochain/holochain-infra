@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs: {}
 
-env:
+env: {}
 
 jobs:
   lints:

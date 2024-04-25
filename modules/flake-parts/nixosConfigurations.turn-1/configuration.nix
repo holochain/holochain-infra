@@ -5,20 +5,23 @@
   pkgs,
   ...
 }: let
-  turnIpv4 = "37.27.24.128";
-  turnFqdn = "turn.infra.holochain.org";
+  hostName = "turn-1";
 
-  signalIpv4 = "95.217.30.224";
-  signalFqdn = "signal.infra.holochain.org";
+  turnIpv4 = "65.109.5.38";
+  turnFqdn = "${hostName}.infra.holochain.org";
 
-  bootstrapIpv4 = "95.216.179.59";
-  bootstrapFqdn = "bootstrap.infra.holochain.org";
+  signalIpv4 = "95.217.243.165";
+  signalFqdn = "signal-1.infra.holochain.org";
+
+  bootstrapIpv4 = "65.109.242.27";
+  bootstrapFqdn = "bootstrap-1.infra.holochain.org";
 in {
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
     inputs.srvos.nixosModules.mixins-terminfo
     inputs.srvos.nixosModules.hardware-hetzner-cloud
+    self.nixosModules.hardware-hetzner-cloud-cpx
 
     inputs.sops-nix.nixosModules.sops
 
@@ -31,7 +34,7 @@ in {
     self.nixosModules.kitsune-bootstrap
   ];
 
-  networking.hostName = "turn-infra-holochain-org"; # Define your hostname.
+  networking.hostName = hostName; # Define your hostname.
 
   hostName = turnIpv4;
 
@@ -45,12 +48,6 @@ in {
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
   ];
 
-  boot.loader.grub.enable = false;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.kernelPackages = pkgs.linuxPackages;
-
   # FIXME: is there a better way to do this?
   environment.etc."systemd/network/10-cloud-init-eth0.network.d/00-floating-ips.conf".text = ''
     [Network]
@@ -58,43 +55,7 @@ in {
     Address = ${bootstrapIpv4}/32
   '';
 
-  disko.devices.disk.sda = {
-    device = "/dev/sda";
-    type = "disk";
-    content = {
-      type = "gpt";
-      partitions = {
-        ESP = {
-          type = "EF00";
-          size = "1G";
-          content = {
-            type = "filesystem";
-            format = "vfat";
-            mountpoint = "/boot";
-          };
-        };
-        root = {
-          size = "100%";
-          content = {
-            type = "btrfs";
-            extraArgs = ["-f"]; # Override existing partition
-            subvolumes = {
-              # Subvolume name is different from mountpoint
-              "/rootfs" = {
-                mountpoint = "/";
-              };
-              "/nix" = {
-                mountOptions = ["noatime"];
-                mountpoint = "/nix";
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 
   services.holochain-turn-server = {
     enable = true;
