@@ -96,6 +96,18 @@
       flake = false;
       url = "github:steveej-forks/coturn/debug-cli-login";
     };
+
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    threefold-rfs = {
+      url = "github:steveej-forks/threefold-rfs/configure-pool-pin-rust";
+      # url = "github:threefoldtech/rfs/configure-pool";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.crane.follows = "crane";
+    };
   };
 
   outputs = inputs @ {
@@ -116,6 +128,7 @@
         self',
         inputs',
         pkgs,
+        lib,
         ...
       }: {
         # Per-system attributes can be defined here. The self' and inputs'
@@ -127,40 +140,54 @@
           nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
         in
           pkgs.mkShell {
-            packages = [
-              pkgs.yq-go
+            packages =
+              [
+                pkgs.yq-go
 
-              inputs'.nixos-anywhere.packages.default
+                inputs'.nixos-anywhere.packages.default
 
-              inputs'.sops-nix.packages.default
-              pkgs.ssh-to-age
-              pkgs.age
-              pkgs.age-plugin-yubikey
-              pkgs.sops
+                inputs'.sops-nix.packages.default
+                pkgs.ssh-to-age
+                pkgs.age
+                pkgs.age-plugin-yubikey
+                pkgs.sops
 
-              self'.packages.nomad
+                # self'.packages.nomad
 
-              (pkgs.writeShellScriptBin "nomad-ui-proxy" (let
-                caddyfile = pkgs.writeText "caddyfile" ''
-                  {
-                    auto_https off
-                    http_port 2016
-                  }
+                (pkgs.writeShellScriptBin "nomad-ui-proxy" (let
+                  caddyfile = pkgs.writeText "caddyfile" ''
+                    {
+                      auto_https off
+                      http_port 2016
+                    }
 
-                  localhost:2016 {
-                    reverse_proxy ${nomadAddr} {
-                      transport http {
-                        tls_trusted_ca_certs ${nomadCaCert}
-                        tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                    localhost:2016 {
+                      reverse_proxy ${nomadAddr} {
+                        transport http {
+                          tls_trusted_ca_certs ${nomadCaCert}
+                          tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                        }
                       }
                     }
-                  }
-                '';
-              in ''
-                ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
-              ''))
-              pkgs.caddy
-            ];
+                  '';
+                in ''
+                  ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
+                ''))
+                pkgs.caddy
+
+                inputs'.threefold-rfs.packages.default
+
+                pkgs.jq
+              ]
+              ++ (
+                let
+                  zosCmds = builtins.filter (pkg: null != (builtins.match "^zos-.*" pkg.name)) (builtins.attrValues self'.packages);
+                in
+                  zosCmds
+                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.nativeBuildInputs or []) zosCmds))
+                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.buildInputs or []) zosCmds))
+                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.runtimeInputs or []) zosCmds))
+              );
 
             NOMAD_ADDR = nomadAddr;
             NOMAD_CACERT = nomadCaCert;
