@@ -76,7 +76,7 @@
     "crane": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs-23-11"
+          "craneNixpkgs"
         ]
       },
       "locked": {
@@ -90,6 +90,22 @@
       "original": {
         "owner": "ipetkov",
         "repo": "crane",
+        "type": "github"
+      }
+    },
+    "craneNixpkgs": {
+      "locked": {
+        "lastModified": 1710806803,
+        "narHash": "sha256-qrxvLS888pNJFwJdK+hf1wpRCSQcqA6W5+Ox202NDa0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "b06025f1533a1e07b6db3e75151caa155d1c7eb3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -1071,6 +1087,7 @@
         "cachix_for_watch_store": "cachix_for_watch_store",
         "coturn": "coturn",
         "crane": "crane",
+        "craneNixpkgs": "craneNixpkgs",
         "darwin": "darwin",
         "disko": "disko",
         "flake-parts": "flake-parts",
@@ -1313,16 +1330,16 @@
     "tx5": {
       "flake": false,
       "locked": {
-        "lastModified": 1707175829,
-        "narHash": "sha256-Lkry9eEUk6aXe7aQ824YwkG2Ra44GPapIznGR2Ao/PA=",
+        "lastModified": 1710791497,
+        "narHash": "sha256-DfuppR6geBawupO8WnssXMZEOQxP0/FPPlfSmr93vlo=",
         "owner": "holochain",
         "repo": "tx5",
-        "rev": "d5fa9096eae2156618c701e87b7c40770faa123c",
+        "rev": "af0ecea9bee17f4e6230b15dd4af89bb0fc98bd9",
         "type": "github"
       },
       "original": {
         "owner": "holochain",
-        "ref": "tx5-signal-srv-v0.0.7-alpha",
+        "ref": "tx5-signal-srv-v0.0.8-alpha",
         "repo": "tx5",
         "type": "github"
       }

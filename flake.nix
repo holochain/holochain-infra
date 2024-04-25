@@ -33,9 +33,11 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
+    # have the latest rust version available
+    craneNixpkgs = {url = "github:nixos/nixpkgs/nixos-unstable";};
     crane = {
       url = "github:ipetkov/crane";
-      inputs.nixpkgs.follows = "nixpkgs-23-11";
+      inputs.nixpkgs.follows = "craneNixpkgs";
     };
 
     keys_steveej = {
@@ -81,7 +83,7 @@
 
     cachix_for_watch_store.url = "github:cachix/cachix/v1.5";
 
-    tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.7-alpha";
+    tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.8-alpha";
     tx5.flake = false;
 
     holochain-versions.url = "github:holochain/holochain?dir=versions/weekly";
