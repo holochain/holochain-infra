@@ -74,7 +74,7 @@
   };
 
   sops.secrets.github-runners-token = {
-    key = "gh_hra2_pat3";
+    key = "gh_hra2_pat5";
     sopsFile = ../../../secrets/${config.networking.hostName}/secrets.yaml;
   };
 
