@@ -23,9 +23,7 @@ creation_rules:
       - *dweb-reverse-proxy
   - path_regex: ^secrets/linux-builder-01/[^/]+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
+    - age:
       - *linux-builder-01
   - path_regex: ^secrets/nomad/.+$
     key_groups:
