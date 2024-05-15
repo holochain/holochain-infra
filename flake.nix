@@ -110,6 +110,9 @@
     };
 
     nixpkgsPulumi.url = "github:steveej-forks/nixpkgs/pulumi-version-bump";
+
+    holoNixpkgs.url = "https://hydra.holo.host/channel/custom/holo-nixpkgs/2112/holo-nixpkgs/nixexprs.tar.xz";
+    # holoNixpkgs.url = "/home/steveej/src/holo/holo-nixpkgs";
   };
 
   outputs = inputs @ {

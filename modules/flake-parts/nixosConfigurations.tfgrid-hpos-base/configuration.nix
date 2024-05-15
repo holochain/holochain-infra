@@ -6,7 +6,7 @@
   lib,
   ...
 }: let
-  hostName = "tfgrid-devnet-vm0";
+  hostName = "tfgrid-hpos-base";
 in {
 
   imports = [
@@ -15,21 +15,20 @@ in {
     inputs.sops-nix.nixosModules.sops
 
     self.nixosModules.nomad-client
+
+    "${inputs.holoNixpkgs}/profiles/logical/binary-cache.nix"
   ];
 
   system.stateVersion = lib.mkForce "23.11";
 
   sops.age.keyFile = "/etc/age.key";
 
-  nix.settings.max-jobs = 8;
-
   environment.systemPackages = [
-    pkgs.iperf3
     pkgs.man
   ];
 
   holochain-infra.nomad-client = {
-    enable = true;
+    enable = false;
     machineType = "zos-vm";
   };
 
