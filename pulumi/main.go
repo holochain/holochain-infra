@@ -45,6 +45,8 @@ func main() {
 			Nodes:       pulumi.Array{pulumi.Int(node)},
 
 			Mycelium_keys: pulumi.StringMap{fmt.Sprint(node): mycelium_seed.Hex},
+
+			Add_wg_access: pulumi.Bool(true),
 		},
 			pulumi.Provider(grid_provider),
 		)
@@ -107,6 +109,7 @@ func main() {
 		*/
 		ctx.Export("mycelium_ip", deployment.Vms_computed.Index(pulumi.Int(0)).Mycelium_ip())
 		ctx.Export("vm0", deployment.Vms_computed.Index(pulumi.Int(0)))
+		ctx.Export("wg_access_config", grid_network.Access_wg_config)
 
 		return nil
 	})
