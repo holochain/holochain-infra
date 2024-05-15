@@ -1,1 +1,4 @@
 encryptionsalt: v1:KNBcfUHWy2o=:v1:YK042d91RPDBfWqV:xVlR2oJkhgzm/F+EivUGASLvrkTNRw==
+config:
+  holochain-infra:tfgrid_devnet_mnemonic:
+    secure: v1:HDOR5EME2F6JO3r7:/5QBMCuQW4FuZxSoh72uhuhL9CFdK7bCkNcDLgo0LSRZixxQgeu38G4JwQcWcE2nLAQ7sYWjzaL7Lf1KDsUsRNJP8vjaipIMnfhsw9HmtesnRNLffzzjlzw2PJc=

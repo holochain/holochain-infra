@@ -2,20 +2,21 @@ package main
 
 import (
 	"fmt"
-	"os"
+
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 
 	"github.com/pulumi/pulumi-random/sdk/v4/go/random"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+
 	"github.com/threefoldtech/pulumi-threefold/sdk/go/threefold"
 	"github.com/threefoldtech/pulumi-threefold/sdk/go/threefold/provider"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		mnemonic := os.Getenv("TF_VAR_tfgrid_dev_mnemonics")
 
 		grid_provider, err := threefold.NewProvider(ctx, "grid provider", &threefold.ProviderArgs{
-			Mnemonic: pulumi.String(mnemonic),
+			Mnemonic: config.RequireSecret(ctx, "tfgrid_devnet_mnemonic"),
 			Network:  pulumi.String("dev"),
 		})
 		if err != nil {
