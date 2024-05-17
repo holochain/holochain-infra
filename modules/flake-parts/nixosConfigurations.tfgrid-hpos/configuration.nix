@@ -32,4 +32,9 @@ in {
   };
 
   networking.hostName = hostName;
+
+  # TODO: figure out auto-update mechanism
+  system.holo-nixpkgs.autoUpgrade.enable = lib.mkForce false;
+  services.hpos-led-manager.enable = lib.mkForce false;
+  services.netstatsd.enable = lib.mkForce false;
 }

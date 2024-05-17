@@ -4,7 +4,7 @@
         "stack": "organization/holochain-infra/dev",
         "latest": {
             "manifest": {
-                "time": "2024-05-15T16:01:09.064195726+02:00",
+                "time": "2024-05-17T13:37:33.929912539Z",
                 "magic": "6cece4896dda855f1f8eeb278295600f55147c3a4c822170dd54c64d426a45f0",
                 "version": "v3.116.0"
             },
@@ -19,13 +19,13 @@
                     "urn": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
                     "custom": false,
                     "type": "pulumi:pulumi:Stack",
-                    "created": "2024-05-15T14:00:38.291662576Z",
-                    "modified": "2024-05-15T14:00:38.291662576Z"
+                    "created": "2024-05-17T13:37:07.128312007Z",
+                    "modified": "2024-05-17T13:37:07.128312007Z"
                 },
                 {
                     "urn": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1",
                     "custom": true,
-                    "id": "54daf801-46a7-41ac-a6ac-bd11e7d98aa7",
+                    "id": "f299d955-5956-4aeb-bac5-8766545ef743",
                     "type": "pulumi:providers:random",
                     "inputs": {
                         "version": "4.16.1"
@@ -33,19 +33,19 @@
                     "outputs": {
                         "version": "4.16.1"
                     },
-                    "created": "2024-05-15T14:00:38.32341129Z",
-                    "modified": "2024-05-15T14:00:38.32341129Z"
+                    "created": "2024-05-17T13:37:07.17140637Z",
+                    "modified": "2024-05-17T13:37:07.17140637Z"
                 },
                 {
                     "urn": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider",
                     "custom": true,
-                    "id": "25ed340e-4e69-4a98-938f-a011498fa056",
+                    "id": "ba49f78a-6db8-400b-a0f7-1af1965ceccb",
                     "type": "pulumi:providers:threefold",
                     "inputs": {
                         "key_type": "sr25519",
                         "mnemonic": {
                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                            "ciphertext": "v1:pVNQI67P18tlqKbI:PSNehKFvLftjOa2gFdjy1BRgcZssRLxaz3h3ZfsbZzBTS9EyKDzjQb0VAoFVSdXVKt0JlWPccRAOQ3503OmVNv0XUzEGzLuieW/15CHHSRi4Jt71QRFzRF3mgHMTHQ=="
+                            "ciphertext": "v1:T5ciugMDDWMth0ci:/KlKTQMmA+HS41wfsFgTfkqQONIYUlmW5BalyO7n9v0nWEF9hOpnGnkACXT+O6JEeD/UaGzd8V3n3ad7JGNiPEymmaXT0dQ10y/QYRCR4WemssO/FpLyw71xUAIwBA=="
                         },
                         "network": "dev",
                         "relay_url": "",
@@ -56,7 +56,7 @@
                         "key_type": "sr25519",
                         "mnemonic": {
                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                            "ciphertext": "v1:pVNQI67P18tlqKbI:PSNehKFvLftjOa2gFdjy1BRgcZssRLxaz3h3ZfsbZzBTS9EyKDzjQb0VAoFVSdXVKt0JlWPccRAOQ3503OmVNv0XUzEGzLuieW/15CHHSRi4Jt71QRFzRF3mgHMTHQ=="
+                            "ciphertext": "v1:T5ciugMDDWMth0ci:/KlKTQMmA+HS41wfsFgTfkqQONIYUlmW5BalyO7n9v0nWEF9hOpnGnkACXT+O6JEeD/UaGzd8V3n3ad7JGNiPEymmaXT0dQ10y/QYRCR4WemssO/FpLyw71xUAIwBA=="
                         },
                         "network": "dev",
                         "relay_url": "",
@@ -72,13 +72,13 @@
                     "additionalSecretOutputs": [
                         "mnemonic"
                     ],
-                    "created": "2024-05-15T14:00:38.350098628Z",
-                    "modified": "2024-05-15T14:00:38.350098628Z"
+                    "created": "2024-05-17T13:37:07.208071356Z",
+                    "modified": "2024-05-17T13:37:07.208071356Z"
                 },
                 {
                     "urn": "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_seed",
                     "custom": true,
-                    "id": "Y2Wrq/FkyE2494b8W7NQdKDxur8XjNfTGG1Q2MUq9ak=",
+                    "id": "xUlNfqx2nQfbft46rYRd4Tb0iWeDP0Pxc1qpbgUSwXw=",
                     "type": "random:index/randomBytes:RandomBytes",
                     "inputs": {
                         "length": 32
@@ -86,16 +86,16 @@
                     "outputs": {
                         "base64": {
                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                            "ciphertext": "v1:Gef2wn/CypBkbKbG:GIIsRQB/f6olqmiE2qXqIsbNX0LMUU9ibvbtkaN8/xVjv8M4q48whz6vEAbDYL9ACB6vIBXVL/KNTXeg+og="
+                            "ciphertext": "v1:ni6rFbeB1dxFawMv:oAODLqOmlfgmeJ+iApGviF/bOs4wbvisPCWD+wEFK5tYpApZjU672/TAvxMqQbBBbc5p4FNIzMO8AwS8u4Q="
                         },
                         "hex": {
                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                            "ciphertext": "v1:3ZkwJiyQXy3+zk5a:lmsHOYDQs0v0mudNQtbui2QX9rebLX2GyGHLcl/L3vH1TSz5+j0yioz0LA2LlWR+pMQ7VjgC+zskTclj6BNHWnexEIQSObBUvL5KgmP9wbtjTg=="
+                            "ciphertext": "v1:abi3bQ6hgmWknoA/:JDQTFpayuJqVYzGaPIfDA+7jBsWOoApfagbWuTggA/IzzN5bs05ytQ90E2bkZF07gJxRGkJOV8UUmh/o5rg/rmRkHaL1LrhWPQwIiTLREnX05A=="
                         },
                         "length": 32
                     },
                     "parent": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
-                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1::54daf801-46a7-41ac-a6ac-bd11e7d98aa7",
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1::f299d955-5956-4aeb-bac5-8766545ef743",
                     "propertyDependencies": {
                         "length": []
                     },
@@ -103,13 +103,13 @@
                         "base64",
                         "hex"
                     ],
-                    "created": "2024-05-15T14:00:38.352227837Z",
-                    "modified": "2024-05-15T14:00:38.352227837Z"
+                    "created": "2024-05-17T13:37:07.210802014Z",
+                    "modified": "2024-05-17T13:37:07.210802014Z"
                 },
                 {
                     "urn": "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_ip_seed",
                     "custom": true,
-                    "id": "Hn/B8PIq",
+                    "id": "E9G4n/fX",
                     "type": "random:index/randomBytes:RandomBytes",
                     "inputs": {
                         "length": 6
@@ -117,16 +117,16 @@
                     "outputs": {
                         "base64": {
                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                            "ciphertext": "v1:0Sh3rE9X9CAoa2FZ:ZUl5B7yrC4IDHZEZmxd3RfPvwRi2rpLnEN4="
+                            "ciphertext": "v1:8IV9tMWGmEUtebR2:vFYTXGeyrV3isGlV07eVr9wU2ZvvHC0Lf+U="
                         },
                         "hex": {
                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                            "ciphertext": "v1:RFm0DcHAy6zljxR4:djZ6XGMQbHTbfm0LAVXdK901Zg7TRPkLfHeCRQHH"
+                            "ciphertext": "v1:iphKLkcisaHn6kUE:2s/MxeR09mjzLRAox3PX+G74pHbLbEjoFdNnB4e7"
                         },
                         "length": 6
                     },
                     "parent": "urn:pulumi:dev::holochain-infra::pulumi:pulumi:Stack::holochain-infra-dev",
-                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1::54daf801-46a7-41ac-a6ac-bd11e7d98aa7",
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:random::default_4_16_1::f299d955-5956-4aeb-bac5-8766545ef743",
                     "propertyDependencies": {
                         "length": []
                     },
@@ -134,8 +134,8 @@
                         "base64",
                         "hex"
                     ],
-                    "created": "2024-05-15T14:00:38.353930256Z",
-                    "modified": "2024-05-15T14:00:38.353930256Z"
+                    "created": "2024-05-17T13:37:07.21229854Z",
+                    "modified": "2024-05-17T13:37:07.21229854Z"
                 },
                 {
                     "urn": "urn:pulumi:dev::holochain-infra::threefold:provider:Network::network0",
@@ -149,7 +149,7 @@
                         "mycelium_keys": {
                             "195": {
                                 "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                "ciphertext": "v1:d0UGBIi3y9hIdzea:N5U2uu20qCR1AULULMd7AurYaAEC53ILtNwS+szIcgyzuzI+huMM91h43wGRKlirqtM2QIOqFp2MaCcXcV9ccJqqXfShI1af5e4fZjRvHlZpXA=="
+                                "ciphertext": "v1:8Okr8y4ArASa2prd:dnrHhJD5YtR/SL3LjDkcDoG843eD/m7T8yceW+kURq1Me0l5uiEjkdnGoHteLZUEmEY6a/JFhH/pkywQkd3oeagHptAeN7GsLSlXwcRtlntZdQ=="
                             }
                         },
                         "name": "network0",
@@ -159,22 +159,22 @@
                         "solution_type": ""
                     },
                     "outputs": {
-                        "access_wg_config": "\n[Interface]\nAddress = 100.64.1.2\nPrivateKey = EID/tRBMQkXXN02FHfQjxb1Dt9Z3rdFBnuflqZTihWY=\n[Peer]\nPublicKey = fjCTIqVyIFVERCKm5922idaDkzlJwdMeBAjJQYXlSVw=\nAllowedIPs = 10.1.0.0/16, 100.64.0.0/16\nPersistentKeepalive = 25\nEndpoint = 185.206.122.32:8674\n\t",
+                        "access_wg_config": "\n[Interface]\nAddress = 100.64.1.2\nPrivateKey = iJ7wgZKAPVa8jazDFn2/AYyXHNKbYza/kSwxejRY7Fw=\n[Peer]\nPublicKey = kKxITtZ2T5TuULi+LtvjidKEK1rRSQl1VTEtx1Cx+GU=\nAllowedIPs = 10.1.0.0/16, 100.64.0.0/16\nPersistentKeepalive = 25\nEndpoint = 185.206.122.32:2594\n\t",
                         "add_wg_access": true,
                         "description": "example grid network 0",
                         "external_ip": "10.1.2.0/24",
-                        "external_sk": "EID/tRBMQkXXN02FHfQjxb1Dt9Z3rdFBnuflqZTihWY=",
+                        "external_sk": "iJ7wgZKAPVa8jazDFn2/AYyXHNKbYza/kSwxejRY7Fw=",
                         "ip_range": "10.1.0.0/16",
                         "mycelium_keys": {
                             "195": {
                                 "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                "ciphertext": "v1:aMBvW/Kr/Tal7Rhz:LiDCaV76ZzOBDGmmyDQZtMOogaWSJtsrrAPbU5L31tBX3QNGjRlnUAMKjKr1VlQWXpl8zLaw56U2ZJbaFuDJp22kcIEWmmkDY2dgomAaG0HhtA=="
+                                "ciphertext": "v1:FKaVtBcjx7uqChVK:DpFbG9HJVXb2SV3MQjQBQaSyckZc5Emv02rBQJjTsx99V6o65EHmeJQXTuEBF0QPbANMSOy+U2kyvv8ITQzvRPOxcI6kChXoBTn644w+QF5+5Q=="
                             }
                         },
                         "name": "network0",
                         "node_deployment_id": {
-                            "11": 110404,
-                            "195": 110405
+                            "11": 110703,
+                            "195": 110704
                         },
                         "nodes": [
                             195
@@ -190,7 +190,7 @@
                     "dependencies": [
                         "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_seed"
                     ],
-                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider::25ed340e-4e69-4a98-938f-a011498fa056",
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider::ba49f78a-6db8-400b-a0f7-1af1965ceccb",
                     "propertyDependencies": {
                         "add_wg_access": [],
                         "description": [],
@@ -201,8 +201,8 @@
                         "name": [],
                         "nodes": []
                     },
-                    "created": "2024-05-15T14:00:57.735685234Z",
-                    "modified": "2024-05-15T14:00:57.735685234Z"
+                    "created": "2024-05-17T13:37:20.716062019Z",
+                    "modified": "2024-05-17T13:37:20.716062019Z"
                 },
                 {
                     "urn": "urn:pulumi:dev::holochain-infra::threefold:provider:Deployment::deployment",
@@ -223,14 +223,14 @@
                                 "env_vars": {
                                     "SSH_KEY": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAIODJoJ7Chi8jPTGmKQ5MlB7+TgNGznreeRW/K34v1ey23/FlnIxP9XyyLkzojKALTfAQYgqzrQV3HDSRwhd1rXB7YLq1/CiVWRJvDMTkJiOCV515eiUJGXu1G8e12d/USPNBMEzMJGvqBCIGYen5OxXkyIHIREfePNi5k337G5z9fiuiggxJl9ty6qZ4XIRgFQj9jAoShixP/+99I7XrGWeFQ1BmLZWzi20SQGKvogYnOszDZFqBAHGFnCFYHaTz2jOXXCtQsa27gr8D2iLRFaxvhB7XMK+VbpDcZGjmfRJ701XxFv15GFnFAV71hTaYqj/Ebpw9Vs02+gUp3+tt cardno:17_673_080"
                                 },
-                                "flist": "https://sj-bm-hostkey0.dev.infra.holochain.org/s3/tfgrid-eval/tfgrid-base.20240408.190655.fl",
+                                "flist": "https://sj-bm-hostkey0.dev.infra.holochain.org/s3/tfgrid-eval/tfgrid-base.20240517.114850.fl",
                                 "flist_checksum": "",
                                 "memory": 512,
                                 "mycelium_ip_seed": {
                                     "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                    "ciphertext": "v1:TswQ/jfdrg4xrG09:PB0LwR/QrA0Q6zMkbvHIxFcIbS7AZhDc8mmmeJY+"
+                                    "ciphertext": "v1:6G/Rw1jrueLlzd6J:T9Sjp4P7N0gqP5cSYsZawxmSCrbefTctxN84GcYJ"
                                 },
-                                "name": "steveej_vm0",
+                                "name": "tfgrid_base",
                                 "network_name": "network0",
                                 "planetary": false,
                                 "public_ip": false,
@@ -240,12 +240,12 @@
                         ]
                     },
                     "outputs": {
-                        "contract_id": 110406,
+                        "contract_id": 110705,
                         "ip_range": "10.1.3.0/24",
                         "name": "steveej_vm0",
                         "network_name": "network0",
                         "node_deployment_id": {
-                            "195": 110406
+                            "195": 110705
                         },
                         "node_id": 195,
                         "qsfs_computed": [],
@@ -259,14 +259,14 @@
                                 "env_vars": {
                                     "SSH_KEY": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAIODJoJ7Chi8jPTGmKQ5MlB7+TgNGznreeRW/K34v1ey23/FlnIxP9XyyLkzojKALTfAQYgqzrQV3HDSRwhd1rXB7YLq1/CiVWRJvDMTkJiOCV515eiUJGXu1G8e12d/USPNBMEzMJGvqBCIGYen5OxXkyIHIREfePNi5k337G5z9fiuiggxJl9ty6qZ4XIRgFQj9jAoShixP/+99I7XrGWeFQ1BmLZWzi20SQGKvogYnOszDZFqBAHGFnCFYHaTz2jOXXCtQsa27gr8D2iLRFaxvhB7XMK+VbpDcZGjmfRJ701XxFv15GFnFAV71hTaYqj/Ebpw9Vs02+gUp3+tt cardno:17_673_080"
                                 },
-                                "flist": "https://sj-bm-hostkey0.dev.infra.holochain.org/s3/tfgrid-eval/tfgrid-base.20240408.190655.fl",
+                                "flist": "https://sj-bm-hostkey0.dev.infra.holochain.org/s3/tfgrid-eval/tfgrid-base.20240517.114850.fl",
                                 "flist_checksum": "",
                                 "memory": 512,
                                 "mycelium_ip_seed": {
                                     "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                    "ciphertext": "v1:xQv0JZ3HDLPhg6Mv:kpdi/p33lmzW+W4IHgdHux0MBJ+jaN2pyoP+7Z5l"
+                                    "ciphertext": "v1:I9v5c4ekKiOlII0p:r+eA70FHNQKww/1+FHZ1M3ig7Cua0SEoPz/oeyES"
                                 },
-                                "name": "steveej_vm0",
+                                "name": "tfgrid_base",
                                 "network_name": "network0",
                                 "planetary": false,
                                 "public_ip": false,
@@ -280,7 +280,7 @@
                                 "computed_ip6": "",
                                 "console_url": "10.1.3.1:20002",
                                 "ip": "10.1.3.2",
-                                "mycelium_ip": "423:b081:d521:7a90:ff0f:1e7f:c1f0:f22a",
+                                "mycelium_ip": "40e:8e25:5b21:50f5:ff0f:13d1:b89f:f7d7",
                                 "planetary_ip": ""
                             }
                         ],
@@ -291,7 +291,7 @@
                         "urn:pulumi:dev::holochain-infra::random:index/randomBytes:RandomBytes::mycelium_ip_seed",
                         "urn:pulumi:dev::holochain-infra::threefold:provider:Network::network0"
                     ],
-                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider::25ed340e-4e69-4a98-938f-a011498fa056",
+                    "provider": "urn:pulumi:dev::holochain-infra::pulumi:providers:threefold::grid provider::ba49f78a-6db8-400b-a0f7-1af1965ceccb",
                     "propertyDependencies": {
                         "name": [],
                         "network_name": [
@@ -303,8 +303,8 @@
                             "urn:pulumi:dev::holochain-infra::threefold:provider:Network::network0"
                         ]
                     },
-                    "created": "2024-05-15T14:01:09.063544944Z",
-                    "modified": "2024-05-15T14:01:09.063544944Z"
+                    "created": "2024-05-17T13:37:33.929603495Z",
+                    "modified": "2024-05-17T13:37:33.929603495Z"
                 }
             ]
         }
