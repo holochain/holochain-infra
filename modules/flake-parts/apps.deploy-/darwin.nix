@@ -18,17 +18,17 @@
         ])}:$PATH"
         set -x
 
-        rsync -r --delete ${self}/ ${deployUser}@${hostName}:/tmp/deploy-flake
+        rsync -r --delete ${self}/ ${deployUser}@${hostName}:/private/tmp/deploy-flake
 
         ssh ${deployUser}@${hostName} /nix/var/nix/profiles/default/bin/nix \
           --extra-experimental-features '"flakes nix-command"' \
           build \
-            -o /tmp/next-system \
-            /tmp/deploy-flake#darwinConfigurations.'"${attrName}"'.system
+            -o /private/tmp/next-system \
+            /private/tmp/deploy-flake#darwinConfigurations.'"${attrName}"'.system
 
-        ssh ${deployUser}@${hostName} /tmp/next-system/sw/bin/darwin-rebuild \
+        ssh ${deployUser}@${hostName} /private/tmp/next-system/sw/bin/darwin-rebuild \
           -j4 \
-          "''${1:-switch}" --flake /tmp/deploy-flake#'"${attrName}"'
+          "''${1:-switch}" --flake /private/tmp/deploy-flake#'"${attrName}"'
       '';
 
     mkDarwinDeployApp = attrName: config:

@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.follows = "nixpkgs-23-11";
     nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
+    nixpkgsNix = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
@@ -26,7 +27,7 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
-    home-manager.url = "github:nix-community/home-manager/release-23.05";
+    home-manager.url = "github:nix-community/home-manager/release-23.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # secret management

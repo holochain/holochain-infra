@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   pkgs,
   lib,
@@ -16,7 +17,7 @@
     # ]
     ;
 
-  nix.package = lib.mkDefault pkgs.nixVersions.nix_2_18;
+  nix.package = lib.mkDefault inputs.nixpkgsNix.legacyPackages.${pkgs.stdenv.system}.nixVersions.nix_2_20;
 
   nix.settings.extra-platforms =
     lib.mkIf pkgs.stdenv.isDarwin ["x86_64-darwin" "aarch64-darwin"];
