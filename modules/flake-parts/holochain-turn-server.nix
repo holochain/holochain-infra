@@ -78,14 +78,14 @@
 
         username = lib.mkOption {
           description = "user for establishing turn connections to coturn";
-          type = lib.types.str;
-          default = "test";
+          type = lib.types.nullOr lib.types.str;
+          default = null;
         };
 
         credential = lib.mkOption {
           description = "credential for establishing turn connections to coturn";
-          type = lib.types.str;
-          default = "test";
+          type = lib.types.nullOr lib.types.str;
+          default = null;
         };
 
         extraCoturnAttrs = lib.mkOption {
@@ -140,7 +140,7 @@
             enable = true;
             tls-listening-port = 443;
             listening-ips = [cfg.address];
-            lt-cred-mech = true; # Use long-term credential mechanism.
+            lt-cred-mech = cfg.username != null && cfg.credential != null; # Use long-term credential mechanism.
             realm = cfg.url;
             cert = "${cfg.turn-cert-dir}/fullchain.pem";
             pkey = "${cfg.turn-cert-dir}/key.pem";
@@ -153,8 +153,10 @@
                 no-multicast-peers
                 no-tlsv1
                 no-tlsv1_1
-                user=${cfg.username}:${cfg.credential}
                 prometheus
+              ''
+              + lib.strings.optionalString config.services.coturn.lt-cred-mech ''
+                user=${cfg.username}:${cfg.credential}
               ''
               + lib.strings.optionalString cfg.verbose ''
                 verbose
