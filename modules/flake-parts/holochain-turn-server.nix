@@ -86,6 +86,12 @@
           type = lib.types.attrs;
           default = {};
         };
+
+        extraCoturnConfig = lib.mkOption {
+          description = "extra config passed to coturn";
+          type = lib.types.str;
+          default = "";
+        };
       };
 
       config = lib.mkIf cfg.enable {
@@ -137,7 +143,8 @@
               ''
               + lib.strings.optionalString (cfg.acme-redirect != null) ''
                 acme-redirect=${cfg.acme-redirect}
-              '';
+              ''
+              + cfg.extraCoturnConfig;
           }
           // cfg.extraCoturnAttrs;
 
