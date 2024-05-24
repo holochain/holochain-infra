@@ -143,6 +143,8 @@
           pkgs.mkShell {
             packages =
               [
+                self'.formatter
+
                 pkgs.yq-go
 
                 inputs'.nixos-anywhere.packages.default
