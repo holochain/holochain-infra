@@ -22,6 +22,7 @@
     nixosModules.holochain-turn-server = {
       config,
       lib,
+      options,
       ...
     }: let
       cfg = config.services.holochain-turn-server;
@@ -49,6 +50,12 @@
           default = 82;
         };
 
+        listening-port = lib.mkOption {
+          description = options.services.coturn.listening-port.description;
+          type = lib.types.nullOr lib.types.int;
+          default = 80;
+        };
+
         coturn-min-port = lib.mkOption {
           description = "lower port for coturn's range";
           type = lib.types.int;
@@ -71,14 +78,14 @@
 
         username = lib.mkOption {
           description = "user for establishing turn connections to coturn";
-          type = lib.types.str;
-          default = "test";
+          type = lib.types.nullOr lib.types.str;
+          default = null;
         };
 
         credential = lib.mkOption {
           description = "credential for establishing turn connections to coturn";
-          type = lib.types.str;
-          default = "test";
+          type = lib.types.nullOr lib.types.str;
+          default = null;
         };
 
         extraCoturnAttrs = lib.mkOption {
@@ -86,23 +93,41 @@
           type = lib.types.attrs;
           default = {};
         };
+
+        extraCoturnConfig = lib.mkOption {
+          description = "extra config passed to coturn";
+          type = lib.types.str;
+          default = "";
+        };
+
+        acme-staging = lib.mkEnableOption "use ACME's staging server which has retry limits. useful when debugging ACME challenges.";
       };
 
       config = lib.mkIf cfg.enable {
         nixpkgs.overlays = [self.overlays.coturn];
 
-        networking.firewall.allowedTCPPorts = [
-          80
-          443
-          9641 # prometheus
+        networking.firewall.allowedTCPPorts =
+          (
+            lib.lists.optionals (cfg.listening-port != null) [
+              cfg.listening-port
+            ]
+          )
+          ++ [
+            443
+            9641 # prometheus
 
-          cfg.nginx-http-port
-        ];
-        networking.firewall.allowedUDPPorts = [
-          80
-          443
-          9641 # prometheus
-        ];
+            cfg.nginx-http-port
+          ];
+        networking.firewall.allowedUDPPorts =
+          (
+            lib.lists.optionals (cfg.listening-port != null) [
+              cfg.listening-port
+            ]
+          )
+          ++ [
+            443
+            9641 # prometheus
+          ];
         networking.firewall.allowedUDPPortRanges = [
           {
             from = cfg.coturn-min-port;
@@ -113,10 +138,9 @@
         services.coturn =
           {
             enable = true;
-            listening-port = 80;
             tls-listening-port = 443;
             listening-ips = [cfg.address];
-            lt-cred-mech = true; # Use long-term credential mechanism.
+            lt-cred-mech = cfg.username != null && cfg.credential != null; # Use long-term credential mechanism.
             realm = cfg.url;
             cert = "${cfg.turn-cert-dir}/fullchain.pem";
             pkey = "${cfg.turn-cert-dir}/key.pem";
@@ -129,15 +153,22 @@
                 no-multicast-peers
                 no-tlsv1
                 no-tlsv1_1
-                user=${cfg.username}:${cfg.credential}
                 prometheus
+              ''
+              + lib.strings.optionalString config.services.coturn.lt-cred-mech ''
+                user=${cfg.username}:${cfg.credential}
               ''
               + lib.strings.optionalString cfg.verbose ''
                 verbose
               ''
               + lib.strings.optionalString (cfg.acme-redirect != null) ''
                 acme-redirect=${cfg.acme-redirect}
-              '';
+              ''
+              + cfg.extraCoturnConfig;
+          }
+          // lib.attrsets.optionalAttrs (cfg.listening-port
+            != null) {
+            inherit (cfg) listening-port;
           }
           // cfg.extraCoturnAttrs;
 
@@ -167,19 +198,22 @@
           };
         };
 
-        security.acme = {
-          acceptTerms = true;
-          defaults = {
-            email = "acme@holo.host";
-          };
+        security.acme =
+          lib.attrsets.recursiveUpdate
+          {
+            acceptTerms = true;
+            defaults = {
+              email = "acme@holo.host";
+            };
 
-          # after certificate renewal by acme coturn.service needs to reload this new cert, too
-          # see https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/security/acme/default.nix#L322
-          certs."${cfg.url}".reloadServices = ["coturn"];
-
-          # staging server has higher retry limits. uncomment the following when debugging ACME challenges.
-          # certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
-        };
+            # after certificate renewal by acme coturn.service needs to reload this new cert, too
+            # see https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/security/acme/default.nix#L322
+            certs."${cfg.url}".reloadServices = ["coturn"];
+          } (
+            lib.attrsets.optionalAttrs cfg.acme-staging {
+              certs."${cfg.url}".server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+            }
+          );
       };
     };
   };
