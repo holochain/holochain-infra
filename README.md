@@ -63,24 +63,29 @@ After making changes to the configuration files of a host, a flake app must be e
 ```command
 nix flake show
 ```
-
-notice apps prefixed with `deploy-`
+notice apps prefixed with `ssh-`, `git-push-`, and `deploy-`.
 
 ### Deploy changes to host
 
+Prerequisites:
+* all relevant changes are committed to the current branch.
+* `git push` access to holochain/holochain-infra
+* authorized key for the `deployUser` on the remote host
+
+The first command will push the current git HEAD to the `origin` git remote at a branch specific to the hostname.
+The second command will cause a `nixos-rebuild switch ...` on the host from its branch.
+
 ```command
+nix run .\#git-push-{hostname}
 nix run .#deploy-{hostname}
 ```
 
-### Deploy to all hosts
+These scripts also have arguments for rudimentary customization.
+Here, it pushes to the git remote called `upstream`, and then runs a `build` (instead of a `switch`) on the remote host:
 
 ```
-nix run .\#deploy-linux-builder-01
-nix run .\#deploy-dweb-reverse-tls-proxy
-nix run .\#deploy-macos-01
-nix run .\#deploy-macos-02
-nix run .\#deploy-macos-03
-nix run .\#deploy-macos-04
+nix run .\#git-push-sbd-0_main_infra_holo_host upstream
+nix run .\#deploy-sbd-0_main_infra_holo_host build
 ```
 
 ### Update dependencies (nixpkgs version)

@@ -12,16 +12,14 @@
       pkgs.writeShellScript "deploy-${hostName}" ''
         set -Eeo pipefail
         export PATH="${lib.makeBinPath (with pkgs; [
-          nix
-          rsync
+          git
+          coreutils
         ])}:$PATH"
         set -x
 
-        rsync -r --delete ${self}/ root@${hostName}:/tmp/deploy-flake
-
         ssh root@${hostName} nixos-rebuild \
           -j4 \
-          "''${1:-switch}" --flake /tmp/deploy-flake#'"${attrName}"'
+          "''${1:-switch}" --flake github:holochain/holochain-infra/deploy/${attrName}#'"${attrName}"'
       '';
 
     mkLinuxDeployApp = attrName: config:
