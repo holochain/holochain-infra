@@ -1126,6 +1126,7 @@
         "nixpkgsMaster": "nixpkgsMaster",
         "nixpkgsNix": "nixpkgsNix",
         "nixpkgsUnstable": "nixpkgsUnstable",
+        "sbd": "sbd",
         "sops-nix": "sops-nix",
         "srvos": "srvos",
         "threefold-rfs": "threefold-rfs",
@@ -1176,6 +1177,23 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sbd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1716568215,
+        "narHash": "sha256-ROvhoxRovsm3KCKTVLap1NigCXbjo0HikToO7raHnAU=",
+        "owner": "holochain",
+        "repo": "sbd",
+        "rev": "466fcebc0227526597295e054455db7c82748b96",
+        "type": "github"
+      },
+      "original": {
+        "owner": "holochain",
+        "ref": "sbd-server-v0.0.4-alpha",
+        "repo": "sbd",
         "type": "github"
       }
     },

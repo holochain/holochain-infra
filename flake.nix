@@ -86,6 +86,10 @@
 
     tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.8-alpha";
     tx5.flake = false;
+    sbd.url =
+      "github:holochain/sbd/sbd-server-v0.0.4-alpha"
+      ;
+    sbd.flake = false;
 
     holochain-versions.url = "github:holochain/holochain?dir=versions/weekly";
     holochain = {
