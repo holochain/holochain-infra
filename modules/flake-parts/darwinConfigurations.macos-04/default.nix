@@ -1,4 +1,5 @@
 {
+  self,
   lib,
   inputs,
   ...
@@ -7,6 +8,7 @@
 in {
   flake.darwinConfigurations.macos-04 = inputs.darwin.lib.darwinSystem {
     inherit system inputs;
+    inherit (self) specialArgs;
     modules = [
       ./configuration.nix
       ../../nixos/macos.nix

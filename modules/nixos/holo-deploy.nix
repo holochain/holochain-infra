@@ -1,4 +1,8 @@
-{lib, ...}: {
+{
+  self,
+  lib,
+  ...
+}: {
   options = {
     deployUser = lib.mkOption {
       type = lib.types.str;
@@ -8,6 +12,18 @@
     hostName = lib.mkOption {
       type = lib.types.str;
       description = "IP addres or host name to connect to the host";
+    };
+  };
+
+  config = {
+    environment.etc."nix/sourceInfo.json" = {
+      enable = true;
+      text = builtins.toJSON (builtins.removeAttrs self.sourceInfo ["outPath"]);
+    };
+
+    environment.etc."nix/source" = {
+      enable = true;
+      text = self.sourceInfo.outPath;
     };
   };
 }

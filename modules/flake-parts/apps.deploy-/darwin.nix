@@ -18,17 +18,17 @@
         ])}:$PATH"
         set -x
 
-        rsync -r --delete ${self}/ ${deployUser}@${hostName}:/private/tmp/deploy-flake
+        flake_base=github:holochain/holochain-infra/deploy/${attrName}
 
         ssh ${deployUser}@${hostName} /nix/var/nix/profiles/default/bin/nix \
           --extra-experimental-features '"flakes nix-command"' \
-          build \
+          build --refresh \
             -o /private/tmp/next-system \
-            /private/tmp/deploy-flake#darwinConfigurations.'"${attrName}"'.system
+            $flake_base#darwinConfigurations.'"${attrName}"'.system
 
         ssh ${deployUser}@${hostName} /private/tmp/next-system/sw/bin/darwin-rebuild \
-          -j4 \
-          "''${1:-switch}" --flake /private/tmp/deploy-flake#'"${attrName}"'
+          -j4 --refresh \
+          "''${1:-switch}" --flake $flake_base#'"${attrName}"'
       '';
 
     mkDarwinDeployApp = attrName: config:
