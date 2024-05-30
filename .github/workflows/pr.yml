@@ -3,17 +3,23 @@ on:
   push:
     branches: [develop]
 
+
 jobs:
-  lints:
-    name: Build
-    runs-on: ubuntu-22.04
+  os-configurations:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, macos-13]
+    name: OS configurations
+    runs-on: ${{ matrix.os }}
     permissions:
       id-token: "write"
       contents: "read"
     steps:
-    - uses: actions/checkout@v4
-    - uses: DeterminateSystems/nix-installer-action@main
-    - uses: DeterminateSystems/magic-nix-cache-action@main
-    - uses: DeterminateSystems/flake-checker-action@main
-    # - name: Run `nix build`
-    #   run: nix build .
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DeterminateSystems/flake-checker-action@main
+      - run: |
+          nix build .#build-os-configurations
+          ls -lha result/
