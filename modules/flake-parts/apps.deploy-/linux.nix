@@ -19,7 +19,7 @@
 
         ssh root@${hostName} nixos-rebuild \
           -j4 \
-          "''${1:-switch}" --flake github:holochain/holochain-infra/deploy/${attrName}#'"${attrName}"'
+          "''${1:-switch}" --refresh --flake github:holochain/holochain-infra/deploy/${attrName}#'"${attrName}"'
       '';
 
     mkLinuxDeployApp = attrName: config:
