@@ -36,7 +36,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     services.github-runners =
       lib.genAttrs mkList
       (_: {
