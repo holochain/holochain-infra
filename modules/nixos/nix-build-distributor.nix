@@ -54,7 +54,9 @@
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      maxJobs = 3;
+      # had a factory reset, still needs setting up
+      maxJobs = 0;
+      # maxJobs = 3;
       speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
