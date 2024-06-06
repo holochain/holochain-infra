@@ -15,7 +15,8 @@
     self.nixosModules.github-runner-multi-arch
     {
       config.services.github-runner-multi-arch = {
-        enable = true;
+        # can't distribute jobs to the mac builders so this would disturb CI jobs.
+        enable = false;
         countOffset = config.services.github-runner-multi-arch.count;
       };
     }
