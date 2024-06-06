@@ -43,7 +43,7 @@ in {
         replace = true;
         ephemeral = true;
         inherit package;
-        extraLabels = [cfg.namePrefix];
+        extraLabels = [cfg.namePrefix config.networking.hostName];
         tokenFile = config.sops.secrets.github-runners-token.path;
         url = "https://github.com/holochain/holochain";
         extraPackages = config.environment.systemPackages;
