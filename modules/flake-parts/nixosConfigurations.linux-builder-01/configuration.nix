@@ -13,6 +13,12 @@
     inputs.srvos.nixosModules.roles-nix-remote-builder
     self.nixosModules.holo-users
     self.nixosModules.github-runner-multi-arch
+    {
+      config.services.github-runner-multi-arch = {
+        enable = true;
+        countOffset = 0;
+      };
+    }
     self.nixosModules.nix-build-distributor
 
     inputs.sops-nix.nixosModules.sops
