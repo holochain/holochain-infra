@@ -3,3 +3,9 @@ result*
 .decrypted~keys.yaml
 .storage
 .direnv
+
+# binary file
+pulumi/holochain-infra
+
+pulumi-state/.pulumi/history
+pulumi-state/.pulumi/backups

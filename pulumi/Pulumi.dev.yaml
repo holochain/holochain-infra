@@ -1,0 +1,4 @@
+encryptionsalt: v1:Pqc+zMVi/jk=:v1:qrWBTYDIcH2WqUmg:1THU1HTwRjJH4PGbQ3nmjuSlU+amrg==
+config:
+  holochain-infra:tfgrid_devnet_mnemonic:
+    secure: v1:E5ZMFqQ0PzGUZ6sP:yheY428s/sWTiiWt+j594yYWTjsAlVaoHsFzRZixvCmuNeZMoSz6qlxaQCl8xwWL05tWmIQpqxZ0wv5Fn3EqFnZxtXnB06GHWApoIpZaP+no5mSPFk6ygaSUagY=

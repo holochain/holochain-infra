@@ -1,0 +1,19 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/holochain-infra/dev",
+        "latest": {
+            "manifest": {
+                "time": "2024-06-07T18:24:50.983868558Z",
+                "magic": "6cece4896dda855f1f8eeb278295600f55147c3a4c822170dd54c64d426a45f0",
+                "version": "v3.116.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:KNBcfUHWy2o=:v1:YK042d91RPDBfWqV:xVlR2oJkhgzm/F+EivUGASLvrkTNRw=="
+                }
+            }
+        }
+    }
+}
