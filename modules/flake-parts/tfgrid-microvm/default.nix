@@ -1,4 +1,3 @@
-# TODO: make sure new kernels/initrds also get copied to `/boot/vmlinuz` and `/boot/initrd.mg`
 {self, ...}: {
   flake.nixosModules = {
     zosVmDir = {
@@ -43,10 +42,11 @@
 
       boot.loader.external.enable = true;
       # the first argument points to the new system's toplevel, which is equivalent to config.system.build.toplevel
-      boot.loader.external.installHook = pkgs.writeShellScript "noop" ''
+      boot.loader.external.installHook = pkgs.writeShellScript "installhook" ''
+        set -x
         ${pkgs.coreutils}/bin/ln -sf "$1"/init /init
-        ${pkgs.coreutils}/bin/ln -sf ${bootFiles}/vmlinuz /boot/vmlinuz
-        ${pkgs.coreutils}/bin/ln -sf  ${bootFiles}/initrd.img /boot/initrd.img
+        ${pkgs.coreutils}/bin/cp -v ${bootFiles}/vmlinuz /boot/vmlinuz
+        ${pkgs.coreutils}/bin/cp -v ${bootFiles}/initrd.img /boot/initrd.img
       '';
 
       services.cloud-init.enable = true;
@@ -65,24 +65,6 @@
       networking.useHostResolvConf = false;
 
       environment.systemPackages = [
-        (pkgs.writeShellScriptBin "nixos-rebuild-helper" ''
-          set -xeEu -o pipefail
-
-          FLAKE="''${FLAKE:-github:holochain/holochain-infra/workorch-zos#tfgrid-devnet-vm0}"
-
-          case "$1" in
-            replace-init)
-              result="$(nix build --refresh --tarball-ttl 0 "''${FLAKE}.config.system.build.toplevel" --print-out-paths --no-link)"
-              ln -sf "''${result}"/init /init
-              ;;
-            switch)
-              exec nixos-rebuild --refresh --flake "''${FLAKE}" switch
-              ;;
-            boot)
-              exec nixos-rebuild --refresh --flake "''${FLAKE}" switch
-              ;;
-          esac
-        '')
       ];
     };
 
@@ -118,7 +100,7 @@
           mount --move ${targetRo} ${overlay.lower}
           mount -t overlay overlay -o upperdir=${overlay.upper},workdir=${overlay.work},lowerdir=${overlay.lower} ${target}
 
-          # TODO: make the overlay internals visible underneath its own mountpoint
+          # TODO?: make the overlay internals visible underneath its own mountpoint
           # currently the mount fails with: 'mount: mounting /overlay on /mnt-root/overlay failed: Invalid argument'
           # mkdir ${target}/overlay
           # mount --move ${overlay.base} ${target}/overlay

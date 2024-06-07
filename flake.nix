@@ -108,11 +108,12 @@
     };
 
     threefold-rfs = {
-      url = "github:steveej-forks/threefold-rfs/configure-pool-pin-rust";
-      # url = "github:threefoldtech/rfs/configure-pool";
+      url = "github:threefoldtech/rfs";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.crane.follows = "crane";
     };
+
+    holoNixpkgs.url = "https://hydra.holo.host/channel/custom/holo-nixpkgs/2112/holo-nixpkgs/nixexprs.tar.xz";
   };
 
   outputs = inputs @ {
@@ -143,6 +144,8 @@
           nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
           nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
           nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
+
+          pkgsUnstable = inputs'.nixpkgsUnstable.legacyPackages;
         in
           pkgs.mkShell {
             packages =
