@@ -4,7 +4,8 @@
   inputs = {
     nixpkgs.follows = "nixpkgs-23-11";
     nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
-    nixpkgsNix = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    nixpkgs-24-05 = {url = "github:nixos/nixpkgs/nixos-24.05";};
+    nixpkgsNix.follows = "nixpkgs-24-05";
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
