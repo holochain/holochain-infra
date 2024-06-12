@@ -679,7 +679,7 @@
         "versions": "versions"
       },
       "locked": {
-        "narHash": "sha256-eczsmDRDhXlN6GQ5h0UBWsDe5hKnthl//O3hiC1+JnY=",
+        "narHash": "sha256-EwKzTn3/LhIFtaflp4X96RUcAIyJKzftSfUM+vz6wCk=",
         "type": "tarball",
         "url": "https://hydra.holo.host/channel/custom/holo-nixpkgs/2112/holo-nixpkgs/nixexprs.tar.xz"
       },
