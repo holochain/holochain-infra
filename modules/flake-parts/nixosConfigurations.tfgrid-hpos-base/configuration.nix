@@ -8,7 +8,6 @@
 }: let
   hostName = "tfgrid-hpos-base";
 in {
-
   imports = [
     ../nixosConfigurations.tfgrid-base/configuration.nix
 

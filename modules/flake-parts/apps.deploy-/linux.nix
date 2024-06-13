@@ -51,7 +51,6 @@
         ssh root@${hostName} "$closure_path/bin/switch-to-configuration ''${1:-switch}"
       '';
 
-
     mkLinuxDeployDirectApp = attrName: config:
       lib.nameValuePair "deploy-direct-${attrName}" {
         type = "app";
@@ -62,9 +61,8 @@
       };
   in {
     config.apps =
-    (lib.mapAttrs' mkLinuxDeployApp self.nixosConfigurations) //
-    (lib.mapAttrs' mkLinuxDeployDirectApp self.nixosConfigurations) //
-    {}
-    ;
+      (lib.mapAttrs' mkLinuxDeployApp self.nixosConfigurations)
+      // (lib.mapAttrs' mkLinuxDeployDirectApp self.nixosConfigurations)
+      // {};
   };
 }
