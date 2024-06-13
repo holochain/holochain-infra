@@ -86,9 +86,7 @@
 
     tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.8-alpha";
     tx5.flake = false;
-    sbd.url =
-      "github:holochain/sbd/sbd-server-v0.0.4-alpha"
-      ;
+    sbd.url = "github:holochain/sbd/sbd-server-v0.0.4-alpha";
     sbd.flake = false;
 
     holochain-versions.url = "github:holochain/holochain?dir=versions/weekly";
@@ -147,7 +145,6 @@
           nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
           nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
 
-
           pkgsUnstable = inputs'.nixpkgsUnstable.legacyPackages;
           pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
         in
@@ -193,10 +190,11 @@
 
                 pkgs.jq
                 pkgsPulumi.pulumictl
-                (pkgsPulumi.pulumi.withPackages(pulumiPackages: with pulumiPackages; [
-                  pulumi-language-go
-                  pulumi-command
-                ]))
+                (pkgsPulumi.pulumi.withPackages (pulumiPackages:
+                  with pulumiPackages; [
+                    pulumi-language-go
+                    pulumi-command
+                  ]))
                 pkgs.go_1_21
               ]
               ++ (
