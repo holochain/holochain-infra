@@ -9,7 +9,7 @@
   nix.buildMachines = [
     # macos-01
     # - m1 cpu
-    # - system integrity protection disabled
+    # - system integrity protection enabled
     {
       hostName = "167.235.13.208";
       sshUser = "builder";
@@ -47,15 +47,13 @@
 
     # macos-04
     # - m1 cpu
-    # - system integrity protection disabled
+    # - system integrity protection enabled
     {
       hostName = "167.235.38.111";
       sshUser = "builder";
       protocol = "ssh-ng";
       system = "aarch64-darwin";
-      # had a factory reset, still needs setting up
-      maxJobs = 0;
-      # maxJobs = 3;
+      maxJobs = 3;
       speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
