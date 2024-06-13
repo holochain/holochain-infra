@@ -14,10 +14,9 @@
       hostName = "167.235.13.208";
       sshUser = "builder";
       protocol = "ssh-ng";
-      system = "x86_64-darwin";
-      # has a broken nix installation
-      maxJobs = 0;
-      speedFactor = 1;
+      system = "aarch64-darwin";
+      maxJobs = 3;
+      speedFactor = 2;
       supportedFeatures = config.nix.settings.experimental-features;
     }
 
