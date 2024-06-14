@@ -32,6 +32,8 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINQ22z5rDdCLYH+MEoEt+tXJXTJqoeZNqvJl2n4aB+Kn steveej@steveej-x13s"
   ];
 
+  virtualisation.libvirtd.enable = true;
+
   boot.loader.grub = {
     efiSupport = false;
   };
