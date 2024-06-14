@@ -11,5 +11,4 @@ nix run .#ssh-macos-04
 exit
 nix run .\#deploy-macos-04
 nix run .\#linux-builder-01-ping-buildmachines
-nix run .\#linux-builder-02-ping-buildmachines
 ```

@@ -8,7 +8,7 @@ keys:
   - &jost-s D299483493EAE6B2B3D892B6D33548FA55FF167F
   - &dweb-reverse-proxy age1ygzy9clj0xavlmau0ham7j5nw8yy4z0q8hvkfpdgwc4fcr8nufpqrdxgvx
   - &linux-builder-01 age1kxkr407jz77ljrhgsfwfmv2yvqjprc6unvx389xp2f48xj8r0vqq2wew5r
-  - &linux-builder-02 age1vlxerq9j9jd00qvxj2gxds9re4dz2djqmllkhzsf44gz9a5y4ghs7807h9
+  - &x86_64-linux-dev-01 age1vlxerq9j9jd00qvxj2gxds9re4dz2djqmllkhzsf44gz9a5y4ghs7807h9
   - &tfgrid-shared age194xfar0gfdauu2dcxwqk9lh9d0vjfrzzs2ke0ppanpwv9eqxzs2qp7q7cn
 
 creation_rules:
@@ -26,10 +26,6 @@ creation_rules:
     key_groups:
     - age:
       - *linux-builder-01
-  - path_regex: ^secrets/linux-builder-02/[^/]+$
-    key_groups:
-    - age:
-      - *linux-builder-02
   - path_regex: ^secrets/nomad/.+$
     key_groups:
     - pgp:
