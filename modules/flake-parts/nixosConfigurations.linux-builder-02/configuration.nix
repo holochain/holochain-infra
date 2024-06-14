@@ -15,10 +15,12 @@
     self.nixosModules.github-runner-multi-arch
     {
       config.services.github-runner-multi-arch = {
-        enable = true;
-        countOffset = 0;
+        # can't distribute jobs to the mac builders so this would disturb CI jobs.
+        enable = false;
+        countOffset = config.services.github-runner-multi-arch.count;
       };
     }
+
     self.nixosModules.nix-build-distributor
 
     inputs.sops-nix.nixosModules.sops
@@ -28,9 +30,9 @@
     ../../nixos/shared-linux.nix
   ];
 
-  networking.hostName = "linux-builder-01"; # Define your hostname.
+  networking.hostName = "linux-builder-02"; # Define your hostname.
 
-  hostName = "95.217.193.35";
+  hostName = "135.181.118.162";
 
   nix.settings.max-jobs = 32;
 
@@ -45,7 +47,7 @@
   # boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  systemd.network.networks."10-uplink".networkConfig.Address = "2a01:4f9:4a:5026::1/64";
+  systemd.network.networks."10-uplink".networkConfig.Address = "2a01:4f9:4b:1e9b::/64";
 
   disko.devices.disk.nvme0n1 = {
     device = "/dev/nvme0n1";
@@ -80,9 +82,9 @@
   };
 
   sops.secrets.github-runners-token = {
-    key = "gh_hra2_pat5";
+    key = "gh_hra2_pat4";
     sopsFile = ../../../secrets/${config.networking.hostName}/secrets.yaml;
   };
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }

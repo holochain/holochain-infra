@@ -11,7 +11,22 @@
   }: {
     # system specific outputs like, apps, checks, packages
 
-    packages = {
+    packages = let
+      mkPingBuildmachines = {builderName}:
+        pkgs.writeShellApplication {
+          name = "${builderName}-ping-buildmachines";
+          text = builtins.concatStringsSep "\n" (
+            builtins.map
+            (builder: let
+              sshTarget = "${builder.sshUser}@${builder.hostName}";
+            in ''
+              # 255 is the timeout exit status which is the best we can check for here. a hard error would be expected to show up sooner and have a different exit status.
+              nix run .#ssh-${builderName} "ssh-keygen -R ${builder.hostName}; timeout --preserve-status 5s ssh -o StrictHostKeyChecking=accept-new ${sshTarget}; if [ \$? -ne 255 ]; then exit 1; fi; nix store info --store ssh-ng://${sshTarget}"
+            '')
+            (builtins.filter (builder: builder.maxJobs > 0) self.nixosConfigurations.${builderName}.config.nix.buildMachines)
+          );
+        };
+    in {
       reverse-proxy-nix-cache = pkgs.writeShellScriptBin "reverse-proxy-nix-cache" ''
         sudo ${pkgs.caddy}/bin/caddy reverse-proxy --from :80 --to :5000
       '';
@@ -40,6 +55,9 @@
             echo success
           '';
       };
+
+      linux-builder-01-ping-buildmachines = mkPingBuildmachines {builderName = "linux-builder-01";};
+      linux-builder-02-ping-buildmachines = mkPingBuildmachines {builderName = "linux-builder-02";};
     };
   };
 
