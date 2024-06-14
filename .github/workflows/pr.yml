@@ -1,3 +1,5 @@
+name: Build
+
 on:
   pull_request:
   push:
@@ -5,12 +7,12 @@ on:
 
 
 jobs:
-  os-configurations:
+  os:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, macos-13]
-    name: OS configurations
+    name: OS
     runs-on: ${{ matrix.os }}
     permissions:
       id-token: "write"
