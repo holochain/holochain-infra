@@ -254,11 +254,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1692613703,
-        "narHash": "sha256-ByFRYQ8J4YSeAU6N0gUc5nmIjAGoiDU+jMUL73Ns0ZU=",
+        "lastModified": 1715935620,
+        "narHash": "sha256-b60zHhqS67LW9nTxl7p6ba2OdXJAMoMclEYHbRPpwKM=",
         "owner": "steveeJ-forks",
         "repo": "nix-darwin",
-        "rev": "72d647c8bda6d8d8a88ba2b63b56ce4e0be57ea7",
+        "rev": "9f51e374d7cc7fdf7c9b2578a5757b92d028e2ea",
         "type": "github"
       },
       "original": {
@@ -679,7 +679,7 @@
         "versions": "versions"
       },
       "locked": {
-        "narHash": "sha256-eczsmDRDhXlN6GQ5h0UBWsDe5hKnthl//O3hiC1+JnY=",
+        "narHash": "sha256-EwKzTn3/LhIFtaflp4X96RUcAIyJKzftSfUM+vz6wCk=",
         "type": "tarball",
         "url": "https://hydra.holo.host/channel/custom/holo-nixpkgs/2112/holo-nixpkgs/nixexprs.tar.xz"
       },
@@ -947,7 +947,7 @@
     "keys_thetasinner": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-8RWZCPJpXCWx9vwVoimLJG0YQzXow9bexgUnyb9T5Hs=",
+        "narHash": "sha256-sDa25rA0Qb8ASDLWBXQ3YIDVwDoK56cgQGow+3aWNfE=",
         "type": "file",
         "url": "https://github.com/ThetaSinner.keys"
       },
@@ -1305,6 +1305,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-24-05": {
+      "locked": {
+        "lastModified": 1718086528,
+        "narHash": "sha256-hoB7B7oPgypePz16cKWawPfhVvMSXj4G/qLsfFuhFjw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "47b604b07d1e8146d5398b42d3306fdebd343986",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-24.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "dir": "lib",
@@ -1435,22 +1451,6 @@
       "original": {
         "owner": "nixos",
         "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgsNix": {
-      "locked": {
-        "lastModified": 1715787315,
-        "narHash": "sha256-cYApT0NXJfqBkKcci7D9Kr4CBYZKOQKDYA23q8XNuWg=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "33d1e753c82ffc557b4a585c77de43d4c922ebb5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -1683,9 +1683,12 @@
           "nixpkgs-23-11"
         ],
         "nixpkgs-23-11": "nixpkgs-23-11",
+        "nixpkgs-24-05": "nixpkgs-24-05",
         "nixpkgsGithubActionRunners": "nixpkgsGithubActionRunners",
         "nixpkgsMaster": "nixpkgsMaster",
-        "nixpkgsNix": "nixpkgsNix",
+        "nixpkgsNix": [
+          "nixpkgs-24-05"
+        ],
         "nixpkgsPulumi": "nixpkgsPulumi",
         "nixpkgsUnstable": "nixpkgsUnstable",
         "sbd": "sbd",

@@ -4,7 +4,8 @@
   inputs = {
     nixpkgs.follows = "nixpkgs-23-11";
     nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
-    nixpkgsNix = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    nixpkgs-24-05 = {url = "github:nixos/nixpkgs/nixos-24.05";};
+    nixpkgsNix.follows = "nixpkgs-24-05";
     nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
     nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
@@ -135,6 +136,7 @@
         inputs',
         pkgs,
         lib,
+        system,
         ...
       }: {
         # Per-system attributes can be defined here. The self' and inputs'
@@ -221,11 +223,49 @@
             '';
           };
 
-        packages = {
-          nomad = inputs'.nixpkgs.legacyPackages.nomad_1_6;
+        packages =
+          {
+            # nomad = pkgs.nomad_1_6;
 
-          nixos-anywhere = inputs'.nixos-anywhere.packages.default;
-        };
+            nixos-anywhere = inputs'.nixos-anywhere.packages.default;
+          }
+          // (
+            let
+              mkOsConfigCheck = osConfigs: let
+                filteredBySystem =
+                  lib.filterAttrs (
+                    key: value:
+                      (value.pkgs.system == system)
+                      # needs private repos
+                      && (key != "tfgrid-hpos")
+                  )
+                  osConfigs;
+                asStrings =
+                  lib.mapAttrsToList (
+                    key: value:
+                      builtins.trace "evaluating ${key} (${value.pkgs.system})..."
+                      "ln -s ${value.config.system.build.toplevel} $out/${key}"
+                  )
+                  filteredBySystem;
+              in
+                pkgs.stdenv.mkDerivation {
+                  name = "check-osconfigurations";
+                  phases = "installPhase";
+                  installPhase = "mkdir $out;" + builtins.concatStringsSep "\n" asStrings;
+                };
+            in {
+              build-os-configurations =
+                if pkgs.stdenv.isLinux
+                then
+                  mkOsConfigCheck (builtins.removeAttrs self.nixosConfigurations [
+                    # too big for current CI structure and rarely used
+                    "vm-nixcache"
+                  ])
+                else if pkgs.stdenv.isDarwin
+                then mkOsConfigCheck self.darwinConfigurations
+                else throw "unexpected case";
+            }
+          );
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
