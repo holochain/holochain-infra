@@ -11,7 +11,7 @@ in {
     enable = lib.mkEnableOption "kitsune-bootstrap";
 
     package = lib.mkOption {
-      default = self.inputs.holochain.packages.${pkgs.system}.holochain;
+      default = self.inputs.holochain.packages.${pkgs.system}.holochain.override {cargoExtraArgs = " --bin kitsune-bootstrap";};
       type = lib.types.package;
     };
 
