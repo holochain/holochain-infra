@@ -23,8 +23,7 @@
     microvm.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix darwin
-    darwin.url = "github:steveeJ-forks/nix-darwin/fork-fix-launchd-calendar-interval";
-
+    darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
