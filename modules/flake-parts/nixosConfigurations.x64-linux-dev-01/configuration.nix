@@ -56,10 +56,6 @@
 
   virtualisation.libvirtd.enable = true;
 
-  services.garage = {
-    enable = true;
-  };
-
   boot.loader.grub = {
     efiSupport = false;
   };
