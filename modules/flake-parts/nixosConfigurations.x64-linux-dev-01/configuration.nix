@@ -22,7 +22,29 @@
     ../../nixos/shared-linux.nix
   ];
 
-  networking.hostName = "x64-linux-dev-01"; # Define your hostname.
+  networking = {
+    hostName = "x64-linux-dev-01"; # Define your hostname.
+    useNetworkd = true;
+
+    nat.enable = true;
+    firewall.enable = true;
+
+    firewall.allowedTCPPorts = [
+      5201
+    ];
+    firewall.allowedUDPPorts = [
+      5201
+    ];
+  };
+
+  boot = {
+    kernel = {
+      sysctl = {
+        "net.ipv4.conf.all.forwarding" = true;
+        "net.ipv6.conf.all.forwarding" = true;
+      };
+    };
+  };
 
   hostName = "135.181.118.162";
 
