@@ -23,7 +23,10 @@ func main() {
 			return err
 		}
 
-		const node int = 195
+		// const node int = 195
+
+		// VM on x64-linux-dev-01
+		const node int = 206
 
 		mycelium_seed, err := random.NewRandomBytes(ctx, "mycelium_seed", &random.RandomBytesArgs{
 			Length: pulumi.Int(32),
