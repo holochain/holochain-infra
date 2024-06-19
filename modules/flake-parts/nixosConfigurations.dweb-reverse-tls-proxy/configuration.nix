@@ -184,6 +184,7 @@ in {
       amsterdam2023.events.${fqdn2domain}.     A       10.1.3.187
 
       sj-bm-hostkey0.dev.${fqdn2domain}.       A       185.130.224.33
+      x64-linux-dev-01.dev.${fqdn2domain}.    A       ${self.nixosConfigurations.x64-linux-dev-01.config.hostName}
 
       turn-0.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-0.config.services.holochain-turn-server.address}
       signal-0.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-0.config.services.tx5-signal-server.address}

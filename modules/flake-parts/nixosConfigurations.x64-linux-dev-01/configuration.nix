@@ -12,14 +12,6 @@
     inputs.srvos.nixosModules.hardware-hetzner-online-amd
     inputs.srvos.nixosModules.roles-nix-remote-builder
     self.nixosModules.holo-users
-    self.nixosModules.github-runner-multi-arch
-    {
-      config.services.github-runner-multi-arch = {
-        # can't distribute jobs to the mac builders so this would disturb CI jobs.
-        enable = false;
-        countOffset = config.services.github-runner-multi-arch.count;
-      };
-    }
 
     self.nixosModules.nix-build-distributor
 
@@ -30,15 +22,39 @@
     ../../nixos/shared-linux.nix
   ];
 
-  networking.hostName = "linux-builder-02"; # Define your hostname.
+  networking = {
+    hostName = "x64-linux-dev-01"; # Define your hostname.
+    useNetworkd = true;
+
+    nat.enable = true;
+    firewall.enable = true;
+
+    firewall.allowedTCPPorts = [
+      5201
+    ];
+    firewall.allowedUDPPorts = [
+      5201
+    ];
+  };
+
+  boot = {
+    kernel = {
+      sysctl = {
+        "net.ipv4.conf.all.forwarding" = true;
+        "net.ipv6.conf.all.forwarding" = true;
+      };
+    };
+  };
 
   hostName = "135.181.118.162";
 
   nix.settings.max-jobs = 32;
 
   roles.nix-remote-builder.schedulerPublicKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHVxIpF1Rfqz6i8JfhYswzYUM9cuL5p11LfVGSfPmw4Q root@github-runner-host"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINQ22z5rDdCLYH+MEoEt+tXJXTJqoeZNqvJl2n4aB+Kn steveej@steveej-x13s"
   ];
+
+  virtualisation.libvirtd.enable = true;
 
   boot.loader.grub = {
     efiSupport = false;
@@ -79,11 +95,6 @@
         };
       };
     };
-  };
-
-  sops.secrets.github-runners-token = {
-    key = "gh_hra2_pat4";
-    sopsFile = ../../../secrets/${config.networking.hostName}/secrets.yaml;
   };
 
   system.stateVersion = "23.11";

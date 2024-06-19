@@ -57,7 +57,6 @@
       };
 
       linux-builder-01-ping-buildmachines = mkPingBuildmachines {builderName = "linux-builder-01";};
-      linux-builder-02-ping-buildmachines = mkPingBuildmachines {builderName = "linux-builder-02";};
     };
   };
 

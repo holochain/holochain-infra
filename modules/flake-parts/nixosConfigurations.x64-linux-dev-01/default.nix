@@ -4,7 +4,7 @@
   inputs,
   ...
 }: {
-  flake.nixosConfigurations.linux-builder-02 = inputs.nixpkgs.lib.nixosSystem {
+  flake.nixosConfigurations.x64-linux-dev-01 = inputs.nixpkgs.lib.nixosSystem {
     modules = [./configuration.nix];
     system = "x86_64-linux";
     specialArgs = self.specialArgs;
