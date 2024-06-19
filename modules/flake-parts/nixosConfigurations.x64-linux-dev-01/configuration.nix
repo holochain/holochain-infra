@@ -22,6 +22,10 @@
     ../../nixos/shared-linux.nix
   ];
 
+  nix.settings.system-features = [
+    "big-parallel"
+  ];
+
   networking = {
     hostName = "x64-linux-dev-01"; # Define your hostname.
     useNetworkd = true;
