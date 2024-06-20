@@ -70,12 +70,15 @@ in {
           secrets = {
             GARAGE_ADMIN_TOKEN = {
               group = "garage-secrets";
+              mode = "440";
             };
             GARAGE_METRICS_TOKEN = {
               group = "garage-secrets";
+              mode = "440";
             };
             GARAGE_RPC_SECRET = {
               group = "garage-secrets";
+              mode = "440";
             };
           };
         };
