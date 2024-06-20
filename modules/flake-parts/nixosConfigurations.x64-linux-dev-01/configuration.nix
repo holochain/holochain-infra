@@ -63,7 +63,7 @@ in {
         '';
         services.caddy.virtualHosts."web.garage.${domain}" = {
           extraConfig = ''
-            reverse_proxy ${config.services.garage.settings.s3_web.bind_addr}
+            reverse_proxy http://${config.services.garage.settings.s3_web.bind_addr}
           '';
         };
       }
