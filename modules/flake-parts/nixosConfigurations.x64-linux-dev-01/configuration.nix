@@ -57,13 +57,13 @@ in {
         };
 
         services.caddy.enable = true;
-        services.caddy.email = "mail@stefanjunker.de";
+        services.caddy.email = "admin@holochain.org";
         services.caddy.globalConfig = ''
           auto_https disable_redirects
         '';
         services.caddy.virtualHosts."web.garage.${domain}" = {
           extraConfig = ''
-            reverse_proxy "${config.services.garage.settings.s3_web.bind_addr}
+            reverse_proxy ${config.services.garage.settings.s3_web.bind_addr}
           '';
         };
       }
