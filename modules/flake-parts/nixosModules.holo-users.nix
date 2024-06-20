@@ -57,7 +57,10 @@ in {
 
         programs.bash.enable = true;
         programs.bash.sessionVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
-        programs.nix-direnv.enable = true;
+
+        programs.direnv.enable = true;
+        # TODO: enable this once home-manager is bumped to >= release-24.05
+        # programs.nix-direnv.enable = true;
 
         # This value determines the Home Manager release that your
         # configuration is compatible with. This helps avoid breakage
