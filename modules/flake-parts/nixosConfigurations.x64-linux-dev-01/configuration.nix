@@ -88,7 +88,7 @@ in {
 
             s3_web = {
               bind_addr = "[::]:${s3_web_port}";
-              root_domain = ".web.${domain}";
+              root_domain = ".${domain}";
             };
             admin = {
               api_bind_addr = "0.0.0.0:3903";
