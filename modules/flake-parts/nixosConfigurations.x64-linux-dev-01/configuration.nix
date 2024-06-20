@@ -25,32 +25,9 @@ in {
 
     {
       home-manager.users.dev = {pkgs, ...}: {
-        # Home Manager needs a bit of information about you and the
-        # paths it should manage.
-        home.username = "dev";
-        home.homeDirectory = "/home/dev";
-
         home.packages = [
-          pkgs.coreutils
-          pkgs.neovim
+          # additional packages for this user go here
         ];
-
-        # home.sessionVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
-        programs.bash.enable = true;
-        programs.bash.sessionVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
-
-        # This value determines the Home Manager release that your
-        # configuration is compatible with. This helps avoid breakage
-        # when a new Home Manager release introduces backwards
-        # incompatible changes.
-        #
-        # You can update Home Manager without changing this value. See
-        # the Home Manager release notes for a list of state version
-        # changes in each release.
-        home.stateVersion = "23.11";
-
-        # Let Home Manager install and manage itself.
-        programs.home-manager.enable = true;
       };
     }
 
