@@ -16,6 +16,8 @@ in {
     users.mutableUsers = false;
     users.users.root.openssh.authorizedKeys = mkAuthorizedKeys {};
     users.users.dev = {
+      home = "/home/dev";
+      extraGroups = ["wheel"];
       openssh.authorizedKeys = mkAuthorizedKeys {};
       isNormalUser = true;
       createHome = true;
