@@ -88,6 +88,11 @@ in {
           enable = true;
           package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
           settings = {
+            # it's *NOT* world-readable, however not was garage exepects either
+            # Jun 20 17:27:39 x64-linux-dev-01 garage[1701365]: Error: File /run/secrets/GARAGE_RPC_SECRET is world-readable! (mode: 0100440, expected 0600)
+
+            allow_world_readable_secrets = false;
+
             rpc_bind_addr = "[::]:3901";
             rpc_secret_file = config.sops.secrets.GARAGE_RPC_SECRET.path;
 
