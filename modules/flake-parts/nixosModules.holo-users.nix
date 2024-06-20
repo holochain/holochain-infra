@@ -27,7 +27,7 @@ in {
       createHome = true;
     };
     home-manager = {
-      sharedmodules = [
+      sharedModules = [
         inputs.sops-nix.homeManagerModules.sops
       ];
       users.dev.sops = {
