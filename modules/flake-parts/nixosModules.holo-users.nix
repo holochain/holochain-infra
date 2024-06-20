@@ -36,7 +36,7 @@ in {
         inputs.sops-nix.homeManagerModules.sops
       ];
       users.dev = {
-        home.environment.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
+        home.environmentVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
         sops = {
           age.keyFile = config.sops.secrets.dev-age-key.path;
           defaultSopsFile = self + "/secrets/dev/secrets.yaml";
