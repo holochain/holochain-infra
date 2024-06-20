@@ -26,6 +26,12 @@ creation_rules:
     key_groups:
     - age:
       - *linux-builder-01
+  - path_regex: ^secrets/x64-linux-dev-01/[^/]+$
+    key_groups:
+    - pgp:
+      - *steveej
+      age:
+      - *x64-linux-dev-01
   - path_regex: ^secrets/nomad/.+$
     key_groups:
     - pgp:
