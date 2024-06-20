@@ -73,10 +73,20 @@
     environmentFile = config.sops.secrets.garage_env.path;
     settings = {
       rpc_bind_addr = "[::]:3901";
-      # admin = {
-      #   admin_token_file = config.sops.secrets.garage_admin_token.path;
-      #   metrics_token_file = config.sops.secrets.garage_metrics_token.path;
-      # };
+
+      s3_api = {
+        api_bind_addr = "[::]:3900";
+        s3_region = "garage";
+        root_domain = ".s3.garage";
+      };
+
+      s3_web = {
+        bind_addr = "[::]:3902";
+        root_domain = ".web.garage";
+      };
+      admin = {
+        api_bind_addr = "0.0.0.0:3903";
+      };
     };
   };
 
