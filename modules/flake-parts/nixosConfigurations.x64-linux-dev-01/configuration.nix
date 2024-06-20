@@ -61,7 +61,7 @@
   virtualisation.libvirtd.enable = true;
 
   sops = {
-    defaultSopsFile = self + "/secrets/${config.networking.hostName}/secerts.yaml";
+    defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
     secrets = {
       garage_env = {};
     };
