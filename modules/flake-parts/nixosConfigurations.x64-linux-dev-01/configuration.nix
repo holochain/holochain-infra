@@ -25,6 +25,7 @@ in {
     (
       {config, ...}: let
         domain = "garage.dev.infra.holochain.org";
+        s3_web_port = "3902";
       in {
         sops = {
           defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
@@ -47,7 +48,7 @@ in {
             };
 
             s3_web = {
-              bind_addr = "[::]:3902";
+              bind_addr = "[::]:${s3_web_port}";
               root_domain = ".web.${domain}";
             };
             admin = {
@@ -63,7 +64,7 @@ in {
         '';
         services.caddy.virtualHosts."web.garage.${domain}" = {
           extraConfig = ''
-            reverse_proxy http://${config.services.garage.settings.s3_web.bind_addr}
+            reverse_proxy http://127.0.0.1:${s3_web_port}
           '';
         };
       }
