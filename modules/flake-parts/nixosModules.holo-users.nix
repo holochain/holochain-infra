@@ -35,9 +35,12 @@ in {
       sharedModules = [
         inputs.sops-nix.homeManagerModules.sops
       ];
-      users.dev.sops = {
-        age.keyFile = config.sops.secrets.dev-age-key.path;
-        defaultSopsFile = self + "/secrets/dev/secrets.yaml";
+      users.devi = {
+        home.environment.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
+        sops = {
+          age.keyFile = config.sops.secrets.dev-age-key.path;
+          defaultSopsFile = self + "/secrets/dev/secrets.yaml";
+        };
       };
     };
     security.sudo = {
