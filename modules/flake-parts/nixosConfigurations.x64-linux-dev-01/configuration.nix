@@ -37,8 +37,9 @@ in {
           pkgs.neovim
         ];
 
-        home.sessionVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
-        home.bash.sessionVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
+        # home.sessionVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
+        home.programs.bash.enable = true;
+        home.programs.bash.sessionVariables.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
 
         # This value determines the Home Manager release that your
         # configuration is compatible with. This helps avoid breakage
