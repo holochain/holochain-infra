@@ -21,6 +21,37 @@ in {
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
 
+    self.inputs.home-manager.nixosModules.home-manager
+    {
+      users.users.dev.groups = ["users"];
+
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.users.steveej = {
+        config,
+        pkgs,
+        ...
+      }: {
+        # Home Manager needs a bit of information about you and the
+        # paths it should manage.
+        home.username = "dev";
+        home.homeDirectory = "/home/dev";
+
+        # This value determines the Home Manager release that your
+        # configuration is compatible with. This helps avoid breakage
+        # when a new Home Manager release introduces backwards
+        # incompatible changes.
+        #
+        # You can update Home Manager without changing this value. See
+        # the Home Manager release notes for a list of state version
+        # changes in each release.
+        home.stateVersion = "23.11";
+
+        # Let Home Manager install and manage itself.
+        programs.home-manager.enable = true;
+      };
+    }
+
     # garage
     (
       {config, ...}: let
