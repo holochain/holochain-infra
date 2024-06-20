@@ -84,6 +84,15 @@ in {
         };
 
         systemd.services.garage.serviceConfig.Group = "garage-secrets";
+        /*
+        post deployment actions taken to get the node ready for storing files
+
+        ```
+        garage status
+        garage layout assign fdf468cca3934a18 -c 100G -z dc0
+        garage layout apply --version 1
+        ```
+        */
         services.garage = {
           enable = true;
           package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
