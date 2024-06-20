@@ -23,11 +23,9 @@ in {
 
     self.inputs.home-manager.nixosModules.home-manager
     {
-      users.users.dev.groups = ["users"];
-
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users.steveej = {
+      home-manager.users.dev = {
         config,
         pkgs,
         ...
