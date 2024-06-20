@@ -13,6 +13,7 @@ in {
     inputs.srvos.nixosModules.hardware-hetzner-online-amd
     inputs.srvos.nixosModules.roles-nix-remote-builder
     self.nixosModules.holo-users
+    self.nixosModules.holo-users-interactive
 
     self.nixosModules.nix-build-distributor
 
@@ -22,10 +23,7 @@ in {
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
 
-    self.inputs.home-manager.nixosModules.home-manager
     {
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
       home-manager.users.dev = {pkgs, ...}: {
         # Home Manager needs a bit of information about you and the
         # paths it should manage.
