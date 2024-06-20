@@ -5,7 +5,6 @@
   lib,
   ...
 }: let
-  domain = "dev.infra.holochain.org";
 in {
   imports = [
     inputs.disko.nixosModules.disko
@@ -24,7 +23,9 @@ in {
 
     # garage
     (
-      {config, ...}: {
+      {config, ...}: let
+        domain = "garage.dev.infra.holochain.org";
+      in {
         sops = {
           defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
           secrets = {
@@ -42,12 +43,12 @@ in {
             s3_api = {
               api_bind_addr = "[::]:3900";
               s3_region = "garage";
-              root_domain = ".s3.garage";
+              root_domain = ".s3.${domain}";
             };
 
             s3_web = {
               bind_addr = "[::]:3902";
-              root_domain = ".web.garage";
+              root_domain = ".web.${domain}";
             };
             admin = {
               api_bind_addr = "0.0.0.0:3903";
@@ -60,9 +61,9 @@ in {
         services.caddy.globalConfig = ''
           auto_https disable_redirects
         '';
-        services.caddy.virtualHosts."s3.${domain}" = {
+        services.caddy.virtualHosts."web.garage.${domain}" = {
           extraConfig = ''
-            reverse_proxy "${config.services.garage.settings.s3_web.bind_addr};
+            reverse_proxy "${config.services.garage.settings.s3_web.bind_addr}
           '';
         };
       }
