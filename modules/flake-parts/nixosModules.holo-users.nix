@@ -13,7 +13,7 @@
     ];
   };
 in {
-  flake.nixosModules.holo-users = {
+  flake.nixosModules.holo-users = {config, ...}: {
     users.mutableUsers = false;
     users.users.root.openssh.authorizedKeys = mkAuthorizedKeys {};
 
@@ -26,12 +26,17 @@ in {
       isNormalUser = true;
       createHome = true;
     };
+
+    sops.secets.dev-age-key = {
+      sopsFile = self + "/secrets/dev/secrets.yaml";
+      owner = "dev";
+    };
     home-manager = {
       sharedModules = [
         inputs.sops-nix.homeManagerModules.sops
       ];
       users.dev.sops = {
-        age.keyFile = "/home/dev/.age-key.txt";
+        age.keyFile = config.sops.secrets.dev-age-key.path;
         defaultSopsFile = self + "/secrets/dev/secrets.yaml";
       };
     };
