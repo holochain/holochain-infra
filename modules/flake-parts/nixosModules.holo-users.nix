@@ -35,7 +35,7 @@ in {
       sharedModules = [
         inputs.sops-nix.homeManagerModules.sops
       ];
-      users.devi = {
+      users.dev = {
         home.environment.SOPS_AGE_KEY_FILE = config.sops.secrets.dev-age-key.path;
         sops = {
           age.keyFile = config.sops.secrets.dev-age-key.path;
