@@ -62,7 +62,7 @@ in {
         services.caddy.globalConfig = ''
           auto_https disable_redirects
         '';
-        services.caddy.virtualHosts."web.garage.${domain}" = {
+        services.caddy.virtualHosts."web.${domain}" = {
           extraConfig = ''
             reverse_proxy http://127.0.0.1:${s3_web_port}
           '';
