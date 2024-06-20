@@ -72,6 +72,7 @@
     package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
     environmentFile = config.sops.secrets.garage_env.path;
     settings = {
+      rpc_bind_addr = "[::]:3901";
       # admin = {
       #   admin_token_file = config.sops.secrets.garage_admin_token.path;
       #   metrics_token_file = config.sops.secrets.garage_metrics_token.path;
