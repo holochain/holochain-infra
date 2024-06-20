@@ -67,6 +67,10 @@ in {
             reverse_proxy http://127.0.0.1:${s3_web_port}
           '';
         };
+
+        networking.firewall.allowedTCPPorts = [
+          443
+        ];
       }
     )
   ];
