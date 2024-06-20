@@ -27,7 +27,7 @@ in {
       createHome = true;
     };
 
-    sops.secets.dev-age-key = {
+    sops.secrets.dev-age-key = {
       sopsFile = self + "/secrets/dev/secrets.yaml";
       owner = "dev";
     };
