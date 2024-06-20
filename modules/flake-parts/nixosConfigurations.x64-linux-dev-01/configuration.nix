@@ -64,16 +64,18 @@ in {
         sops = {
           defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
           secrets = {
-            garage_env = {};
+            GARAGE_ADMIN_TOKEN = {};
+            GARAGE_METRICS_TOKEN = {};
+            GARAGE_RPC_SECRET = {};
           };
         };
 
         services.garage = {
           enable = true;
           package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
-          environmentFile = config.sops.secrets.garage_env.path;
           settings = {
             rpc_bind_addr = "[::]:3901";
+            rpc_secret_file = config.sops.secrets.GARAGE_RPC_SECRET.path;
 
             s3_api = {
               api_bind_addr = "[::]:3900";
@@ -87,6 +89,8 @@ in {
             };
             admin = {
               api_bind_addr = "0.0.0.0:3903";
+              metrics_token_file = config.sops.secrets.GARAGE_METRICS_TOKEN.path;
+              admin_token_file = config.sops.secrets.GARAGE_ADMIN_TOKEN.path;
             };
           };
         };
