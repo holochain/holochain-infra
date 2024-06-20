@@ -13,7 +13,12 @@
   };
 in {
   flake.nixosModules.holo-users = {
+    users.mutableUsers = false;
     users.users.root.openssh.authorizedKeys = mkAuthorizedKeys {};
-    users.users.dev.openssh.authorizedKeys = mkAuthorizedKeys {};
+    users.users.dev = {
+      openssh.authorizedKeys = mkAuthorizedKeys {};
+      isNormalUser = true;
+      createHome = true;
+    };
   };
 }
