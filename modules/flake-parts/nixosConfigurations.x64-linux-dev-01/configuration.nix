@@ -70,7 +70,7 @@
   services.garage = {
     enable = true;
     package = pkgs.garage_1_0_0;
-    environmentFile = config.secrets.garage-env.path;
+    environmentFile = config.sops.secrets.garage-env.path;
     settings = {
       # admin = {
       #   admin_token_file = config.sops.secrets.garage_admin_token.path;
