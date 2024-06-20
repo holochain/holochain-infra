@@ -18,7 +18,7 @@ in {
     users.users.root.openssh.authorizedKeys = mkAuthorizedKeys {};
   };
 
-  flake.nixosModules.holo-users-dev = {config, ...}: {
+  flake.nixosModules.holo-users-interactive = {config, ...}: {
     imports = [
       inputs.home-manager.nixosModules.home-manager
     ];
