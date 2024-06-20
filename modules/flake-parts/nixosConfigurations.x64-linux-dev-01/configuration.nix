@@ -69,7 +69,7 @@
 
   services.garage = {
     enable = true;
-    package = pkgs.garage_1_0_0;
+    package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
     environmentFile = config.sops.secrets.garage_env.path;
     settings = {
       # admin = {
