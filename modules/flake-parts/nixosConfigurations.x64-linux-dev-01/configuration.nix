@@ -35,6 +35,11 @@ in {
         home.username = "dev";
         home.homeDirectory = "/home/dev";
 
+        home.packages = [
+          pkgs.coreutils
+          pkgs.neovim
+        ];
+
         # This value determines the Home Manager release that your
         # configuration is compatible with. This helps avoid breakage
         # when a new Home Manager release introduces backwards

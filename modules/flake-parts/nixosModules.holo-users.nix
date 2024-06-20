@@ -1,4 +1,5 @@
 {
+  self,
   inputs,
   lib,
   ...
@@ -15,12 +16,24 @@ in {
   flake.nixosModules.holo-users = {
     users.mutableUsers = false;
     users.users.root.openssh.authorizedKeys = mkAuthorizedKeys {};
+
+    # a generic dev user that can be used to have per-host home-manager environments for it.
+    # this adds no risk since all potential users already have access to the root account via their SSH credentials.
     users.users.dev = {
       home = "/home/dev";
       extraGroups = ["wheel"];
       openssh.authorizedKeys = mkAuthorizedKeys {};
       isNormalUser = true;
       createHome = true;
+    };
+    home-manager = {
+      sharedmodules = [
+        inputs.sops-nix.homeManagerModules.sops
+      ];
+      users.dev.sops = {
+        age.keyFile = "/home/dev/.age-key.txt";
+        defaultSopsFile = self + "/secrets/dev/secrets.yaml";
+      };
     };
     security.sudo = {
       enable = true;
