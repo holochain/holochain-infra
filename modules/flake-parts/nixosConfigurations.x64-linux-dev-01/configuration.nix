@@ -61,7 +61,7 @@ in {
         domain = "garage.dev.infra.holochain.org";
         s3_web_port = "3902";
       in {
-        users.groups.garage.members = [
+        users.groups.garage-secrets.members = [
           "dev"
         ];
 
@@ -69,18 +69,18 @@ in {
           defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
           secrets = {
             GARAGE_ADMIN_TOKEN = {
-              group = "garage";
+              group = "garage-secrets";
             };
             GARAGE_METRICS_TOKEN = {
-              group = "garage";
+              group = "garage-secrets";
             };
             GARAGE_RPC_SECRET = {
-              group = "garage";
+              group = "garage-secrets";
             };
           };
         };
 
-        systemd.services.garage.serviceConfig.Group = "garage";
+        systemd.services.garage.serviceConfig.Group = "garage-secrets";
         services.garage = {
           enable = true;
           package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
