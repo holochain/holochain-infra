@@ -22,5 +22,20 @@ in {
       isNormalUser = true;
       createHome = true;
     };
+    security.sudo = {
+      enable = true;
+      execWheelOnly = true;
+      extraRules = [
+        {
+          groups = ["wheel"];
+          commands = [
+            {
+              command = "ALL";
+              options = ["NOPASSWD"];
+            }
+          ];
+        }
+      ];
+    };
   };
 }
