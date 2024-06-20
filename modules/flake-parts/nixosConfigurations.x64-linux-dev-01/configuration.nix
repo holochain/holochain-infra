@@ -83,12 +83,12 @@ in {
             s3_api = {
               api_bind_addr = "[::]:3900";
               s3_region = "garage";
-              root_domain = ".s3.${domain}";
+              # root_domain = ".s3.${domain}";
             };
 
             s3_web = {
               bind_addr = "[::]:${s3_web_port}";
-              root_domain = ".${domain}";
+              # root_domain = ".web.${domain}";
             };
             admin = {
               api_bind_addr = "0.0.0.0:3903";
