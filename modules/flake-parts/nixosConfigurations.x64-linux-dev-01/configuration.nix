@@ -1,11 +1,12 @@
 {
-  config,
   inputs,
   self,
   pkgs,
   lib,
   ...
-}: {
+}: let
+  domain = "dev.infra.holochain.org";
+in {
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -20,6 +21,52 @@
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
+
+    # garage
+    (
+      {config, ...}: {
+        sops = {
+          defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
+          secrets = {
+            garage_env = {};
+          };
+        };
+
+        services.garage = {
+          enable = true;
+          package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
+          environmentFile = config.sops.secrets.garage_env.path;
+          settings = {
+            rpc_bind_addr = "[::]:3901";
+
+            s3_api = {
+              api_bind_addr = "[::]:3900";
+              s3_region = "garage";
+              root_domain = ".s3.garage";
+            };
+
+            s3_web = {
+              bind_addr = "[::]:3902";
+              root_domain = ".web.garage";
+            };
+            admin = {
+              api_bind_addr = "0.0.0.0:3903";
+            };
+          };
+        };
+
+        services.caddy.enable = true;
+        services.caddy.email = "mail@stefanjunker.de";
+        services.caddy.globalConfig = ''
+          auto_https disable_redirects
+        '';
+        services.caddy.virtualHosts."s3.${domain}" = {
+          extraConfig = ''
+            reverse_proxy "${config.services.garage.s3_web.bind_addr};
+          '';
+        };
+      }
+    )
   ];
 
   nix.settings.system-features = [
@@ -59,36 +106,6 @@
   ];
 
   virtualisation.libvirtd.enable = true;
-
-  sops = {
-    defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
-    secrets = {
-      garage_env = {};
-    };
-  };
-
-  services.garage = {
-    enable = true;
-    package = self.inputs.nixpkgs-24-05.legacyPackages.${pkgs.stdenv.system}.garage_1_0_0;
-    environmentFile = config.sops.secrets.garage_env.path;
-    settings = {
-      rpc_bind_addr = "[::]:3901";
-
-      s3_api = {
-        api_bind_addr = "[::]:3900";
-        s3_region = "garage";
-        root_domain = ".s3.garage";
-      };
-
-      s3_web = {
-        bind_addr = "[::]:3902";
-        root_domain = ".web.garage";
-      };
-      admin = {
-        api_bind_addr = "0.0.0.0:3903";
-      };
-    };
-  };
 
   boot.loader.grub = {
     efiSupport = false;
