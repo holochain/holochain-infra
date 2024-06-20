@@ -3,6 +3,7 @@
   self,
   pkgs,
   lib,
+  config,
   ...
 }: let
 in {
@@ -25,11 +26,7 @@ in {
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users.dev = {
-        config,
-        pkgs,
-        ...
-      }: {
+      home-manager.users.dev = {pkgs, ...}: {
         # Home Manager needs a bit of information about you and the
         # paths it should manage.
         home.username = "dev";
