@@ -4,7 +4,7 @@
         "stack": "organization/holochain-infra/dev",
         "latest": {
             "manifest": {
-                "time": "2024-06-18T21:43:06.192982843+02:00",
+                "time": "2024-06-26T17:47:05.154786843+02:00",
                 "magic": "6cece4896dda855f1f8eeb278295600f55147c3a4c822170dd54c64d426a45f0",
                 "version": "v3.116.0"
             },
