@@ -31,6 +31,10 @@ in {
       };
     }
 
+    ../../nixos/dev-minio.nix
+    {
+      services.devMinio.enable = true;
+    }
   ];
 
   nix.settings.system-features = [

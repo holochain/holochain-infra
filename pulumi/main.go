@@ -81,7 +81,7 @@ func main() {
 					"SSH_KEY": pulumi.String("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAIODJoJ7Chi8jPTGmKQ5MlB7+TgNGznreeRW/K34v1ey23/FlnIxP9XyyLkzojKALTfAQYgqzrQV3HDSRwhd1rXB7YLq1/CiVWRJvDMTkJiOCV515eiUJGXu1G8e12d/USPNBMEzMJGvqBCIGYen5OxXkyIHIREfePNi5k337G5z9fiuiggxJl9ty6qZ4XIRgFQj9jAoShixP/+99I7XrGWeFQ1BmLZWzi20SQGKvogYnOszDZFqBAHGFnCFYHaTz2jOXXCtQsa27gr8D2iLRFaxvhB7XMK+VbpDcZGjmfRJ701XxFv15GFnFAV71hTaYqj/Ebpw9Vs02+gUp3+tt cardno:17_673_080"),
 				},
 
-				Flist:        pulumi.String("https://sj-bm-hostkey0.dev.infra.holochain.org/s3/tfgrid-eval/tfgrid-base.20240517.114850.fl"),
+				Flist:        pulumi.String("https://s3.dev.infra.holochain.org/tfgrid-eval/tfgrid-base.20240624.183001.fl"),
 				Memory:       pulumi.Int(512),
 				Name:         pulumi.String("tfgrid_base"),
 				Network_name: grid_network.Name,

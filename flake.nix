@@ -188,6 +188,7 @@
                 pkgs.caddy
 
                 inputs'.threefold-rfs.packages.default
+                pkgs.minio-client
 
                 pkgs.jq
                 pkgsPulumi.pulumictl
@@ -212,14 +213,35 @@
             NOMAD_CACERT = nomadCaCert;
             NOMAD_CLIENT_CERT = nomadClientCert;
 
-            shellHook = ''
-              set -x
-              REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
-              mkdir -p ''${REPO_SECRETS_DIR}
-              chmod 700 ''${REPO_SECRETS_DIR}
-              export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
-              sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
-            '';
+            shellHook = let
+              devMinioOsConfig = self.nixosConfigurations.x64-linux-dev-01.config;
+            in
+              ''
+                if sops -d secrets/nomad/cli/keys.yaml 2>&1 >/dev/null; then
+                  REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
+                  mkdir -p ''${REPO_SECRETS_DIR}
+                  chmod 700 ''${REPO_SECRETS_DIR}
+                  export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
+                  sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
+                fi
+              ''
+              + (let
+                minioUserPass = ''''${MINIO_ROOT_USER}:''${MINIO_ROOT_PASSWORD}'';
+                minioDevHost = devMinioOsConfig.services.devMinio.s3Domain + ":443";
+                minioDevLocalHost = "127.0.0.1:${builtins.toString devMinioOsConfig.services.devMinio.listenPort}";
+                minioRegion = devMinioOsConfig.services.devMinio.region;
+              in ''
+                if sops -d secrets/minio/server.yaml 2>&1 >/dev/null; then
+                  source <(sops -d secrets/minio/server.yaml | yq '.minio_root_credentials')
+
+                  export MC_HOST_devminio_local="http://${minioUserPass}@${minioDevLocalHost}";
+                  export MC_HOST_devminio="https://${minioUserPass}@${minioDevHost}"
+
+                  export RFS_HOST_devminio_region="${minioRegion}"
+                  export RFS_HOST_devminio_local="s3://${minioUserPass}@${minioDevLocalHost}"
+                  export RFS_HOST_devminio="s3s://${minioUserPass}@${minioDevHost}"
+                fi
+              '');
           };
 
         packages =
