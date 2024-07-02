@@ -31,29 +31,16 @@
           '';
         };
 
-        # TODO: automate proper minio hosting. this is exemplary only and requires imperative setup of minio
-        zos-vm-serve-s3 = pkgs.writeShellApplication {
-          name = "zos-vm-serve-s3";
-          runtimeInputs = [
-            pkgs.minio
-          ];
-          text = ''
-            set -ueE -o pipefail
-
-            cd .minio
-
-            env \
-              MINIO_ROOT_USER=minioadmin \
-              MINIO_ROOT_PASSWORD="$(cat minioadmin.key)" \
-              minio server --console-address ":9001" storage
-          '';
-        };
-
         zos-vm-publish-s3 = let
-          s3BaseUrl = "sj-bm-hostkey0.dev.infra.holochain.org";
-          s3ListenUrl = "${s3BaseUrl}:9000";
-          s3HttpUrl = "https://${s3BaseUrl}/s3";
+          # TODO: document these: explain the relationship to the variables in the devShell's shellHook; if viable give them a common source of truth
+          s3BaseUrl = "dev.infra.holochain.org";
+          s3HttpUrl = "https://s3.${s3BaseUrl}";
+
+          # TODO: programmatically ensure this exists
           s3Bucket = "tfgrid-eval";
+
+          # TODO: this is faster however restricts publishing to the server itself
+          s3Alias = "devminio_local";
         in
           pkgs.writeShellApplication {
             name = "zos-vm-publish-s3";
@@ -73,12 +60,16 @@
               mkdir -p "$workDir"
               cd "$workDir"
 
+              s3_remote="''${MC_HOST_devminio_local:?}"
+              s3_remote="''${s3_remote/http:\/\//}"
+
               # mc rm --recursive --force localhost/${s3Bucket} || echo removal failed
               env RUST_MIN_STACK=8388608 \
-                rfs pack -m result.fl -s s3://minioadmin:"$(cat ../../.minio/minioadmin.key)"@${s3ListenUrl}/${s3Bucket}\?region=us-east-1 "$rootfs/" | tee rfs-pack.log
+                rfs pack -m result.fl -s "''${RFS_HOST_devminio:?}/${s3Bucket}?region=''${RFS_HOST_devminio_region:?}" "$rootfs/" | tee rfs-pack.log
 
-              # TODO: document or automate setting up the alias "localhost"
-              mc cp result.fl localhost/${s3Bucket}/"$rootfsBase".fl
+              mc cp result.fl ${s3Alias}/${s3Bucket}/"$rootfsBase".fl
+
+              # the final URL doesn't have the bucket name as it's implied as the default bucket.
               echo ${s3HttpUrl}/${s3Bucket}/"$rootfsBase".fl > public-url
 
               touch published
@@ -208,9 +199,12 @@
               kernel="$rootfs/boot/vmlinuz"
               initram="$rootfs/boot/initrd.img"
 
+              # FIXME: can't handle path ending in '/'
               workDir="$rootfs.work"
               mountDir="$workDir/mnt"
               mkdir -p "$mountDir"
+              # set it to read-only by default. the mount will be writable.
+              chmod 440 "$mountDir"
 
               socket="$workDir/virtiofs.sock"
 
@@ -219,7 +213,9 @@
                   exit 1
               }
 
-              rfs mount -m "$workDir"/result.fl "$mountDir" > "$workDir"/rfs_mount.log 2>&1 &
+              # FIXME: check whether the mount was successful
+              # FIXME: don't rely on sudo
+              sudo rfs mount -m "$workDir"/result.fl "$mountDir" 2>&1 | tee "$workDir"/rfs_mount.log &
               mountpid="$!"
 
               sleep 3
@@ -243,8 +239,8 @@
                   sudo kill "$fspid"
                   rm -rf "$socket"
 
-                  kill "$mountpid"
-                  umount --lazy "$mountDir"
+                  sudo kill "$mountpid"
+                  sudo umount --lazy "$mountDir"
                   rmdir "$mountDir"
                 )
               }

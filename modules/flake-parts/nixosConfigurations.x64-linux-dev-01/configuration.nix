@@ -1,17 +1,19 @@
 {
-  config,
   inputs,
   self,
   pkgs,
   lib,
+  config,
   ...
-}: {
+}: let
+in {
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
     inputs.srvos.nixosModules.hardware-hetzner-online-amd
     inputs.srvos.nixosModules.roles-nix-remote-builder
     self.nixosModules.holo-users
+    self.nixosModules.holo-users-interactive
 
     self.nixosModules.nix-build-distributor
 
@@ -20,6 +22,23 @@
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
+
+    {
+      home-manager.users.dev = {pkgs, ...}: {
+        home.packages = [
+          # additional packages for this user go here
+        ];
+      };
+    }
+
+    ../../nixos/dev-minio.nix
+    {
+      services.devMinio.enable = true;
+    }
+  ];
+
+  nix.settings.system-features = [
+    "big-parallel"
   ];
 
   networking = {
