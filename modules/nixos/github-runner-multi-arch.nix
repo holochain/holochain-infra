@@ -3,17 +3,19 @@
   config,
   lib,
   pkgs,
+  options,
   ...
 }: let
   nixpkgsGithubActionRunners' = pkgs.callPackage self.inputs.nixpkgsGithubActionRunners {};
 
   package = nixpkgsGithubActionRunners'.github-runner;
 
-  mkList = builtins.genList
-    (x: "${cfg.namePrefix}-${builtins.toString (x+cfg.countOffset)}")
+  mkList =
+    builtins.genList
+    (x: "${cfg.namePrefix}-${builtins.toString (x + cfg.countOffset)}")
     cfg.count;
 
-    cfg = config.services.github-runner-multi-arch;
+  cfg = config.services.github-runner-multi-arch;
 in {
   options.services.github-runner-multi-arch = {
     enable = lib.mkEnableOption "self-hosted multi-arch github runner on holochain/holochain";
@@ -29,11 +31,17 @@ in {
       type = lib.types.int;
     };
 
-    namePrefix= lib.mkOption {
+    namePrefix = lib.mkOption {
       description = "prefix for the runner names";
       default = "multi-arch";
       type = lib.types.str;
     };
+
+    tokenFile =
+      options.services.github-runner.tokenFile
+      // {
+        default = config.sops.secrets.github-runners-token.path;
+      };
   };
 
   config = lib.mkIf cfg.enable {
@@ -44,13 +52,9 @@ in {
         ephemeral = true;
         inherit package;
         extraLabels = [cfg.namePrefix config.networking.hostName];
-        tokenFile = config.sops.secrets.github-runners-token.path;
+        tokenFile = cfg.tokenFile;
         url = "https://github.com/holochain/holochain";
         extraPackages = config.environment.systemPackages;
       });
-
-    nixpkgs.config.permittedInsecurePackages = [
-      "nodejs-16.20.2"
-    ];
   };
 }
