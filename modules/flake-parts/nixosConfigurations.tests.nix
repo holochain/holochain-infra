@@ -11,12 +11,12 @@
   }: {
     # system specific outputs like, apps, checks, packages
 
-    packages = {
-      github-runner-multi-arch-test = let
-        prefixName = "multi-arch-test";
-        runnerServiceName = "github-runner-${prefixName}-0.service";
-      in
-        pkgs.testers.runNixOSTest {
+    packages = let
+      prefixName = "multi-arch-test";
+      runnerServiceName = "github-runner-${prefixName}-0.service";
+      github-runner-multi-arch-test =
+        pkgs.testers.runNixOSTest
+        {
           name = "github-runner-multi-arch-test";
           node.specialArgs = {
             inherit self inputs;
@@ -29,21 +29,15 @@
                 ./nixosConfigurations.linux-builder-01/configuration.nix
               ];
 
-              # copied from https://github.com/NixOS/nixpkgs/blob/master/nixos/tests/github-runner.nix
-              networking.hosts."127.0.0.1" = ["api.github.com"];
-              systemd.services.dummy-github-com = {
-                wantedBy = ["multi-user.target"];
-                before = [runnerServiceName];
-                script = "${pkgs.netcat}/bin/nc -Fl 443 | true && touch /tmp/registration-connect";
-                serviceConfig.Restart = "always";
-              };
-
               services.github-runner-multi-arch = {
                 enable = true;
                 countOffset = 0;
                 count = lib.mkForce 1;
                 namePrefix = lib.mkForce "multi-arch-test";
-                tokenFile = builtins.toFile "tokenfile" "notsecret";
+                url = "https://github.com/steveej/empty";
+
+                # TODO: pass a minimal-permissioned github token that can indeed create a new runner
+                tokenFile = builtins.toFile "tokenfile" "***";
               };
 
               # sops.secrets.github-runners-token = {
@@ -55,11 +49,20 @@
           testScript = {nodes, ...}: ''
             start_all()
 
-            machine.wait_for_unit("dummy-github-com")
+            machine.succeed("ping -c1 github.com")
+
             machine.wait_for_unit("github-runner-${nodes.machine.config.services.github-runner-multi-arch.namePrefix}-${builtins.toString (nodes.machine.config.services.github-runner-multi-arch.count - 1)}")
-            machine.wait_until_fails("github-runner-${nodes.machine.config.services.github-runner-multi-arch.namePrefix}-${builtins.toString (nodes.machine.config.services.github-runner-multi-arch.count - 1)}")
+
+            # TODO: parse the log and assert
+            # Runner successfully added
           '';
         };
+    in {
+      inherit github-runner-multi-arch-test;
+
+      # needs to be run like so currently:
+      # NIX_CONFIG="sandbox = relaxed" sudo -E nix build .\#github-runner-multi-arch-test-online
+      github-runner-multi-arch-test-online = github-runner-multi-arch-test.config.rawTestDerivation.overrideAttrs (_: {__noChroot = true;});
     };
   };
   flake = {

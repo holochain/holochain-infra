@@ -8,8 +8,6 @@
 }: let
   nixpkgsGithubActionRunners' = pkgs.callPackage self.inputs.nixpkgsGithubActionRunners {};
 
-  package = nixpkgsGithubActionRunners'.github-runner;
-
   mkList =
     builtins.genList
     (x: "${cfg.namePrefix}-${builtins.toString (x + cfg.countOffset)}")
@@ -31,6 +29,12 @@ in {
       type = lib.types.int;
     };
 
+    url = lib.mkOption {
+      description = "url";
+      default = "https://github.com/holochain/holochain";
+      type = lib.types.str;
+    };
+
     namePrefix = lib.mkOption {
       description = "prefix for the runner names";
       default = "multi-arch";
@@ -42,6 +46,10 @@ in {
       // {
         default = config.sops.secrets.github-runners-token.path;
       };
+
+    package = lib.mkOption {
+      default = nixpkgsGithubActionRunners'.github-runner;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -50,10 +58,10 @@ in {
       (_: {
         replace = true;
         ephemeral = true;
-        inherit package;
         extraLabels = [cfg.namePrefix config.networking.hostName];
         tokenFile = cfg.tokenFile;
-        url = "https://github.com/holochain/holochain";
+        inherit (cfg) url package;
+
         extraPackages = config.environment.systemPackages;
       });
   };
