@@ -31,8 +31,8 @@ in {
       };
 
       services.openssh.settings.AcceptEnv = builtins.concatStringsSep " " [
-        "GIT_AUTHOR_NAME"
-        "GIT_AUTHOR_EMAIL"
+        "GIT_AUTHOR_*"
+        "GIT_COMMITTER_*"
       ];
     }
 
