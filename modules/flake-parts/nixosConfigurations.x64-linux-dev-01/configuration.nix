@@ -29,6 +29,11 @@ in {
           # additional packages for this user go here
         ];
       };
+
+      services.openssh.settings.AcceptEnv = builtins.concatStringsSep " " [
+        "GIT_AUTHOR_NAME"
+        "GIT_AUTHOR_EMAIL"
+      ];
     }
 
     ../../nixos/dev-minio.nix
