@@ -27,6 +27,9 @@ in {
       home-manager.users.dev = {pkgs, ...}: {
         home.packages = [
           # additional packages for this user go here
+          pkgs.nil
+          pkgs.wget
+          pkgs.file
         ];
       };
 
@@ -40,6 +43,19 @@ in {
     {
       services.devMinio.enable = true;
     }
+
+    inputs.nixos-vscode-server.nixosModules.default
+    ({
+      config,
+      pkgs,
+      ...
+    }: {
+      services.vscode-server = {
+        enable = true;
+        installPath = "$HOME/.vscodium-server";
+        nodejsPackage = pkgs.nodejs_18;
+      };
+    })
   ];
 
   nix.settings.system-features = [

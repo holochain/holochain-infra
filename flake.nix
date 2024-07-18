@@ -116,6 +116,8 @@
     holoNixpkgs.url = "https://hydra.holo.host/channel/custom/holo-nixpkgs/2112/holo-nixpkgs/nixexprs.tar.xz";
 
     nixpkgsPulumi.url = "github:steveej-forks/nixpkgs/pulumi-version-bump";
+
+    nixos-vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
   outputs = inputs @ {
