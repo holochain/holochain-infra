@@ -60,6 +60,8 @@ in {
 
   nix.settings.system-features = [
     "big-parallel"
+    "kvm"
+    "nixos-test"
   ];
 
   networking = {
