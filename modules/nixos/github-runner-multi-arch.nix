@@ -9,11 +9,12 @@
 
   package = nixpkgsGithubActionRunners'.github-runner;
 
-  mkList = builtins.genList
-    (x: "${cfg.namePrefix}-${builtins.toString (x+cfg.countOffset)}")
+  mkList =
+    builtins.genList
+    (x: "${cfg.namePrefix}-${builtins.toString (x + cfg.countOffset)}")
     cfg.count;
 
-    cfg = config.services.github-runner-multi-arch;
+  cfg = config.services.github-runner-multi-arch;
 in {
   options.services.github-runner-multi-arch = {
     enable = lib.mkEnableOption "self-hosted multi-arch github runner on holochain/holochain";
@@ -29,7 +30,7 @@ in {
       type = lib.types.int;
     };
 
-    namePrefix= lib.mkOption {
+    namePrefix = lib.mkOption {
       description = "prefix for the runner names";
       default = "multi-arch";
       type = lib.types.str;
