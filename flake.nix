@@ -2,7 +2,7 @@
   description = "The new, performant, and simplified version of Holochain on Rust (sometimes called Holochain RSM for Refactored State Model) ";
 
   inputs = {
-    nixpkgs.follows = "nixpkgs-23-11";
+    nixpkgs.follows = "nixpkgs-24-05";
     nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
     nixpkgs-24-05 = {url = "github:nixos/nixpkgs/nixos-24.05";};
     nixpkgsNix.follows = "nixpkgs-24-05";

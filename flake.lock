@@ -1331,11 +1331,11 @@
     },
     "nixpkgs-24-05": {
       "locked": {
-        "lastModified": 1718086528,
-        "narHash": "sha256-hoB7B7oPgypePz16cKWawPfhVvMSXj4G/qLsfFuhFjw=",
+        "lastModified": 1726447378,
+        "narHash": "sha256-2yV8nmYE1p9lfmLHhOCbYwQC/W8WYfGQABoGzJOb1JQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "47b604b07d1e8146d5398b42d3306fdebd343986",
+        "rev": "086b448a5d54fd117f4dc2dee55c9f0ff461bdc1",
         "type": "github"
       },
       "original": {
@@ -1718,7 +1718,7 @@
         "nixos-generators": "nixos-generators",
         "nixos-vscode-server": "nixos-vscode-server",
         "nixpkgs": [
-          "nixpkgs-23-11"
+          "nixpkgs-24-05"
         ],
         "nixpkgs-23-11": "nixpkgs-23-11",
         "nixpkgs-24-05": "nixpkgs-24-05",
