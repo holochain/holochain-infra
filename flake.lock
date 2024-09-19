@@ -949,6 +949,18 @@
         "url": "https://github.com/jost-s.keys"
       }
     },
+    "keys_r-vdp": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-DBwLobZFgeDUbUp4CoAlvIULpZEcHauPWzW8Ie0PwZM=",
+        "type": "file",
+        "url": "https://git.sr.ht/~r-vdp/nixos-config/blob/main/users/ramses/authorized_keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://git.sr.ht/~r-vdp/nixos-config/blob/main/users/ramses/authorized_keys"
+      }
+    },
     "keys_steveej": {
       "flake": false,
       "locked": {
@@ -1711,6 +1723,7 @@
         "home-manager": "home-manager",
         "keys_artbrock": "keys_artbrock",
         "keys_jost-s": "keys_jost-s",
+        "keys_r-vdp": "keys_r-vdp",
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
         "microvm": "microvm",
