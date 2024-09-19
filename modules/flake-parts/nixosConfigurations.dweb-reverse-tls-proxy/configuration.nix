@@ -202,6 +202,8 @@ in {
       turn-3.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-3.config.services.holochain-turn-server.address}
       signal-3.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-3.config.services.tx5-signal-server.address}
       bootstrap-3.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-3.config.services.kitsune-bootstrap.address}
+
+      monitoring-0.${fqdn2domain}.               A       ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv4}
     '';
   };
 

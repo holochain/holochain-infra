@@ -4,11 +4,7 @@
   self,
   pkgs,
   ...
-}: let
-  hostName = "monitoring-0";
-
-  primaryIpv4 = "135.181.110.69";
-in {
+}: {
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -23,11 +19,11 @@ in {
     ../../nixos/shared-nix-settings.nix
   ];
 
-  networking.hostName = hostName; # Define your hostname.
+  networking.hostName = config.passthru.hostName; # Define your hostname.
 
-  hostName = primaryIpv4;
+  hostName = "${config.passthru.hostName}.${(builtins.elemAt (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones) 0).name}";
 
-  nix.settings.max-jobs = 2;
+  nix.settings.max-jobs = 3;
 
   nix.settings.substituters = [
     "https://holochain-ci.cachix.org"
@@ -38,4 +34,9 @@ in {
   ];
 
   system.stateVersion = "24.05";
+
+  passthru = {
+    hostName = "monitoring-0";
+    primaryIpv4 = "135.181.110.69";
+  };
 }
