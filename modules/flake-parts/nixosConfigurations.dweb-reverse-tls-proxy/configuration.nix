@@ -207,6 +207,7 @@ in
       bootstrap-3.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-3.config.services.kitsune-bootstrap.address}
 
       monitoring-0.${fqdn2domain}.               A       ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv4}
+      buildbot-nix-0.${fqdn2domain}.             A       ${self.nixosConfigurations.buildbot-nix-0.config.passthru.primaryIpv4}
     '';
   };
 
