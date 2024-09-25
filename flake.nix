@@ -84,6 +84,11 @@
       flake = false;
     };
 
+    keys_r-vdp = {
+      url = "https://git.sr.ht/~r-vdp/nixos-config/blob/main/users/ramses/authorized_keys";
+      flake = false;
+    };
+
     cachix_for_watch_store.url = "github:cachix/cachix/v1.5";
 
     tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.8-alpha";
@@ -167,6 +172,9 @@
                 pkgs.age
                 pkgs.age-plugin-yubikey
                 pkgs.sops
+                (pkgs.writeShellScriptBin "sops-update-keys" ''
+                  for file in $(egrep -lr '"?sops"?:') secrets; do sops updatekeys -y $file; done
+                '')
 
                 # self'.packages.nomad
 
