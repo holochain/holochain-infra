@@ -172,6 +172,9 @@
                 pkgs.age
                 pkgs.age-plugin-yubikey
                 pkgs.sops
+                (pkgs.writeShellScriptBin "sops-update-keys" ''
+                  for file in $(egrep -lr '"?sops"?:') secrets; do sops updatekeys -y $file; done
+                '')
 
                 # self'.packages.nomad
 
