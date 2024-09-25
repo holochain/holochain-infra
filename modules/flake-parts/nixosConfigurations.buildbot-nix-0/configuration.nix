@@ -80,9 +80,18 @@
             primary = {
               size = "100%";
               content = {
-                type = "filesystem";
-                format = "btrfs";
-                mountpoint = "/";
+                type = "btrfs";
+                extraArgs = ["-f"]; # Override existing partition
+                subvolumes = {
+                  # Subvolume name is different from mountpoint
+                  "/rootfs" = {
+                    mountpoint = "/";
+                  };
+                  "/nix" = {
+                    mountOptions = ["noatime"];
+                    mountpoint = "/nix";
+                  };
+                };
               };
             };
           };
