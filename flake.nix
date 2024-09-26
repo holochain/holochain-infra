@@ -475,6 +475,8 @@
                 };
               };
             };
+
+            inherit (self'.packages) build-os-configurations;
           };
         };
       flake = {
