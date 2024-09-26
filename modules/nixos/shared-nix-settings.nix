@@ -15,9 +15,6 @@
   nix.settings.experimental-features = lib.mkForce [
     "nix-command"
     "flakes"
-    "ca-derivations"
-    "impure-derivations"
-    "recursive-nix"
   ];
   nix.settings.sandbox =
     if pkgs.stdenv.isLinux
