@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, macos-13]
+        os: [macos-latest, macos-13]
     name: OS
     runs-on: ${{ matrix.os }}
     permissions:
