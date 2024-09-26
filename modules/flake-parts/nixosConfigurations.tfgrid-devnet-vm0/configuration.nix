@@ -5,9 +5,11 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   hostName = "tfgrid-devnet-vm0";
-in {
+in
+{
   imports = [
     ../nixosConfigurations.tfgrid-base/configuration.nix
 

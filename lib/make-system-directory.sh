@@ -1,10 +1,19 @@
-source $stdenv/setup
+# shellcheck shell=bash
 
-sources_=($sources)
-targets_=($targets)
+declare stdenv
+declare closureInfo
+declare extraCommands
+declare out
+declare system
 
-objects=($objects)
-symlinks=($symlinks)
+# shellcheck source=/dev/null
+source "$stdenv"/setup
+
+sources_=("$sources")
+targets_=("$targets")
+
+objects=("$objects")
+symlinks=("$symlinks")
 
 # Remove the initial slash from a path, since genisofs likes it that way.
 stripSlash() {
@@ -22,32 +31,32 @@ done
 # Add the closures of the top-level store objects.
 chmod +w .
 mkdir -p nix/store
-for i in $(<$closureInfo/store-paths); do
+for i in $(<"$closureInfo"/store-paths); do
   cp -a "$i" "${i:1}"
 done
 
 # TODO tar ruxo
 # Also include a manifest of the closures in a format suitable for
 # nix-store --load-db.
-cp $closureInfo/registration nix-path-registration
+cp "$closureInfo"/registration nix-path-registration
 
 # Add symlinks to the top-level store objects.
 for ((n = 0; n < ${#objects[*]}; n++)); do
   object=${objects[$n]}
   symlink=${symlinks[$n]}
   if test "$symlink" != "none"; then
-    mkdir -p $(dirname ./$symlink)
-    ln -s $object ./$symlink
+    mkdir -p "$(dirname "./$symlink")"
+    ln -s "$object" "./$symlink"
   fi
 done
 
-$extraCommands
+"$extraCommands"
 
 rm env-vars
 
-mkdir $out
-cp -a --reflink=always * $out/
+mkdir "$out"
+cp -a --reflink=always -- * "$out/"
 
-mkdir -p $out/nix-support
-echo $system >$out/nix-support/system
-echo "file system-directory $out" >$out/nix-support/hydra-build-products
+mkdir -p "$out/nix-support"
+echo "$system" >"$out"/nix-support/system
+echo "file system-directory $out" >"$out"/nix-support/hydra-build-products

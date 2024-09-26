@@ -1,8 +1,5 @@
+{ self, lib, ... }:
 {
-  self,
-  lib,
-  ...
-}: {
   options = {
     deployUser = lib.mkOption {
       type = lib.types.str;
@@ -18,7 +15,7 @@
   config = {
     environment.etc."nix/sourceInfo.json" = {
       enable = true;
-      text = builtins.toJSON (builtins.removeAttrs self.sourceInfo ["outPath"]);
+      text = builtins.toJSON (builtins.removeAttrs self.sourceInfo [ "outPath" ]);
     };
 
     environment.etc."nix/source" = {

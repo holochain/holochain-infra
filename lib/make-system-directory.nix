@@ -12,30 +12,29 @@
   # a list of attribute sets {object, symlink} where `object' if a
   # store path whose closure will be copied, and `symlink' is a
   # symlink to `object' that will be added to the tarball.
-  storeContents ? [],
+  storeContents ? [ ],
   # Extra commands to be executed before archiving files
   extraCommands ? "",
   # extra inputs
-  extraInputs ? [],
-}: let
+  extraInputs ? [ ],
+}:
+let
   symlinks = map (x: x.symlink) storeContents;
   objects = map (x: x.object) storeContents;
 in
-  stdenv.mkDerivation {
-    name = "system-directory";
-    builder = ./make-system-directory.sh;
-    nativeBuildInputs = extraInputs;
+stdenv.mkDerivation {
+  name = "system-directory";
+  builder = ./make-system-directory.sh;
+  nativeBuildInputs = extraInputs;
 
-    inherit extraCommands;
+  inherit extraCommands;
 
-    # !!! should use XML.
-    sources = map (x: x.source) contents;
-    targets = map (x: x.target) contents;
+  # !!! should use XML.
+  sources = map (x: x.source) contents;
+  targets = map (x: x.target) contents;
 
-    # !!! should use XML.
-    inherit symlinks objects;
+  # !!! should use XML.
+  inherit symlinks objects;
 
-    closureInfo = closureInfo {
-      rootPaths = objects;
-    };
-  }
+  closureInfo = closureInfo { rootPaths = objects; };
+}

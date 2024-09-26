@@ -4,12 +4,22 @@
     flake-compat.url = "github:edolstra/flake-compat";
 
     nixpkgs.follows = "nixpkgs-24-05";
-    nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
-    nixpkgs-24-05 = {url = "github:nixos/nixpkgs/nixos-24.05";};
+    nixpkgs-23-11 = {
+      url = "github:nixos/nixpkgs/nixos-23.11";
+    };
+    nixpkgs-24-05 = {
+      url = "github:nixos/nixpkgs/nixos-24.05";
+    };
     nixpkgsNix.follows = "nixpkgs-24-05";
-    nixpkgsGithubActionRunners = {url = "github:nixos/nixpkgs/nixos-unstable";};
-    nixpkgsUnstable = {url = "github:nixos/nixpkgs/nixos-unstable";};
-    nixpkgsMaster = {url = "github:nixos/nixpkgs/master";};
+    nixpkgsGithubActionRunners = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
+    nixpkgsUnstable = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
+    nixpkgsMaster = {
+      url = "github:nixos/nixpkgs/master";
+    };
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -41,7 +51,9 @@
     sops-nix.inputs.nixpkgs-stable.follows = "";
 
     # have the latest rust version available
-    craneNixpkgs = {url = "github:nixos/nixpkgs/nixos-unstable";};
+    craneNixpkgs = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
     crane = {
       url = "github:ipetkov/crane";
       inputs.nixpkgs.follows = "craneNixpkgs";
@@ -199,264 +211,267 @@
     };
   };
 
-  outputs = inputs @ {
-    self,
-    flake-parts,
-    ...
-  }:
-    flake-parts.lib.mkFlake {inherit inputs;} {
+  outputs =
+    inputs@{ self, flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
       # auto import all nix code from `./modules`
-      imports =
-        map (m: "${./.}/modules/flake-parts/${m}")
-        (builtins.attrNames (builtins.readDir ./modules/flake-parts));
+      imports = map (m: "${./.}/modules/flake-parts/${m}") (
+        builtins.attrNames (builtins.readDir ./modules/flake-parts)
+      );
 
-      systems = ["aarch64-darwin" "x86_64-darwin" "x86_64-linux" "aarch64-linux"];
+      systems = [
+        "aarch64-darwin"
+        "x86_64-darwin"
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
 
-      perSystem = {
-        config,
-        self',
-        inputs',
-        pkgs,
-        lib,
-        system,
-        ...
-      }:
-      let
-        treefmtConfig = {
-          projectRootFile = "flake.nix";
-          programs = {
-            nixfmt.enable = true;
-            shellcheck.enable = true;
-            shfmt.enable = true;
-            prettier.enable = true;
-          };
-          settings = {
-            global.excludes = [
-              "*.layout.json"
-              "secrets/*"
-              "*.md"
-              "*.mdx"
-            ];
-            formatter.prettier = {
-              options = [
-                "--trailing-comma"
-                "all"
+      perSystem =
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          lib,
+          system,
+          ...
+        }:
+        let
+          treefmtConfig = {
+            projectRootFile = "flake.nix";
+            programs = {
+              nixfmt.enable = true;
+              shellcheck.enable = true;
+              shfmt.enable = true;
+              prettier.enable = true;
+            };
+            settings = {
+              global.excludes = [
+                "*.layout.json"
+                "secrets/*"
+                "*.md"
+                "*.mdx"
               ];
+              formatter.prettier = {
+                options = [
+                  "--trailing-comma"
+                  "all"
+                ];
+              };
             };
           };
-        };
-        treefmtWrapper =
-          # This custom command is needed to prevent a conflict between
-          # --tree-root and --tree-root-file.
-          # treefmt-nix sets --tree-root-file whilst treefmt gets --tree-root
-          # from $PRJ_ROOT, which is set by numtide/devshell.
-          pkgs.writeShellApplication {
-            name = "treefmt";
-            text = ''
-              unset PRJ_ROOT
-              ${lib.getExe (inputs.treefmt-nix.lib.mkWrapper pkgs treefmtConfig)}
-            '';
-          };
-      in {
-        # Per-system attributes can be defined here. The self' and inputs'
-        # module parameters provide easy access to attributes of the same
-        # system.
-        devShells.default =
-          let
-            nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
-            nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
-            nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
+          treefmtWrapper =
+            # This custom command is needed to prevent a conflict between
+            # --tree-root and --tree-root-file.
+            # treefmt-nix sets --tree-root-file whilst treefmt gets --tree-root
+            # from $PRJ_ROOT, which is set by numtide/devshell.
+            pkgs.writeShellApplication {
+              name = "treefmt";
+              text = ''
+                unset PRJ_ROOT
+                ${lib.getExe (inputs.treefmt-nix.lib.mkWrapper pkgs treefmtConfig)}
+              '';
+            };
+        in
+        {
+          # Per-system attributes can be defined here. The self' and inputs'
+          # module parameters provide easy access to attributes of the same
+          # system.
+          devShells.default =
+            let
+              nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
+              nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
+              nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
 
-            pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
-          in
-          inputs.devshell.legacyPackages.${system}.mkShell {
-            packages =
-              [
-                treefmtWrapper
+              pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
+            in
+            inputs.devshell.legacyPackages.${system}.mkShell {
+              packages =
+                [
+                  treefmtWrapper
 
-                pkgs.yq-go
+                  pkgs.yq-go
 
-                inputs'.nixos-anywhere.packages.default
+                  inputs'.nixos-anywhere.packages.default
 
-                inputs'.sops-nix.packages.default
-                pkgs.ssh-to-age
-                pkgs.age
-                pkgs.age-plugin-yubikey
-                pkgs.sops
-                (pkgs.writeShellScriptBin "sops-update-keys" ''
-                  for file in $(egrep -lr '"?sops"?:') secrets; do sops updatekeys -y $file; done
-                '')
+                  inputs'.sops-nix.packages.default
+                  pkgs.ssh-to-age
+                  pkgs.age
+                  pkgs.age-plugin-yubikey
+                  pkgs.sops
+                  (pkgs.writeShellScriptBin "sops-update-keys" ''
+                    for file in $(egrep -lr '"?sops"?:') secrets; do sops updatekeys -y $file; done
+                  '')
 
-                # self'.packages.nomad
+                  # self'.packages.nomad
 
-                (pkgs.writeShellScriptBin "nomad-ui-proxy" (
-                  let
-                    caddyfile = pkgs.writeText "caddyfile" ''
-                      {
-                        auto_https off
-                        http_port 2016
-                      }
+                  (pkgs.writeShellScriptBin "nomad-ui-proxy" (
+                    let
+                      caddyfile = pkgs.writeText "caddyfile" ''
+                        {
+                          auto_https off
+                          http_port 2016
+                        }
 
-                      localhost:2016 {
-                        reverse_proxy ${nomadAddr} {
-                          transport http {
-                            tls_trusted_ca_certs ${nomadCaCert}
-                            tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                        localhost:2016 {
+                          reverse_proxy ${nomadAddr} {
+                            transport http {
+                              tls_trusted_ca_certs ${nomadCaCert}
+                              tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                            }
                           }
                         }
-                      }
-                    '';
-                  in
-                  ''
-                    ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
-                  ''
-                ))
-                pkgs.caddy
+                      '';
+                    in
+                    ''
+                      ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
+                    ''
+                  ))
+                  pkgs.caddy
 
-                inputs'.threefold-rfs.packages.default
-                pkgs.minio-client
+                  inputs'.threefold-rfs.packages.default
+                  pkgs.minio-client
 
-                pkgs.jq
-                pkgsPulumi.pulumictl
-                (pkgsPulumi.pulumi.withPackages (
-                  pulumiPackages: with pulumiPackages; [
-                    pulumi-language-go
-                    pulumi-command
-                  ]
-                ))
-                pkgs.go_1_21
-              ]
-              ++ (
-                let
-                  zosCmds = builtins.filter (pkg: null != (builtins.match "^zos-.*" pkg.name)) (
-                    builtins.attrValues self'.packages
-                  );
-                in
-                zosCmds
-                ++ (lib.lists.flatten (builtins.map (cmd: cmd.nativeBuildInputs or [ ]) zosCmds))
-                ++ (lib.lists.flatten (builtins.map (cmd: cmd.buildInputs or [ ]) zosCmds))
-                ++ (lib.lists.flatten (builtins.map (cmd: cmd.runtimeInputs or [ ]) zosCmds))
-              )
-              ++ self.checks.${system}.pre-commit-check.enabledPackages;
-
-            env = [
-              {
-                name = "NOMAD_ADDR";
-                value = nomadAddr;
-              }
-              {
-                name = "NOMAD_CACERT";
-                value = "${nomadCaCert}";
-              }
-              {
-                name = "NOMAD_CLIENT_CERT";
-                value = "${nomadClientCert}";
-
-              }
-            ];
-
-            devshell.startup = {
-              pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
-              sops.text =
-                let
-                  devMinioOsConfig = self.nixosConfigurations.x64-linux-dev-01.config;
-                in
-                ''
-                  if sops -d secrets/nomad/cli/keys.yaml 2>&1 >/dev/null; then
-                    REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
-                    mkdir -p ''${REPO_SECRETS_DIR}
-                    chmod 700 ''${REPO_SECRETS_DIR}
-                    export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
-                    sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
-                  fi
-                ''
-                + (
+                  pkgs.jq
+                  pkgsPulumi.pulumictl
+                  (pkgsPulumi.pulumi.withPackages (
+                    pulumiPackages: with pulumiPackages; [
+                      pulumi-language-go
+                      pulumi-command
+                    ]
+                  ))
+                  pkgs.go_1_21
+                ]
+                ++ (
                   let
-                    minioUserPass = ''''${MINIO_ROOT_USER}:''${MINIO_ROOT_PASSWORD}'';
-                    minioDevHost = devMinioOsConfig.services.devMinio.s3Domain + ":443";
-                    minioDevLocalHost = "127.0.0.1:${builtins.toString devMinioOsConfig.services.devMinio.listenPort}";
-                    minioRegion = devMinioOsConfig.services.devMinio.region;
+                    zosCmds = builtins.filter (pkg: null != (builtins.match "^zos-.*" pkg.name)) (
+                      builtins.attrValues self'.packages
+                    );
+                  in
+                  zosCmds
+                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.nativeBuildInputs or [ ]) zosCmds))
+                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.buildInputs or [ ]) zosCmds))
+                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.runtimeInputs or [ ]) zosCmds))
+                )
+                ++ self.checks.${system}.pre-commit-check.enabledPackages;
+
+              env = [
+                {
+                  name = "NOMAD_ADDR";
+                  value = nomadAddr;
+                }
+                {
+                  name = "NOMAD_CACERT";
+                  value = "${nomadCaCert}";
+                }
+                {
+                  name = "NOMAD_CLIENT_CERT";
+                  value = "${nomadClientCert}";
+                }
+              ];
+
+              devshell.startup = {
+                pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
+                sops.text =
+                  let
+                    devMinioOsConfig = self.nixosConfigurations.x64-linux-dev-01.config;
                   in
                   ''
-                    if sops -d secrets/minio/server.yaml 2>&1 >/dev/null; then
-                      source <(sops -d secrets/minio/server.yaml | yq '.minio_root_credentials')
-
-                      export MC_HOST_devminio_local="http://${minioUserPass}@${minioDevLocalHost}";
-                      export MC_HOST_devminio="https://${minioUserPass}@${minioDevHost}"
-
-                      export RFS_HOST_devminio_region="${minioRegion}"
-                      export RFS_HOST_devminio_local="s3://${minioUserPass}@${minioDevLocalHost}"
-                      export RFS_HOST_devminio="s3s://${minioUserPass}@${minioDevHost}"
+                    if sops -d secrets/nomad/cli/keys.yaml 2>&1 >/dev/null; then
+                      REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
+                      mkdir -p ''${REPO_SECRETS_DIR}
+                      chmod 700 ''${REPO_SECRETS_DIR}
+                      export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
+                      sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
                     fi
                   ''
-                );
+                  + (
+                    let
+                      minioUserPass = ''''${MINIO_ROOT_USER}:''${MINIO_ROOT_PASSWORD}'';
+                      minioDevHost = devMinioOsConfig.services.devMinio.s3Domain + ":443";
+                      minioDevLocalHost = "127.0.0.1:${builtins.toString devMinioOsConfig.services.devMinio.listenPort}";
+                      minioRegion = devMinioOsConfig.services.devMinio.region;
+                    in
+                    ''
+                      if sops -d secrets/minio/server.yaml 2>&1 >/dev/null; then
+                        source <(sops -d secrets/minio/server.yaml | yq '.minio_root_credentials')
+
+                        export MC_HOST_devminio_local="http://${minioUserPass}@${minioDevLocalHost}";
+                        export MC_HOST_devminio="https://${minioUserPass}@${minioDevHost}"
+
+                        export RFS_HOST_devminio_region="${minioRegion}"
+                        export RFS_HOST_devminio_local="s3://${minioUserPass}@${minioDevLocalHost}"
+                        export RFS_HOST_devminio="s3s://${minioUserPass}@${minioDevHost}"
+                      fi
+                    ''
+                  );
+              };
             };
-          };
 
-        packages =
-          {
-            # nomad = pkgs.nomad_1_6;
+          packages =
+            {
+              # nomad = pkgs.nomad_1_6;
 
-            nixos-anywhere = inputs'.nixos-anywhere.packages.default;
-          }
-          // (
-            let
-              mkOsConfigCheck = osConfigs: let
-                filteredBySystem =
-                  lib.filterAttrs (
-                    key: value:
+              nixos-anywhere = inputs'.nixos-anywhere.packages.default;
+            }
+            // (
+              let
+                mkOsConfigCheck =
+                  osConfigs:
+                  let
+                    filteredBySystem = lib.filterAttrs (
+                      key: value:
                       (value.pkgs.system == system)
                       # needs private repos
                       && (key != "tfgrid-hpos")
-                  )
-                  osConfigs;
-                asStrings =
-                  lib.mapAttrsToList (
-                    key: value:
-                      builtins.trace "evaluating ${key} (${value.pkgs.system})..."
-                      "ln -s ${value.config.system.build.toplevel} $out/${key}"
-                  )
-                  filteredBySystem;
+                    ) osConfigs;
+                    asStrings = lib.mapAttrsToList (
+                      key: value:
+                      builtins.trace "evaluating ${key} (${value.pkgs.system})..." "ln -s ${value.config.system.build.toplevel} $out/${key}"
+                    ) filteredBySystem;
+                  in
+                  pkgs.stdenv.mkDerivation {
+                    name = "check-osconfigurations";
+                    phases = "installPhase";
+                    installPhase = "mkdir $out;" + builtins.concatStringsSep "\n" asStrings;
+                  };
               in
-                pkgs.stdenv.mkDerivation {
-                  name = "check-osconfigurations";
-                  phases = "installPhase";
-                  installPhase = "mkdir $out;" + builtins.concatStringsSep "\n" asStrings;
-                };
-            in {
-              build-os-configurations =
-                if pkgs.stdenv.isLinux
-                then
-                  mkOsConfigCheck (builtins.removeAttrs self.nixosConfigurations [
-                    # too big for current CI structure and rarely used
-                    "vm-nixcache"
-                  ])
-                else if pkgs.stdenv.isDarwin
-                then mkOsConfigCheck self.darwinConfigurations
-                else throw "unexpected case";
-            }
-          );
+              {
+                build-os-configurations =
+                  if pkgs.stdenv.isLinux then
+                    mkOsConfigCheck (
+                      builtins.removeAttrs self.nixosConfigurations [
+                        # too big for current CI structure and rarely used
+                        "vm-nixcache"
+                      ]
+                    )
+                  else if pkgs.stdenv.isDarwin then
+                    mkOsConfigCheck self.darwinConfigurations
+                  else
+                    throw "unexpected case";
+              }
+            );
 
-        checks = {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              nil.enable = true;
-              deadnix = {
-                enable = true;
-                settings = {
-                  noLambdaPatternNames = true;
+          checks = {
+            pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+              src = ./.;
+              hooks = {
+                nil.enable = true;
+                deadnix = {
+                  enable = true;
+                  settings = {
+                    noLambdaPatternNames = true;
+                  };
                 };
-              };
-              treefmt = {
-                enable = true;
-                package = treefmtWrapper;
-                pass_filenames = false;
+                treefmt = {
+                  enable = true;
+                  package = treefmtWrapper;
+                  pass_filenames = false;
+                };
               };
             };
           };
         };
-      };
       flake = {
         # The usual flake attributes can be defined here, including system-
         # agnostic ones like nixosModule and system-enumerating ones, although

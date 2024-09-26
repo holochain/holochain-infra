@@ -3,9 +3,11 @@
   lib,
   inputs,
   ...
-}: let
+}:
+let
   system = "aarch64-darwin";
-in {
+in
+{
   flake.darwinConfigurations.macos-01 = inputs.darwin.lib.darwinSystem {
     inherit system inputs;
     inherit (self) specialArgs;

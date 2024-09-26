@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   fqdn = "${config.networking.hostName}.${config.networking.domain}";
-in {
+in
+{
   programs.bash.promptInit = ''
     # Provide a nice prompt if the terminal supports it.
     if [ "$TERM" != "dumb" ] || [ -n "$INSIDE_EMACS" ]; then

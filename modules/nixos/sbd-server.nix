@@ -4,10 +4,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.sbd-server;
   types = lib.types;
-in {
+in
+{
   options.services.sbd-server = {
     enable = lib.mkEnableOption "sbd-server";
 
@@ -42,8 +44,8 @@ in {
     # TODO: can be tested with check-services tool on the sbd integration branch
 
     systemd.services.sbd-server = {
-      after = ["network.target"];
-      wantedBy = ["multi-user.target"];
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
 
       environment = {
         TMPDIR = "%T";
@@ -62,10 +64,7 @@ in {
 
         AmbientCapabilities =
           # needed for binding to ports <1024
-          lib.lists.optionals (cfg.tls-port
-            < 1024) [
-            "CAP_NET_BIND_SERVICE"
-          ];
+          lib.lists.optionals (cfg.tls-port < 1024) [ "CAP_NET_BIND_SERVICE" ];
 
         ExecStart = builtins.concatStringsSep " " (
           [
@@ -118,7 +117,7 @@ in {
 
       # note: the directory watching tls reload story has not yet been implemented. when tls certs are updated, the service must be restarted
       certs."${cfg.url}" = {
-        reloadServices = ["sbd-server"];
+        reloadServices = [ "sbd-server" ];
 
         # staging server has higher retry limits. uncomment the following when debugging ACME challenges.
         # server = "https://acme-staging-v02.api.letsencrypt.org/directory";

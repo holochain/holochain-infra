@@ -1,10 +1,7 @@
+{ lib, pkgs, ... }:
 {
-  lib,
-  pkgs,
-  ...
-}: {
-  users.knownGroups = ["builder"];
-  users.knownUsers = ["builder"];
+  users.knownGroups = [ "builder" ];
+  users.knownUsers = [ "builder" ];
   users.groups.builder = {
     name = "builder";
     gid = lib.mkDefault 8765;
@@ -18,9 +15,7 @@
     shell = "/bin/bash";
     description = "User for remote build clients";
   };
-  nix.settings.trusted-users = [
-    "builder"
-  ];
+  nix.settings.trusted-users = [ "builder" ];
   system.activationScripts.postActivation.text = ''
     # fixup bashrc for remote nix executions
     echo 'PATH=/nix/var/nix/profiles/default/bin:$PATH' > /Users/builder/.bashrc

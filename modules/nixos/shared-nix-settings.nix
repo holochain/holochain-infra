@@ -1,8 +1,5 @@
+{ pkgs, lib, ... }:
 {
-  pkgs,
-  lib,
-  ...
-}: {
   nix.settings.substituters = [
     "https://holochain-ci.cachix.org/"
     "https://holochain-ci-internal.cachix.org/"
@@ -16,8 +13,5 @@
     "nix-command"
     "flakes"
   ];
-  nix.settings.sandbox =
-    if pkgs.stdenv.isLinux
-    then "relaxed"
-    else false;
+  nix.settings.sandbox = if pkgs.stdenv.isLinux then "relaxed" else false;
 }

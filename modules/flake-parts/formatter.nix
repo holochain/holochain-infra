@@ -1,6 +1,9 @@
-{...}: {
-  perSystem = {pkgs, ...}: {
-    # define formatter used by `nix fmt`
-    formatter = pkgs.alejandra;
-  };
+{ ... }:
+{
+  perSystem =
+    { pkgs, ... }:
+    {
+      # define formatter used by `nix fmt`
+      formatter = pkgs.alejandra;
+    };
 }

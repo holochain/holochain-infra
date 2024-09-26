@@ -4,9 +4,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.tx5-signal-server;
-in {
+in
+{
   options.services.tx5-signal-server = {
     enable = lib.mkEnableOption "tx5-signal-server";
 
@@ -38,24 +40,26 @@ in {
     iceServers = lib.mkOption {
       description = "webrtc configuration to broadcast";
       type = lib.types.listOf lib.types.attrs;
-      default = [];
+      default = [ ];
     };
 
     demo = lib.mkEnableOption "enable demo broadcasting as a stand-in for bootstrapping";
 
     configTextFile = lib.mkOption {
-      default = builtins.toFile "tx5.config.json" (builtins.toJSON {
-        port = cfg.port;
-        iceServers.iceServers = cfg.iceServers;
-        demo = cfg.demo;
-      });
+      default = builtins.toFile "tx5.config.json" (
+        builtins.toJSON {
+          port = cfg.port;
+          iceServers.iceServers = cfg.iceServers;
+          demo = cfg.demo;
+        }
+      );
     };
   };
 
   config = lib.mkIf (cfg.enable) {
     systemd.services.tx5-signal-server = {
-      after = ["network.target"];
-      wantedBy = ["multi-user.target"];
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
 
       environment = {
         TMPDIR = "%T";
@@ -67,7 +71,7 @@ in {
         PrivateTmp = true;
         ExecStartPre = pkgs.writeShellScript "tx5-start-pre" ''
           set -xue
-          export PATH=${lib.makeBinPath [pkgs.coreutils]}
+          export PATH=${lib.makeBinPath [ pkgs.coreutils ]}
 
           cp ${cfg.configTextFile} $CONFIG_PATH
           chmod 0400 $CONFIG_PATH

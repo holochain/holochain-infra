@@ -4,14 +4,18 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.kitsune-bootstrap;
-in {
+in
+{
   options.services.kitsune-bootstrap = {
     enable = lib.mkEnableOption "kitsune-bootstrap";
 
     package = lib.mkOption {
-      default = self.inputs.holochain.packages.${pkgs.system}.holochain.override {cargoExtraArgs = " --bin kitsune-bootstrap";};
+      default = self.inputs.holochain.packages.${pkgs.system}.holochain.override {
+        cargoExtraArgs = " --bin kitsune-bootstrap";
+      };
       type = lib.types.package;
     };
 
@@ -38,8 +42,8 @@ in {
 
   config = lib.mkIf (cfg.enable) {
     systemd.services.kitsune-bootstrap = {
-      after = ["network.target"];
-      wantedBy = ["multi-user.target"];
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
 
       environment = {
         TMPDIR = "%T";

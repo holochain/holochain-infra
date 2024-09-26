@@ -5,9 +5,11 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   hostName = "tfgrid-base";
-in {
+in
+{
   imports = [
     inputs.srvos.nixosModules.server
     inputs.srvos.nixosModules.mixins-terminfo
@@ -22,9 +24,7 @@ in {
   # srvos' server module sets this with lib.mkDefault (1000) so go slightly higher in priority (lower in number)
   networking.hostName = lib.mkOverride 999 hostName;
 
-  nix.settings.substituters = [
-    "https://holochain-ci.cachix.org"
-  ];
+  nix.settings.substituters = [ "https://holochain-ci.cachix.org" ];
 
   nix.settings.trusted-public-keys = [
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="

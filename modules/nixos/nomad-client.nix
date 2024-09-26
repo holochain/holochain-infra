@@ -4,12 +4,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   nomadEnvDir = "/var/lib/nomad-env";
   nomadEnvFile = "${nomadEnvDir}/nomad-extra.env";
 
   cfg = config.holochain-infra.nomad-client;
-in {
+in
+{
   options.holochain-infra.nomad-client = {
     enable = lib.mkEnableOption "the holochain-infra nomad service";
     machineType = lib.mkOption {
@@ -20,14 +22,9 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    nixpkgs.config.allowUnfreePredicate = pkg:
-      builtins.elem (lib.getName pkg) [
-        "nomad"
-      ];
+    nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "nomad" ];
 
-    systemd.tmpfiles.rules = [
-      "d ${nomadEnvDir} 0750 root nomad -"
-    ];
+    systemd.tmpfiles.rules = [ "d ${nomadEnvDir} 0750 root nomad -" ];
 
     systemd.services.nomad-env = {
       enable = true;
@@ -39,8 +36,8 @@ in {
         pkgs.diffutils
         pkgs.nettools
       ];
-      after = ["zerotierone.service"];
-      requiredBy = ["nomad.service"];
+      after = [ "zerotierone.service" ];
+      requiredBy = [ "nomad.service" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -53,8 +50,18 @@ in {
           "name": "$(hostname)",
           "client": {
             "meta": {
-              "FLAKE_URL": "${let inherit (self) sourceInfo; in sourceInfo.url or "unknown"}",
-              "FLAKE_REV": "${let inherit (self) sourceInfo; in sourceInfo.rev or (sourceInfo.dirtyRev or "unknown")}",
+              "FLAKE_URL": "${
+                let
+                  inherit (self) sourceInfo;
+                in
+                sourceInfo.url or "unknown"
+              }",
+              "FLAKE_REV": "${
+                let
+                  inherit (self) sourceInfo;
+                in
+                sourceInfo.rev or (sourceInfo.dirtyRev or "unknown")
+              }",
             }
           }
         }
@@ -80,7 +87,7 @@ in {
 
     systemd.paths.nomad-env-watcher = {
       enable = true;
-      requiredBy = ["nomad-env.service"];
+      requiredBy = [ "nomad-env.service" ];
       pathConfig = {
         PathChanged = [
           # these files might change when zerotier restarts or makes connections
@@ -126,9 +133,7 @@ in {
         client = {
           enabled = true;
           server_join = {
-            retry_join = [
-              "infra.holochain.org"
-            ];
+            retry_join = [ "infra.holochain.org" ];
             retry_interval = "60s";
           };
 
@@ -163,7 +168,7 @@ in {
         plugin.raw_exec.config.enabled = true;
       };
 
-      extraSettingsPaths = [nomadEnvFile];
+      extraSettingsPaths = [ nomadEnvFile ];
     };
 
     systemd.services.nomad-reloader = {
@@ -176,8 +181,8 @@ in {
 
     systemd.paths.nomad-watcher = {
       enable = true;
-      requires = ["nomad-env.service"];
-      requiredBy = ["nomad.service"];
+      requires = [ "nomad-env.service" ];
+      requiredBy = [ "nomad.service" ];
       pathConfig = {
         PathChanged = nomadEnvFile;
         Unit = "nomad-reloader.service";
@@ -192,7 +197,7 @@ in {
         home = config.services.nomad.settings.data_dir;
         createHome = true;
       };
-      groups.nomad = {};
+      groups.nomad = { };
     };
 
     systemd.services.nomad = {

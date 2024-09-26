@@ -1,23 +1,15 @@
+{ lib, config, ... }:
+let
+  mapModules =
+    kind:
+    lib.mapAttrs' (fn: _: lib.nameValuePair (lib.removeSuffix ".nix" fn) "${../.}/${kind}/${fn}") (
+      builtins.readDir "${../.}/${kind}"
+    );
+in
 {
-  lib,
-  config,
-  ...
-}: let
-  mapModules = kind:
-    lib.mapAttrs'
-    (fn: _:
-      lib.nameValuePair
-      (lib.removeSuffix ".nix" fn)
-      "${../.}/${kind}/${fn}")
-    (builtins.readDir "${../.}/${kind}");
-in {
-  options.flake.modules = lib.mkOption {
-    type = lib.types.anything;
-  };
+  options.flake.modules = lib.mkOption { type = lib.types.anything; };
 
-  options.flake.darwinConfigurations = lib.mkOption {
-    type = lib.types.attrs;
-  };
+  options.flake.darwinConfigurations = lib.mkOption { type = lib.types.attrs; };
 
   # generates flake outputs: `modules.<kind>.<module-name>`
   config.flake.modules.nixos = mapModules "nixos";

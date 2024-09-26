@@ -4,7 +4,8 @@
   self,
   pkgs,
   ...
-}: let
+}:
+let
   hostName = "turn-2";
 
   turnIpv4 = "65.109.140.0";
@@ -15,7 +16,8 @@
 
   bootstrapIpv4 = "95.216.176.124";
   bootstrapFqdn = "bootstrap-2.infra.holochain.org";
-in {
+in
+{
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -40,9 +42,7 @@ in {
 
   nix.settings.max-jobs = 8;
 
-  nix.settings.substituters = [
-    "https://holochain-ci.cachix.org"
-  ];
+  nix.settings.substituters = [ "https://holochain-ci.cachix.org" ];
 
   nix.settings.trusted-public-keys = [
     "holochain-ci.cachix.org-2:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
@@ -77,11 +77,7 @@ in {
     tls-port = 443;
     url = signalFqdn;
     iceServers = [
-      {
-        urls = [
-          "stun:${config.services.holochain-turn-server.url}:80"
-        ];
-      }
+      { urls = [ "stun:${config.services.holochain-turn-server.url}:80" ]; }
       {
         urls = [
           "turn:${config.services.holochain-turn-server.url}:80"
@@ -89,11 +85,7 @@ in {
           "turns:${config.services.holochain-turn-server.url}:443?transport=tcp"
         ];
 
-        inherit
-          (config.services.holochain-turn-server)
-          username
-          credential
-          ;
+        inherit (config.services.holochain-turn-server) username credential;
       }
     ];
   };

@@ -5,15 +5,15 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   hostName = "tfgrid-hpos-base";
-in {
+in
+{
   imports = [
     ../nixosConfigurations.tfgrid-hpos-base/configuration.nix
 
-    {
-      nixpkgs.overlays = builtins.attrValues inputs.holoNixpkgs.outputs.overlays;
-    }
+    { nixpkgs.overlays = builtins.attrValues inputs.holoNixpkgs.outputs.overlays; }
     "${inputs.holoNixpkgs}/profiles/logical/hpos"
   ];
 
@@ -21,9 +21,7 @@ in {
 
   sops.age.keyFile = "/etc/age.key";
 
-  environment.systemPackages = [
-    pkgs.man
-  ];
+  environment.systemPackages = [ pkgs.man ];
 
   holochain-infra.nomad-client = {
     enable = false;
