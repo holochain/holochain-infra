@@ -269,7 +269,7 @@
               name = "treefmt";
               text = ''
                 unset PRJ_ROOT
-                ${lib.getExe (inputs.treefmt-nix.lib.mkWrapper pkgs treefmtConfig)}
+                ${lib.getExe (inputs.treefmt-nix.lib.mkWrapper pkgs treefmtConfig)} "$@"
               '';
             };
         in
