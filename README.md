@@ -150,3 +150,22 @@ nix run .#deploy-linux-builder-01 switch
 	```
 	nix run .#turn-readiness-check
 	```
+
+### Bind refuses to start after an update
+
+The error message
+
+```
+journal rollforward failed: journal out of sync with zone
+```
+
+This can be fixed by removing the journal files.
+
+Upon connection via SSH (`nix run .\#ssh-dweb-reverse-tls-proxy
+`):
+
+```shell
+systemctl stop bind
+rm /etc/bind/zones/infra.holochain.org.zone.jnl
+systemctl start bind
+```
