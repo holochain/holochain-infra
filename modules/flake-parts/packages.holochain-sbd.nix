@@ -19,7 +19,6 @@
         let
           system = pkgs.system;
           craneLib = inputs.crane.lib.${system};
-          cranePkgs = inputs.crane.inputs.nixpkgs.legacyPackages.${system};
 
           sbdArgs = {
             pname = "sbd";

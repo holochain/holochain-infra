@@ -1,4 +1,9 @@
-{ self, config, ... }:
+{
+  self,
+  config,
+  pkgs,
+  ...
+}:
 let
   root_domain = "dev.infra.holochain.org";
   s3_web_port = "3902";

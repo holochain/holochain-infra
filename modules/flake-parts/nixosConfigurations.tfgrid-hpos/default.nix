@@ -1,9 +1,4 @@
-{
-  self,
-  lib,
-  inputs,
-  ...
-}:
+{ self, inputs, ... }:
 {
   flake.nixosConfigurations.tfgrid-hpos = inputs.nixpkgs.lib.nixosSystem {
     modules = [ ./configuration.nix ];
