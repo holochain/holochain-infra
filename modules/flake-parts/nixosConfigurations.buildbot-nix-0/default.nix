@@ -3,12 +3,14 @@
   lib,
   inputs,
   ...
-}: let
+}:
+let
   evaluatedSystem = inputs.nixpkgs.lib.nixosSystem {
-    modules = [./configuration.nix];
+    modules = [ ./configuration.nix ];
     system = "x86_64-linux";
     specialArgs = self.specialArgs;
   };
-in {
+in
+{
   flake.nixosConfigurations."${evaluatedSystem.config.passthru.hostName}" = evaluatedSystem;
 }

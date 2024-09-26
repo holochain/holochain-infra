@@ -5,7 +5,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -31,7 +32,12 @@
 
   networking.hostName = config.passthru.hostName; # Define your hostname.
 
-  hostName = "${config.passthru.hostName}.${(builtins.elemAt (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones) 0).name}";
+  hostName = "${config.passthru.hostName}.${
+    (builtins.elemAt
+      (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
+      0
+    ).name
+  }";
 
   nix.settings.max-jobs = 16;
 
@@ -44,52 +50,55 @@
 
   systemd.network.networks."10-uplink".networkConfig.Address = config.passthru.primaryIpv6;
 
-  disko.devices = let
-    disk = id: {
-      type = "disk";
-      device = "/dev/${id}";
-      content = {
-        type = "gpt";
-        partitions = {
-          boot = {
-            size = "1M";
-            type = "EF02"; # for grub MBR
-          };
-          mdadm = {
-            size = "100%";
-            content = {
-              type = "mdraid";
-              name = "raid0";
+  disko.devices =
+    let
+      disk = id: {
+        type = "disk";
+        device = "/dev/${id}";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              size = "1M";
+              type = "EF02"; # for grub MBR
+            };
+            mdadm = {
+              size = "100%";
+              content = {
+                type = "mdraid";
+                name = "raid0";
+              };
             };
           };
         };
       };
-    };
-  in {
-    disk = {
-      sda = disk "nvme0n1";
-      sdb = disk "nvme1n1";
-    };
-    mdadm = {
-      raid0 = {
-        type = "mdadm";
-        level = 0;
-        content = {
-          type = "gpt";
-          partitions = {
-            primary = {
-              size = "100%";
-              content = {
-                type = "btrfs";
-                extraArgs = ["-f"]; # Override existing partition
-                subvolumes = {
-                  # Subvolume name is different from mountpoint
-                  "/rootfs" = {
-                    mountpoint = "/";
-                  };
-                  "/nix" = {
-                    mountOptions = ["noatime"];
-                    mountpoint = "/nix";
+    in
+    {
+      disk = {
+        sda = disk "nvme0n1";
+        sdb = disk "nvme1n1";
+      };
+      mdadm = {
+        raid0 = {
+          type = "mdadm";
+          level = 0;
+          content = {
+            type = "gpt";
+            partitions = {
+              primary = {
+                size = "100%";
+                content = {
+                  type = "btrfs";
+                  extraArgs = [ "-f" ]; # Override existing partition
+                  subvolumes = {
+                    # Subvolume name is different from mountpoint
+                    "/rootfs" = {
+                      mountpoint = "/";
+                    };
+                    "/nix" = {
+                      mountOptions = [ "noatime" ];
+                      mountpoint = "/nix";
+                    };
                   };
                 };
               };
@@ -98,7 +107,6 @@
         };
       };
     };
-  };
 
   roles.nix-remote-builder.schedulerPublicKeys = [
     # TODO
