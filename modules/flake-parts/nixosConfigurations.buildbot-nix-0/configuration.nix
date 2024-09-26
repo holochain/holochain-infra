@@ -4,8 +4,21 @@
   self,
   pkgs,
   lib,
+  nodeName,
   ...
 }:
+let
+  domainSuffix =
+    (builtins.elemAt
+      (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
+      0
+    ).name;
+  appFqdn = "buildbot-nix-0.${domainSuffix}";
+  appId = 1008744;
+
+  oauthId = "Iv23liqmAiBw8ab9EF61";
+  topic = "holo-chain-buildbot-nix-0";
+in
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -20,6 +33,9 @@
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
+
+    inputs.buildbot-nix.nixosModules.buildbot-master
+    inputs.buildbot-nix.nixosModules.buildbot-worker
   ];
 
   system.stateVersion = "24.05";
@@ -39,7 +55,7 @@
     ).name
   }";
 
-  nix.settings.max-jobs = 16;
+  nix.settings.max-jobs = 12;
 
   boot.loader.grub = {
     efiSupport = false;
@@ -88,9 +104,18 @@
               primary = {
                 size = "100%";
                 content = {
-                  type = "filesystem";
-                  format = "btrfs";
-                  mountpoint = "/";
+                  type = "btrfs";
+                  extraArgs = [ "-f" ]; # Override existing partition
+                  subvolumes = {
+                    # Subvolume name is different from mountpoint
+                    "/rootfs" = {
+                      mountpoint = "/";
+                    };
+                    "/nix" = {
+                      mountOptions = [ "noatime" ];
+                      mountpoint = "/nix";
+                    };
+                  };
                 };
               };
             };
@@ -102,4 +127,72 @@
   roles.nix-remote-builder.schedulerPublicKeys = [
     # TODO
   ];
+
+  security.acme = {
+    acceptTerms = true;
+    defaults = {
+      email = "postmaster@holochain.org";
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
+
+  services.nginx.virtualHosts."${appFqdn}" = {
+    enableACME = true;
+    forceSSL = true;
+  };
+
+  sops.defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
+
+  sops.secrets.buildbot-github-oauth-secret = { };
+  sops.secrets.buildbot-github-app-secret-key = { };
+  sops.secrets.buildbot-github-webhook-secret = { };
+  sops.secrets.buildbot-nix-workers = { };
+  # sops.secrets.cachix-auth-token = {};
+
+  services.buildbot-nix.master = {
+    enable = true;
+    admins = [
+      "steveej"
+      "evangineer"
+      "v-rdp"
+    ];
+    buildSystems = [
+      "x86_64-linux"
+      # "aarch64-linux"
+      # "x86_64-darwin"
+      # "aarch64-darwin"
+    ];
+    domain = appFqdn;
+    outputsPath = "/var/www/buildbot/nix-outputs/";
+    evalMaxMemorySize = 12000;
+    evalWorkerCount = 16;
+    jobReportLimit = 0;
+    workersFile = config.sops.secrets.buildbot-nix-workers.path;
+    # cachix = {
+    #   enable = true;
+    #   name = "holochain-infra";
+    #   auth.authToken.file = config.sops.secrets.cachix-auth-token.path;
+    # };
+    github = {
+      authType.app = {
+        id = appId;
+        secretKeyFile = config.sops.secrets.buildbot-github-app-secret-key.path;
+      };
+      webhookSecretFile = config.sops.secrets.buildbot-github-webhook-secret.path;
+      # this is a client secret
+      oauthSecretFile = config.sops.secrets.buildbot-github-oauth-secret.path;
+      # this is displayed in the app as "Client ID"
+      inherit oauthId topic;
+    };
+  };
+
+  sops.secrets.buildbot-nix-worker-password = { };
+  services.buildbot-nix.worker = {
+    enable = true;
+    workerPasswordFile = config.sops.secrets.buildbot-nix-worker-password.path;
+  };
 }
