@@ -1,7 +1,8 @@
 {
-  description = "The new, performant, and simplified version of Holochain on Rust (sometimes called Holochain RSM for Refactored State Model) ";
-
   inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-compat.url = "github:edolstra/flake-compat";
+
     nixpkgs.follows = "nixpkgs-23-11";
     nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
     nixpkgs-24-05 = {url = "github:nixos/nixpkgs/nixos-24.05";};
@@ -18,9 +19,13 @@
 
     nixos-anywhere.url = "github:numtide/nixos-anywhere";
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-anywhere.inputs.disko.follows = "disko";
+    nixos-anywhere.inputs.treefmt-nix.follows = "treefmt-nix";
+    nixos-anywhere.inputs.flake-parts.follows = "flake-parts";
 
     microvm.url = "github:astro/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
+    microvm.inputs.flake-utils.follows = "flake-utils";
 
     # nix darwin
     darwin.url = "github:LnL7/nix-darwin";
@@ -33,6 +38,7 @@
     # secret management
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs-stable.follows = "";
 
     # have the latest rust version available
     craneNixpkgs = {url = "github:nixos/nixpkgs/nixos-unstable";};
@@ -90,16 +96,27 @@
     };
 
     cachix_for_watch_store.url = "github:cachix/cachix/v1.5";
+    cachix_for_watch_store.inputs.nixpkgs.follows = "nixpkgs";
+    cachix_for_watch_store.inputs.flake-compat.follows = "flake-compat";
 
     tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.8-alpha";
     tx5.flake = false;
     sbd.url = "github:holochain/sbd/sbd-server-v0.0.4-alpha";
     sbd.flake = false;
 
-    holochain-versions.url = "github:holochain/holochain?dir=versions/weekly";
+    holochain-versions = {
+      url = "github:holochain/holochain?dir=versions/weekly";
+      inputs = {
+        holochain.follows = "holochain";
+      };
+    };
     holochain = {
       url = "github:holochain/holochain";
-      inputs.versions.follows = "holochain-versions";
+      inputs = {
+        versions.follows = "holochain-versions";
+        flake-compat.follows = "flake-compat";
+        rust-overlay.follows = "rust-overlay";
+      };
     };
 
     coturn = {
@@ -112,17 +129,47 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
     threefold-rfs = {
       url = "github:threefoldtech/rfs";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.crane.follows = "crane";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.rust-overlay.follows = "rust-overlay";
     };
 
-    holoNixpkgs.url = "https://hydra.holo.host/channel/custom/holo-nixpkgs/2112/holo-nixpkgs/nixexprs.tar.xz";
+    holoNixpkgs = {
+      url = "https://hydra.holo.host/channel/custom/holo-nixpkgs/2112/holo-nixpkgs/nixexprs.tar.xz";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+        crane.follows = "crane";
+        flake-compat.follows = "flake-compat";
+        rust-overlay.follows = "rust-overlay";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
 
     nixpkgsPulumi.url = "github:steveej-forks/nixpkgs/pulumi-version-bump";
 
-    nixos-vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nixos-vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
