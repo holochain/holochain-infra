@@ -9,3 +9,5 @@ pulumi/holochain-infra
 
 pulumi-state/.pulumi/history
 pulumi-state/.pulumi/backups
+
+.pre-commit-config.yaml

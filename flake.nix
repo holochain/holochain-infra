@@ -3,7 +3,7 @@
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat.url = "github:edolstra/flake-compat";
 
-    nixpkgs.follows = "nixpkgs-23-11";
+    nixpkgs.follows = "nixpkgs-24-05";
     nixpkgs-23-11 = {url = "github:nixos/nixpkgs/nixos-23.11";};
     nixpkgs-24-05 = {url = "github:nixos/nixpkgs/nixos-24.05";};
     nixpkgsNix.follows = "nixpkgs-24-05";
@@ -95,9 +95,15 @@
       flake = false;
     };
 
-    cachix_for_watch_store.url = "github:cachix/cachix/v1.5";
-    cachix_for_watch_store.inputs.nixpkgs.follows = "nixpkgs";
-    cachix_for_watch_store.inputs.flake-compat.follows = "flake-compat";
+    cachix_for_watch_store = {
+      url = "github:cachix/cachix/v1.5";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+        devenv.inputs.pre-commit-hooks.follows = "pre-commit-hooks";
+        devenv.inputs.nixpkgs.follows = "nixpkgs";
+      };
+    };
 
     tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.8-alpha";
     tx5.flake = false;
@@ -115,7 +121,9 @@
       inputs = {
         versions.follows = "holochain-versions";
         flake-compat.follows = "flake-compat";
+        flake-parts.follows = "flake-parts";
         rust-overlay.follows = "rust-overlay";
+        pre-commit-hooks-nix.follows = "pre-commit-hooks";
       };
     };
 
@@ -153,6 +161,8 @@
         flake-compat.follows = "flake-compat";
         rust-overlay.follows = "rust-overlay";
         treefmt-nix.follows = "treefmt-nix";
+        devshell.follows = "devshell";
+        pre-commit-hooks.follows = "pre-commit-hooks";
       };
     };
 
@@ -169,6 +179,22 @@
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-stable.follows = "";
+        flake-compat.follows = "flake-compat";
+      };
+    };
+
+    devshell = {
+      url = "github:numtide/devshell";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 
@@ -193,22 +219,59 @@
         lib,
         system,
         ...
-      }: {
+      }:
+      let
+        treefmtConfig = {
+          projectRootFile = "flake.nix";
+          programs = {
+            nixfmt.enable = true;
+            shellcheck.enable = true;
+            shfmt.enable = true;
+            prettier.enable = true;
+          };
+          settings = {
+            global.excludes = [
+              "*.layout.json"
+              "secrets/*"
+              "*.md"
+              "*.mdx"
+            ];
+            formatter.prettier = {
+              options = [
+                "--trailing-comma"
+                "all"
+              ];
+            };
+          };
+        };
+        treefmtWrapper =
+          # This custom command is needed to prevent a conflict between
+          # --tree-root and --tree-root-file.
+          # treefmt-nix sets --tree-root-file whilst treefmt gets --tree-root
+          # from $PRJ_ROOT, which is set by numtide/devshell.
+          pkgs.writeShellApplication {
+            name = "treefmt";
+            text = ''
+              unset PRJ_ROOT
+              ${lib.getExe (inputs.treefmt-nix.lib.mkWrapper pkgs treefmtConfig)}
+            '';
+          };
+      in {
         # Per-system attributes can be defined here. The self' and inputs'
         # module parameters provide easy access to attributes of the same
         # system.
-        devShells.default = let
-          nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
-          nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
-          nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
+        devShells.default =
+          let
+            nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
+            nomadCaCert = ./secrets/nomad/admin/nomad-agent-ca.pem;
+            nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
 
-          pkgsUnstable = inputs'.nixpkgsUnstable.legacyPackages;
-          pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
-        in
-          pkgs.mkShell {
+            pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
+          in
+          inputs.devshell.legacyPackages.${system}.mkShell {
             packages =
               [
-                self'.formatter
+                treefmtWrapper
 
                 pkgs.yq-go
 
@@ -225,25 +288,28 @@
 
                 # self'.packages.nomad
 
-                (pkgs.writeShellScriptBin "nomad-ui-proxy" (let
-                  caddyfile = pkgs.writeText "caddyfile" ''
-                    {
-                      auto_https off
-                      http_port 2016
-                    }
+                (pkgs.writeShellScriptBin "nomad-ui-proxy" (
+                  let
+                    caddyfile = pkgs.writeText "caddyfile" ''
+                      {
+                        auto_https off
+                        http_port 2016
+                      }
 
-                    localhost:2016 {
-                      reverse_proxy ${nomadAddr} {
-                        transport http {
-                          tls_trusted_ca_certs ${nomadCaCert}
-                          tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                      localhost:2016 {
+                        reverse_proxy ${nomadAddr} {
+                          transport http {
+                            tls_trusted_ca_certs ${nomadCaCert}
+                            tls_client_auth ${nomadClientCert} {$NOMAD_CLIENT_KEY}
+                          }
                         }
                       }
-                    }
-                  '';
-                in ''
-                  ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
-                ''))
+                    '';
+                  in
+                  ''
+                    ${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}
+                  ''
+                ))
                 pkgs.caddy
 
                 inputs'.threefold-rfs.packages.default
@@ -251,56 +317,79 @@
 
                 pkgs.jq
                 pkgsPulumi.pulumictl
-                (pkgsPulumi.pulumi.withPackages (pulumiPackages:
-                  with pulumiPackages; [
+                (pkgsPulumi.pulumi.withPackages (
+                  pulumiPackages: with pulumiPackages; [
                     pulumi-language-go
                     pulumi-command
-                  ]))
+                  ]
+                ))
                 pkgs.go_1_21
               ]
               ++ (
                 let
-                  zosCmds = builtins.filter (pkg: null != (builtins.match "^zos-.*" pkg.name)) (builtins.attrValues self'.packages);
+                  zosCmds = builtins.filter (pkg: null != (builtins.match "^zos-.*" pkg.name)) (
+                    builtins.attrValues self'.packages
+                  );
                 in
-                  zosCmds
-                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.nativeBuildInputs or []) zosCmds))
-                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.buildInputs or []) zosCmds))
-                  ++ (lib.lists.flatten (builtins.map (cmd: cmd.runtimeInputs or []) zosCmds))
-              );
+                zosCmds
+                ++ (lib.lists.flatten (builtins.map (cmd: cmd.nativeBuildInputs or [ ]) zosCmds))
+                ++ (lib.lists.flatten (builtins.map (cmd: cmd.buildInputs or [ ]) zosCmds))
+                ++ (lib.lists.flatten (builtins.map (cmd: cmd.runtimeInputs or [ ]) zosCmds))
+              )
+              ++ self.checks.${system}.pre-commit-check.enabledPackages;
 
-            NOMAD_ADDR = nomadAddr;
-            NOMAD_CACERT = nomadCaCert;
-            NOMAD_CLIENT_CERT = nomadClientCert;
+            env = [
+              {
+                name = "NOMAD_ADDR";
+                value = nomadAddr;
+              }
+              {
+                name = "NOMAD_CACERT";
+                value = "${nomadCaCert}";
+              }
+              {
+                name = "NOMAD_CLIENT_CERT";
+                value = "${nomadClientCert}";
 
-            shellHook = let
-              devMinioOsConfig = self.nixosConfigurations.x64-linux-dev-01.config;
-            in
-              ''
-                if sops -d secrets/nomad/cli/keys.yaml 2>&1 >/dev/null; then
-                  REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
-                  mkdir -p ''${REPO_SECRETS_DIR}
-                  chmod 700 ''${REPO_SECRETS_DIR}
-                  export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
-                  sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
-                fi
-              ''
-              + (let
-                minioUserPass = ''''${MINIO_ROOT_USER}:''${MINIO_ROOT_PASSWORD}'';
-                minioDevHost = devMinioOsConfig.services.devMinio.s3Domain + ":443";
-                minioDevLocalHost = "127.0.0.1:${builtins.toString devMinioOsConfig.services.devMinio.listenPort}";
-                minioRegion = devMinioOsConfig.services.devMinio.region;
-              in ''
-                if sops -d secrets/minio/server.yaml 2>&1 >/dev/null; then
-                  source <(sops -d secrets/minio/server.yaml | yq '.minio_root_credentials')
+              }
+            ];
 
-                  export MC_HOST_devminio_local="http://${minioUserPass}@${minioDevLocalHost}";
-                  export MC_HOST_devminio="https://${minioUserPass}@${minioDevHost}"
+            devshell.startup = {
+              pre-commit.text = self.checks.${system}.pre-commit-check.shellHook;
+              sops.text =
+                let
+                  devMinioOsConfig = self.nixosConfigurations.x64-linux-dev-01.config;
+                in
+                ''
+                  if sops -d secrets/nomad/cli/keys.yaml 2>&1 >/dev/null; then
+                    REPO_SECRETS_DIR="''${HOME:?}/.holochain-infra-secrets"
+                    mkdir -p ''${REPO_SECRETS_DIR}
+                    chmod 700 ''${REPO_SECRETS_DIR}
+                    export NOMAD_CLIENT_KEY="''${REPO_SECRETS_DIR}/global-cli-nomad-key";
+                    sops -d secrets/nomad/cli/keys.yaml | yq '.global-cli-nomad-key' > ''${NOMAD_CLIENT_KEY:?}
+                  fi
+                ''
+                + (
+                  let
+                    minioUserPass = ''''${MINIO_ROOT_USER}:''${MINIO_ROOT_PASSWORD}'';
+                    minioDevHost = devMinioOsConfig.services.devMinio.s3Domain + ":443";
+                    minioDevLocalHost = "127.0.0.1:${builtins.toString devMinioOsConfig.services.devMinio.listenPort}";
+                    minioRegion = devMinioOsConfig.services.devMinio.region;
+                  in
+                  ''
+                    if sops -d secrets/minio/server.yaml 2>&1 >/dev/null; then
+                      source <(sops -d secrets/minio/server.yaml | yq '.minio_root_credentials')
 
-                  export RFS_HOST_devminio_region="${minioRegion}"
-                  export RFS_HOST_devminio_local="s3://${minioUserPass}@${minioDevLocalHost}"
-                  export RFS_HOST_devminio="s3s://${minioUserPass}@${minioDevHost}"
-                fi
-              '');
+                      export MC_HOST_devminio_local="http://${minioUserPass}@${minioDevLocalHost}";
+                      export MC_HOST_devminio="https://${minioUserPass}@${minioDevHost}"
+
+                      export RFS_HOST_devminio_region="${minioRegion}"
+                      export RFS_HOST_devminio_local="s3://${minioUserPass}@${minioDevLocalHost}"
+                      export RFS_HOST_devminio="s3s://${minioUserPass}@${minioDevHost}"
+                    fi
+                  ''
+                );
+            };
           };
 
         packages =
@@ -346,6 +435,26 @@
                 else throw "unexpected case";
             }
           );
+
+        checks = {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nil.enable = true;
+              deadnix = {
+                enable = true;
+                settings = {
+                  noLambdaPatternNames = true;
+                };
+              };
+              treefmt = {
+                enable = true;
+                package = treefmtWrapper;
+                pass_filenames = false;
+              };
+            };
+          };
+        };
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
