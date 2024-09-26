@@ -5,10 +5,12 @@
   self,
   pkgs,
   ...
-}: let
+}:
+let
   ipv4 = "5.78.43.185";
   fqdn2domain = "infra.holochain.org";
-in {
+in
+{
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -28,9 +30,7 @@ in {
 
   nix.settings.max-jobs = 8;
 
-  nix.settings.substituters = [
-    "https://holochain-ci.cachix.org"
-  ];
+  nix.settings.substituters = [ "https://holochain-ci.cachix.org" ];
 
   nix.settings.trusted-public-keys = [
     "holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="
@@ -63,14 +63,14 @@ in {
           size = "100%";
           content = {
             type = "btrfs";
-            extraArgs = ["-f"]; # Override existing partition
+            extraArgs = [ "-f" ]; # Override existing partition
             subvolumes = {
               # Subvolume name is different from mountpoint
               "/rootfs" = {
                 mountpoint = "/";
               };
               "/nix" = {
-                mountOptions = ["noatime"];
+                mountOptions = [ "noatime" ];
                 mountpoint = "/nix";
               };
             };
@@ -87,7 +87,8 @@ in {
     enable = lib.mkDefault true;
   };
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
     builtins.elem (builtins.trace (lib.getName pkg) (lib.getName pkg)) [
       "zerotierone"
       "nomad"
@@ -99,25 +100,27 @@ in {
   };
   systemd.services.zerotieroneSecretNetworks = {
     enable = true;
-    requiredBy = ["zerotierone.service"];
-    partOf = ["zerotierone.service"];
+    requiredBy = [ "zerotierone.service" ];
+    partOf = [ "zerotierone.service" ];
 
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = true;
 
-    script = let
-      secret = config.sops.secrets.zerotieroneNetworks;
-    in ''
-      # include the secret's hash to trigger a restart on change
-      # ${builtins.hashString "sha256" (builtins.toJSON secret)}
+    script =
+      let
+        secret = config.sops.secrets.zerotieroneNetworks;
+      in
+      ''
+        # include the secret's hash to trigger a restart on change
+        # ${builtins.hashString "sha256" (builtins.toJSON secret)}
 
-      ${config.systemd.services.zerotierone.preStart}
+        ${config.systemd.services.zerotierone.preStart}
 
-      rm -rf /var/lib/zerotier-one/networks.d/*.conf
-      for network in `grep -v '#' ${secret.path}`; do
-        touch /var/lib/zerotier-one/networks.d/''${network}.conf
-      done
-    '';
+        rm -rf /var/lib/zerotier-one/networks.d/*.conf
+        for network in `grep -v '#' ${secret.path}`; do
+          touch /var/lib/zerotier-one/networks.d/''${network}.conf
+        done
+      '';
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -131,7 +134,7 @@ in {
     4647
   ];
 
-  networking.firewall.allowedUDPPorts = [53];
+  networking.firewall.allowedUDPPorts = [ 53 ];
 
   # dynamic port ranges used by nomad services
   networking.firewall.allowedTCPPortRanges = [
@@ -213,7 +216,7 @@ in {
     zones = [
       {
         name = fqdn2domain;
-        allowQuery = ["any"];
+        allowQuery = [ "any" ];
         file = "/etc/bind/zones/${fqdn2domain}.zone";
         master = true;
         extraConfig = "allow-update { key rfc2136key.${fqdn2domain}.; };";
@@ -229,9 +232,7 @@ in {
 
     certs."${fqdn2domain}" = {
       domain = "*.${fqdn2domain}";
-      extraDomainNames = [
-        "*.cachix.${fqdn2domain}"
-      ];
+      extraDomainNames = [ "*.cachix.${fqdn2domain}" ];
       dnsProvider = "rfc2136";
       credentialsFile = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
       # We don't need to wait for propagation since this is a local DNS server
@@ -243,42 +244,50 @@ in {
     # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
   };
 
-  systemd.services.dns-rfc2136-2-conf = let
-    dnskeysConfPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.conf";
-    dnskeysSecretPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
-  in {
-    requiredBy = ["acme-${fqdn2domain}.service" "bind.service"];
-    before = ["acme-${fqdn2domain}.service" "bind.service"];
-    unitConfig = {
-      ConditionPathExists = "!${dnskeysConfPath}";
-    };
-    serviceConfig = {
-      Type = "oneshot";
-      UMask = 0077;
-    };
-    path = [pkgs.bind];
-    script = ''
-      mkdir -p /var/lib/secrets
-      chmod 755 /var/lib/secrets
-      tsig-keygen rfc2136key.${fqdn2domain} > ${dnskeysConfPath}
-      chown named:root ${dnskeysConfPath}
-      chmod 400 ${dnskeysConfPath}
+  systemd.services.dns-rfc2136-2-conf =
+    let
+      dnskeysConfPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.conf";
+      dnskeysSecretPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
+    in
+    {
+      requiredBy = [
+        "acme-${fqdn2domain}.service"
+        "bind.service"
+      ];
+      before = [
+        "acme-${fqdn2domain}.service"
+        "bind.service"
+      ];
+      unitConfig = {
+        ConditionPathExists = "!${dnskeysConfPath}";
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        UMask = 77;
+      };
+      path = [ pkgs.bind ];
+      script = ''
+        mkdir -p /var/lib/secrets
+        chmod 755 /var/lib/secrets
+        tsig-keygen rfc2136key.${fqdn2domain} > ${dnskeysConfPath}
+        chown named:root ${dnskeysConfPath}
+        chmod 400 ${dnskeysConfPath}
 
-      # extract secret value from the dnskeys.conf
-      while read x y; do if [ "$x" = "secret" ]; then secret="''${y:1:''${#y}-3}"; fi; done < ${dnskeysConfPath}
+        # extract secret value from the dnskeys.conf
+        while read x y; do if [ "$x" = "secret" ]; then secret="''${y:1:''${#y}-3}"; fi; done < ${dnskeysConfPath}
 
-      cat > ${dnskeysSecretPath} << EOF
-      RFC2136_NAMESERVER='127.0.0.1:53'
-      RFC2136_TSIG_ALGORITHM='hmac-sha256.'
-      RFC2136_TSIG_KEY='rfc2136key.${fqdn2domain}'
-      RFC2136_TSIG_SECRET='$secret'
-      EOF
-      chmod 400 ${dnskeysSecretPath}
-    '';
-  };
+        cat > ${dnskeysSecretPath} << EOF
+        RFC2136_NAMESERVER='127.0.0.1:53'
+        RFC2136_TSIG_ALGORITHM='hmac-sha256.'
+        RFC2136_TSIG_KEY='rfc2136key.${fqdn2domain}'
+        RFC2136_TSIG_SECRET='$secret'
+        EOF
+        chmod 400 ${dnskeysSecretPath}
+      '';
+    };
 
   ### Caddy
-  users.users.caddy.extraGroups = ["acme"];
+  users.users.caddy.extraGroups = [ "acme" ];
   services.caddy.enable = true;
   services.caddy.virtualHosts = {
     "steveej.${fqdn2domain}:443" = {
@@ -380,9 +389,7 @@ in {
         bootstrap_expect = 1;
 
         server_join = {
-          retry_join = [
-            config.hostName
-          ];
+          retry_join = [ config.hostName ];
         };
       };
       client = {
@@ -424,7 +431,7 @@ in {
   users.extraUsers.nomad.group = "nomad";
   users.extraUsers.nomad.home = config.services.nomad.settings.data_dir;
   users.extraUsers.nomad.createHome = true;
-  users.groups.nomad.members = ["nomad"];
+  users.groups.nomad.members = [ "nomad" ];
 
   systemd.services.nomad.serviceConfig.User = "nomad";
   systemd.services.nomad.serviceConfig.Group = "nomad";

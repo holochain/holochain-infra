@@ -1,15 +1,16 @@
 {
   self,
   config,
+  pkgs,
   ...
-}: let
+}:
+let
   root_domain = "dev.infra.holochain.org";
   s3_web_port = "3902";
   s3_port = "3900";
-in {
-  users.groups.garage-secrets.members = [
-    "dev"
-  ];
+in
+{
+  users.groups.garage-secrets.members = [ "dev" ];
 
   sops = {
     defaultSopsFile = self + "/secrets/${config.networking.hostName}/secrets.yaml";
@@ -31,13 +32,13 @@ in {
 
   systemd.services.garage.serviceConfig.Group = "garage-secrets";
   /*
-  post deployment actions taken to get the node ready for storing files
+    post deployment actions taken to get the node ready for storing files
 
-  ```
-  garage status
-  garage layout assign fdf468cca3934a18 -c 100G -z dc0
-  garage layout apply --version 1
-  ```
+    ```
+    garage status
+    garage layout assign fdf468cca3934a18 -c 100G -z dc0
+    garage layout apply --version 1
+    ```
   */
   services.garage = {
     enable = true;

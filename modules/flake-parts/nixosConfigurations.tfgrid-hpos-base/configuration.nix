@@ -5,9 +5,11 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   hostName = "tfgrid-hpos-base";
-in {
+in
+{
   imports = [
     ../nixosConfigurations.tfgrid-base/configuration.nix
 
@@ -22,9 +24,7 @@ in {
 
   sops.age.keyFile = "/etc/age.key";
 
-  environment.systemPackages = [
-    pkgs.man
-  ];
+  environment.systemPackages = [ pkgs.man ];
 
   holochain-infra.nomad-client = {
     enable = false;

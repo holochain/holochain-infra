@@ -5,7 +5,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -61,7 +62,7 @@
           size = "100%";
           content = {
             type = "btrfs";
-            extraArgs = ["-f"]; # Override existing partition
+            extraArgs = [ "-f" ]; # Override existing partition
             mountpoint = "/partition-root";
             subvolumes = {
               # Subvolume name is different from mountpoint
@@ -69,7 +70,10 @@
                 mountpoint = "/";
               };
               "/nix" = {
-                mountOptions = ["compress=zstd" "noatime"];
+                mountOptions = [
+                  "compress=zstd"
+                  "noatime"
+                ];
                 mountpoint = "/nix";
               };
             };

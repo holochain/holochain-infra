@@ -3,10 +3,12 @@
   self,
   pkgs,
   ...
-}: let
+}:
+let
   storeDumpPath = "/nix/.rw-store/db.dump";
   svcName = "populate-cache";
-in {
+in
+{
   imports = [
     self.nixosModules.holo-users
 
@@ -36,11 +38,17 @@ in {
   ];
 
   systemd.services.${svcName} = {
-    wantedBy = ["multi-user.target"];
-    partOf = ["nix-cache.target"];
-    requires = ["nix-store-load-db.service"];
-    after = ["network.target"];
-    path = [pkgs.coreutils pkgs.nix pkgs.cacert pkgs.iputils pkgs.gitFull];
+    wantedBy = [ "multi-user.target" ];
+    partOf = [ "nix-cache.target" ];
+    requires = [ "nix-store-load-db.service" ];
+    after = [ "network.target" ];
+    path = [
+      pkgs.coreutils
+      pkgs.nix
+      pkgs.cacert
+      pkgs.iputils
+      pkgs.gitFull
+    ];
     description = "populating nix cache";
     serviceConfig = {
       Type = "simple";
@@ -50,42 +58,45 @@ in {
       CacheDirectory = svcName;
     };
 
-    script = let
-      mkPopulateCacheSnippet = {arch}: ''
-        time nix build -L --refresh --keep-going -j0 \
-          --out-link result-${arch}-0 \
-          github:holochain/holochain#packages.${arch}.hc-scaffold
+    script =
+      let
+        mkPopulateCacheSnippet =
+          { arch }:
+          ''
+            time nix build -L --refresh --keep-going -j0 \
+              --out-link result-${arch}-0 \
+              github:holochain/holochain#packages.${arch}.hc-scaffold
 
-        time nix build -L --refresh --keep-going -j0 \
-          --out-link result-${arch}-1 \
-          --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
-          github:holochain/holochain#packages.${arch}.hc-scaffold
+            time nix build -L --refresh --keep-going -j0 \
+              --out-link result-${arch}-1 \
+              --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
+              github:holochain/holochain#packages.${arch}.hc-scaffold
 
-        time nix build -L --refresh --keep-going -j0 \
-          --out-link result-${arch}-2 \
-          --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
-          github:holochain/holochain#packages.${arch}.hc-scaffold
+            time nix build -L --refresh --keep-going -j0 \
+              --out-link result-${arch}-2 \
+              --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
+              github:holochain/holochain#packages.${arch}.hc-scaffold
 
-        time nix build -L --refresh --keep-going -j0 \
-          --out-link result-${arch}-3 \
-          --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
-          github:holochain/holochain#packages.${arch}.hc-scaffold
+            time nix build -L --refresh --keep-going -j0 \
+              --out-link result-${arch}-3 \
+              --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
+              github:holochain/holochain#packages.${arch}.hc-scaffold
 
 
-        time nix develop --build -L --refresh --keep-going -j0 \
-          --profile result-${arch}-4 \
-          --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
-          github:holochain/holochain#devShells.${arch}.holonix
-        time nix develop --build -L --refresh --keep-going -j0 \
-          --profile result-${arch}-5 \
-          --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
-          github:holochain/holochain#devShells.${arch}.holonix
-        time nix develop --build -L --refresh --keep-going -j0 \
-          --profile result-${arch}-6 \
-          --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
-          github:holochain/holochain#devShells.${arch}.holonix
-      '';
-    in
+            time nix develop --build -L --refresh --keep-going -j0 \
+              --profile result-${arch}-4 \
+              --override-input versions 'github:holochain/holochain?dir=versions/0_1' \
+              github:holochain/holochain#devShells.${arch}.holonix
+            time nix develop --build -L --refresh --keep-going -j0 \
+              --profile result-${arch}-5 \
+              --override-input versions 'github:holochain/holochain?dir=versions/0_2' \
+              github:holochain/holochain#devShells.${arch}.holonix
+            time nix develop --build -L --refresh --keep-going -j0 \
+              --profile result-${arch}-6 \
+              --override-input versions 'github:holochain/holochain?dir=versions/weekly' \
+              github:holochain/holochain#devShells.${arch}.holonix
+          '';
+      in
       ''
         echo waiting for WAN connectivity..
         while true; do
@@ -109,9 +120,9 @@ in {
           # don't bail on failures, keep going with best effort
           set +e
       ''
-      + mkPopulateCacheSnippet {arch = "x86_64-linux";}
-      + mkPopulateCacheSnippet {arch = "x86_64-darwin";}
-      + mkPopulateCacheSnippet {arch = "aarch64-darwin";}
+      + mkPopulateCacheSnippet { arch = "x86_64-linux"; }
+      + mkPopulateCacheSnippet { arch = "x86_64-darwin"; }
+      + mkPopulateCacheSnippet { arch = "aarch64-darwin"; }
       + ''
           set -e
 
@@ -125,9 +136,9 @@ in {
   # due to a limitation in microvm.nix we manually dump and load the nix-store db.
   # if we don't do this the store paths will be forgotten.
   systemd.services.nix-store-load-db = {
-    wantedBy = ["multi-user.target"];
-    before = ["network.target"];
-    path = [pkgs.nix];
+    wantedBy = [ "multi-user.target" ];
+    before = [ "network.target" ];
+    path = [ pkgs.nix ];
     serviceConfig = {
       Type = "oneshot";
     };
@@ -144,9 +155,12 @@ in {
   };
 
   systemd.services.nix-store-dump-db = {
-    wantedBy = ["multi-user.target"];
-    path = [pkgs.nix pkgs.coreutils];
-    unitConfig.RequiresMountsFor = ["/nix/.rw-store"];
+    wantedBy = [ "multi-user.target" ];
+    path = [
+      pkgs.nix
+      pkgs.coreutils
+    ];
+    unitConfig.RequiresMountsFor = [ "/nix/.rw-store" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = "yes";

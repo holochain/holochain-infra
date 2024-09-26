@@ -5,8 +5,10 @@
   lib,
   config,
   ...
-}: let
-in {
+}:
+let
+in
+{
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -24,14 +26,16 @@ in {
     ../../nixos/shared-linux.nix
 
     {
-      home-manager.users.dev = {pkgs, ...}: {
-        home.packages = [
-          # additional packages for this user go here
-          pkgs.nil
-          pkgs.wget
-          pkgs.file
-        ];
-      };
+      home-manager.users.dev =
+        { pkgs, ... }:
+        {
+          home.packages = [
+            # additional packages for this user go here
+            pkgs.nil
+            pkgs.wget
+            pkgs.file
+          ];
+        };
 
       services.openssh.settings.AcceptEnv = builtins.concatStringsSep " " [
         "GIT_AUTHOR_*"
@@ -40,22 +44,19 @@ in {
     }
 
     ../../nixos/dev-minio.nix
-    {
-      services.devMinio.enable = true;
-    }
+    { services.devMinio.enable = true; }
 
     inputs.nixos-vscode-server.nixosModules.default
-    ({
-      config,
-      pkgs,
-      ...
-    }: {
-      services.vscode-server = {
-        enable = true;
-        installPath = "$HOME/.vscodium-server";
-        nodejsPackage = pkgs.nodejs_18;
-      };
-    })
+    (
+      { config, pkgs, ... }:
+      {
+        services.vscode-server = {
+          enable = true;
+          installPath = "$HOME/.vscodium-server";
+          nodejsPackage = pkgs.nodejs_18;
+        };
+      }
+    )
   ];
 
   nix.settings.system-features = [
@@ -71,12 +72,8 @@ in {
     nat.enable = true;
     firewall.enable = true;
 
-    firewall.allowedTCPPorts = [
-      5201
-    ];
-    firewall.allowedUDPPorts = [
-      5201
-    ];
+    firewall.allowedTCPPorts = [ 5201 ];
+    firewall.allowedUDPPorts = [ 5201 ];
   };
 
   boot = {
@@ -121,7 +118,7 @@ in {
           size = "100%";
           content = {
             type = "btrfs";
-            extraArgs = ["-f"]; # Override existing partition
+            extraArgs = [ "-f" ]; # Override existing partition
             mountpoint = "/partition-root";
             subvolumes = {
               # Subvolume name is different from mountpoint
@@ -129,7 +126,10 @@ in {
                 mountpoint = "/";
               };
               "/nix" = {
-                mountOptions = ["compress=zstd" "noatime"];
+                mountOptions = [
+                  "compress=zstd"
+                  "noatime"
+                ];
                 mountpoint = "/nix";
               };
             };
@@ -139,9 +139,7 @@ in {
     };
   };
 
-  boot.binfmt.emulatedSystems = [
-    "aarch64-linux"
-  ];
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   system.stateVersion = "23.11";
 }

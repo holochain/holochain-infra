@@ -4,13 +4,15 @@
   self,
   pkgs,
   ...
-}: let
+}:
+let
   # https://console.hetzner.cloud/projects/1982619/servers/47741841/overview
   hostName = "stun-0";
   domain = "main.infra.holo.host";
   ipv4 = "37.27.39.142";
   fqdn = "${config.networking.hostName}.${config.networking.domain}";
-in {
+in
+{
   imports = [
     inputs.disko.nixosModules.disko
     inputs.srvos.nixosModules.server
@@ -27,15 +29,15 @@ in {
     self.nixosModules.holochain-turn-server
   ];
 
-  networking = {inherit hostName domain;};
+  networking = {
+    inherit hostName domain;
+  };
 
   hostName = ipv4;
 
   nix.settings.max-jobs = 8;
 
-  nix.settings.substituters = [
-    "https://holochain-ci.cachix.org"
-  ];
+  nix.settings.substituters = [ "https://holochain-ci.cachix.org" ];
 
   nix.settings.trusted-public-keys = [
     "holochain-ci.cachix.org-3:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="

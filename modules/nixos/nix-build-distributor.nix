@@ -1,8 +1,13 @@
+{ lib, ... }:
+let
+  supportedFeatures = [
+    "kvm"
+    "big-parallel"
+    "nixos-test"
+    "benchmark"
+  ];
+in
 {
-  config,
-  lib,
-  ...
-}: {
   nix.settings.max-jobs = lib.mkDefault 0;
 
   nix.distributedBuilds = true;
@@ -17,7 +22,7 @@
       system = "aarch64-darwin";
       maxJobs = 3;
       speedFactor = 2;
-      supportedFeatures = config.nix.settings.experimental-features;
+      inherit supportedFeatures;
     }
 
     # macos-02
@@ -29,7 +34,7 @@
       system = "x86_64-darwin";
       speedFactor = 2;
       maxJobs = 4;
-      supportedFeatures = config.nix.settings.experimental-features;
+      inherit supportedFeatures;
     }
 
     # macos-03
@@ -42,7 +47,7 @@
       system = "aarch64-darwin";
       maxJobs = 3;
       speedFactor = 2;
-      supportedFeatures = config.nix.settings.experimental-features;
+      inherit supportedFeatures;
     }
 
     # macos-04
@@ -55,7 +60,7 @@
       system = "aarch64-darwin";
       maxJobs = 3;
       speedFactor = 2;
-      supportedFeatures = config.nix.settings.experimental-features;
+      inherit supportedFeatures;
     }
 
     # macos-05
@@ -68,7 +73,7 @@
       system = "aarch64-darwin";
       maxJobs = 6;
       speedFactor = 3;
-      supportedFeatures = config.nix.settings.experimental-features;
+      inherit supportedFeatures;
     }
 
     # macos-06
@@ -80,7 +85,7 @@
       system = "x86_64-darwin";
       speedFactor = 2;
       maxJobs = 6;
-      supportedFeatures = config.nix.settings.experimental-features;
+      inherit supportedFeatures;
     }
 
     # {
@@ -89,7 +94,7 @@
     #   protocol = "ssh-ng";
     #   system = "x86_64-linux";
     #   maxJobs = 32;
-    #   supportedFeatures = config.nix.settings.experimental-features;
+    #   inherit supportedFeatures;
     # }
   ];
 }

@@ -1,11 +1,9 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   name = "devMinio";
   cfg = config.services.${name};
-in {
+in
+{
   options.services.${name} = {
     enable = lib.mkEnableOption "dev minio server";
     rootDomain = lib.mkOption {
@@ -63,8 +61,6 @@ in {
       '';
     };
 
-    networking.firewall.allowedTCPPorts = [
-      443
-    ];
+    networking.firewall.allowedTCPPorts = [ 443 ];
   };
 }

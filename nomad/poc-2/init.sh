@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#! /usr/bin/env bash
 set -xeu -o pipefail
 
 pwd
@@ -10,15 +10,15 @@ mkdir -p "${JOB_STATE_DIRECTORY}"
 cd "${JOB_STATE_DIRECTORY}"
 
 if [[ -d holochain/.git ]]; then
-    cd holochain
-    git status
-    git remote set-url origin ''${GIT_URL}
-    git fetch origin ''${GIT_BRANCH}
-    git checkout -B ''${GIT_BRANCH} origin/''${GIT_BRANCH}
+  cd holochain
+  git status
+  git remote set-url origin ''"${GIT_URL}"
+  git fetch origin ''"${GIT_BRANCH}"
+  git checkout -B ''"${GIT_BRANCH}" origin/''"${GIT_BRANCH}"
 else
-    rm -rf holochain
-    git clone ''${GIT_URL} --depth 1 --single-branch --branch ''${GIT_BRANCH}
-    cd holochain
+  rm -rf holochain
+  git clone ''"${GIT_URL}" --depth 1 --single-branch --branch ''"${GIT_BRANCH}"
+  cd holochain
 fi
 
 git clean -fd
