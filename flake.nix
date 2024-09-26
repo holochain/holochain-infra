@@ -209,6 +209,9 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    # do not forward 'nixpkgs' there as buildbot-nix uses custom buildbot patches
+    buildbot-nix.url = "github:nix-community/buildbot-nix";
   };
 
   outputs =
