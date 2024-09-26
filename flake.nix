@@ -100,8 +100,9 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
-        devenv.inputs.pre-commit-hooks.follows = "pre-commit-hooks";
-        devenv.inputs.nixpkgs.follows = "nixpkgs";
+        # Nix doesn't accept this, lix does...
+        #devenv.inputs.pre-commit-hooks.follows = "pre-commit-hooks";
+        #devenv.inputs.nixpkgs.follows = "nixpkgs";
       };
     };
 
