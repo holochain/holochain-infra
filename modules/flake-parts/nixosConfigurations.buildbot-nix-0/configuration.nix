@@ -158,7 +158,7 @@ in
     admins = [
       "steveej"
       "evangineer"
-      "v-rdp"
+      "r-vdp"
     ];
     buildSystems = [
       "x86_64-linux"
