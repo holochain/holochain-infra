@@ -227,6 +227,11 @@ in
     ];
   };
 
+  # Reload the bind config when the zone file changed
+  systemd.services.bind.reloadTriggers = [
+    config.environment.etc."bind/zones/${fqdn2domain}.zone".source
+  ];
+
   security.acme = {
     acceptTerms = true;
     defaults = {
