@@ -277,6 +277,8 @@
           # Per-system attributes can be defined here. The self' and inputs'
           # module parameters provide easy access to attributes of the same
           # system.
+          formatter = treefmtWrapper;
+
           devShells.default =
             let
               nomadAddr = "https://${self.nixosConfigurations.dweb-reverse-tls-proxy.config.hostName}:4646";
