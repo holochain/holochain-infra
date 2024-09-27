@@ -42,5 +42,6 @@
   passthru = {
     hostName = "monitoring-0";
     primaryIpv4 = "135.181.110.69";
+    primaryIpv6 = "2a01:4f9:c012:fd91::1";
   };
 }
