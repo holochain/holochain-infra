@@ -168,8 +168,8 @@ in
     ];
     domain = appFqdn;
     outputsPath = "/var/www/buildbot/nix-outputs/";
-    evalMaxMemorySize = 12000;
-    evalWorkerCount = 16;
+    evalMaxMemorySize = 6 * 1024;
+    evalWorkerCount = 8;
     jobReportLimit = 0;
     workersFile = config.sops.secrets.buildbot-nix-workers.path;
     # cachix = {
