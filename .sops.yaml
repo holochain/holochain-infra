@@ -14,72 +14,88 @@ keys:
   - &x64-linux-dev-01 age1vlxerq9j9jd00qvxj2gxds9re4dz2djqmllkhzsf44gz9a5y4ghs7807h9
   - &tfgrid-shared age194xfar0gfdauu2dcxwqk9lh9d0vjfrzzs2ke0ppanpwv9eqxzs2qp7q7cn
   - &buildbot-nix-0 age1w99tzxl88z7ct3ekpatl62wvhrx29pg450qmn822dpmz0evhxqxqy3scux
+  - &monitoring-0 age1cpcwv2wlszwase38zpngk6ld3vx8ev8jsv38m9pp74jvlutvxpsqt49yrr
+
 creation_rules:
   - path_regex: ^(.+/|)secrets/[^/]+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *age_r-vdp
   - path_regex: ^secrets/dweb-reverse-tls-proxy/.+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
-      - *dweb-reverse-proxy
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *dweb-reverse-proxy
+          - *age_r-vdp
+  - path_regex: ^secrets/monitoring/.+$
+    key_groups:
+      - pgp:
+          - *steveej
+        age:
+          - *age_r-vdp
+          - *monitoring-0
   - path_regex: ^secrets/linux-builder-01/[^/]+$
     key_groups:
-    - age:
-      - *linux-builder-01
-      - *age_steveej
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *dweb-reverse-proxy
+          - *age_r-vdp
+  - path_regex: ^secrets/linux-builder-01/[^/]+$
+    key_groups:
+      - age:
+          - *linux-builder-01
+          - *age_steveej
+          - *age_r-vdp
   - path_regex: ^secrets/x64-linux-dev-01/[^/]+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
-      - *x64-linux-dev-01
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *x64-linux-dev-01
+          - *age_r-vdp
   - path_regex: ^secrets/buildbot-nix-0/[^/]+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
-      - *buildbot-nix-0
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *buildbot-nix-0
+          - *age_r-vdp
   - path_regex: ^secrets/nomad/.+$
     key_groups:
-    - pgp:
-      - *steveej
-      # - *jost-s
-      age:
-      - *dweb-reverse-proxy
-      - *tfgrid-shared
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        # - *jost-s
+        age:
+          - *dweb-reverse-proxy
+          - *tfgrid-shared
+          - *age_r-vdp
   - path_regex: ^secrets/nomad/admin/.+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *age_r-vdp
   - path_regex: ^secrets/events-nix-cache/.+$
     key_groups:
-    - pgp:
-      - *steveej
+      - pgp:
+          - *steveej
   - path_regex: ^secrets/dev/.+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
-      - *dev
-      - *x64-linux-dev-01
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *dev
+          - *x64-linux-dev-01
+          - *age_r-vdp
   - path_regex: ^secrets/minio/.+$
     key_groups:
-    - pgp:
-      - *steveej
-      age:
-      - *dev
-      - *x64-linux-dev-01
-      - *age_r-vdp
+      - pgp:
+          - *steveej
+        age:
+          - *dev
+          - *x64-linux-dev-01
+          - *age_r-vdp
