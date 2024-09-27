@@ -200,4 +200,8 @@ in
     enable = true;
     workerPasswordFile = config.sops.secrets.buildbot-nix-worker-password.path;
   };
+
+  sops.secrets.holo-host-github-environment-secrets = { };
+  systemd.services.nix-daemon.serviceConfig.EnvironmentFile =
+    config.sops.secrets.holo-host-github-environment-secrets.path;
 }
