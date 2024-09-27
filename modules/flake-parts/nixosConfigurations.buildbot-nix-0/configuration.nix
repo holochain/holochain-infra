@@ -200,6 +200,10 @@ in
     enable = true;
     workerPasswordFile = config.sops.secrets.buildbot-nix-worker-password.path;
   };
+  nix.settings.system-features = [
+    "kvm"
+    "nixos-test"
+  ];
 
   sops.secrets.holo-host-github-environment-secrets = { };
   systemd.services.nix-daemon.serviceConfig.EnvironmentFile =
