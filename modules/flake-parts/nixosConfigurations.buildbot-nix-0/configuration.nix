@@ -190,6 +190,11 @@ in
     };
   };
 
+  # magic_rb:
+  # If you dont pin it, then itll reset your db when it updates
+  # Happened to me, as in the default config uses /var/lib/postgresql/{version}
+  services.postgresql.package = pkgs.postgresql_15;
+
   sops.secrets.buildbot-nix-worker-password = { };
   services.buildbot-nix.worker = {
     enable = true;
