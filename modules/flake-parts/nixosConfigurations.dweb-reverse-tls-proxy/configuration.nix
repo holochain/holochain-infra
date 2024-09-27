@@ -206,7 +206,10 @@ in
       signal-3.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-3.config.services.tx5-signal-server.address}
       bootstrap-3.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-3.config.services.kitsune-bootstrap.address}
 
+      monitoring.${fqdn2domain}.                 CNAME   monitoring-0.${fqdn2domain}.
       monitoring-0.${fqdn2domain}.               A       ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv4}
+      monitoring-0.${fqdn2domain}.               AAAA    ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv6}
+
       buildbot-nix-0.${fqdn2domain}.             A       ${self.nixosConfigurations.buildbot-nix-0.config.passthru.primaryIpv4}
     '';
   };
