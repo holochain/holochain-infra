@@ -188,6 +188,65 @@ in
       # this is displayed in the app as "Client ID"
       inherit oauthId topic;
     };
+
+    postBuildSteps = [
+      {
+        name = "post-build-step-test";
+        environment =
+          let
+            props = lib.attrsets.genAttrs [
+              "attr"
+              "basename"
+              "branch"
+              "builddir"
+              "builderid"
+              "buildername"
+              "buildnumber"
+              "cacheStatus"
+              "codebase"
+              "drv_path"
+              "event"
+              "github.base.sha"
+              "github.head.sha"
+              "out_path"
+              "owners"
+              "project"
+              "projectid"
+              "projectname"
+              "pullrequesturl"
+              "repository"
+              "revision"
+              "scheduler"
+              "status_name"
+              "system"
+              "virtual_builder_name"
+              "virtual_builder_tags"
+              "workername"
+            ] (name: self.inputs.buildbot-nix.lib.interpolate "%(prop:${name})s");
+            props' = lib.attrsets.mapAttrs' (name: value: lib.nameValuePair "PROP_${name}" value) props;
+          in
+          props';
+        command = [
+          (builtins.toString (
+            pkgs.writeShellScript "post-buld-step-test-script" ''
+              set -eEu -o pipefail
+
+              echo Running example postBuildStep...
+
+              echo args: "$@"
+              env
+              pwd
+              ls -lha
+              ls -lha ..
+              ls -lha ../..
+
+              echo Done.
+            ''
+          ))
+        ];
+      }
+
+    ];
   };
 
   # magic_rb:
