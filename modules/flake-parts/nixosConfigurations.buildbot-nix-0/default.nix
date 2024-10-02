@@ -5,7 +5,7 @@
   ...
 }:
 let
-  evaluatedSystem = inputs.nixpkgs.lib.nixosSystem {
+  evaluatedSystem = inputs.nixpkgsUnstable.lib.nixosSystem {
     modules = [ ./configuration.nix ];
     system = "x86_64-linux";
     specialArgs = self.specialArgs;

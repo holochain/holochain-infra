@@ -209,6 +209,10 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    # do not forward 'nixpkgs' there as buildbot-nix uses custom buildbot patches
+    buildbot-nix.url = "github:nix-community/buildbot-nix";
+    buildbot-nix.inputs.nixpkgs.follows = "nixpkgsUnstable";
   };
 
   outputs =
@@ -421,12 +425,7 @@
                 mkOsConfigCheck =
                   osConfigs:
                   let
-                    filteredBySystem = lib.filterAttrs (
-                      key: value:
-                      (value.pkgs.system == system)
-                      # needs private repos
-                      && (key != "tfgrid-hpos")
-                    ) osConfigs;
+                    filteredBySystem = lib.filterAttrs (_: osConfig: (osConfig.pkgs.system == system)) osConfigs;
                     asStrings = lib.mapAttrsToList (
                       key: value:
                       builtins.trace "evaluating ${key} (${value.pkgs.system})..." "ln -s ${value.config.system.build.toplevel} $out/${key}"
@@ -445,6 +444,10 @@
                       builtins.removeAttrs self.nixosConfigurations [
                         # too big for current CI structure and rarely used
                         "vm-nixcache"
+
+                        # needs private repos
+                        "tfgrid-hpos"
+                        "tfgrid-hpos-base"
                       ]
                     )
                   else if pkgs.stdenv.isDarwin then
@@ -472,6 +475,8 @@
                 };
               };
             };
+
+            inherit (self'.packages) build-os-configurations;
           };
         };
       flake = {
