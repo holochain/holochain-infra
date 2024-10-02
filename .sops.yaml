@@ -39,13 +39,6 @@ creation_rules:
           - *monitoring-0
   - path_regex: ^secrets/linux-builder-01/[^/]+$
     key_groups:
-      - pgp:
-          - *steveej
-        age:
-          - *dweb-reverse-proxy
-          - *age_r-vdp
-  - path_regex: ^secrets/linux-builder-01/[^/]+$
-    key_groups:
       - age:
           - *linux-builder-01
           - *age_steveej
