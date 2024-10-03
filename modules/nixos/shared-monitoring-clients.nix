@@ -33,6 +33,7 @@
 
   services.alloy = {
     enable = true;
+    package = inputs.nixpkgsUnstable.legacyPackages.${pkgs.stdenv.system}.grafana-alloy;
     configPath =
       let
         configAlloy = pkgs.writeText "config.alloy" ''
