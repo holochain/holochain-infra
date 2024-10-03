@@ -45,6 +45,7 @@ creation_rules:
           - *age_r-vdp
           - *monitoring-0
           - *buildbot-nix-0
+          - *x64-linux-dev-01
   - path_regex: ^secrets/linux-builder-01/[^/]+$
     key_groups:
       - age:

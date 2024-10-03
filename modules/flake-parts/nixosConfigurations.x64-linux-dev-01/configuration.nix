@@ -23,6 +23,8 @@
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
 
+    (self + "/modules/nixos/shared-monitoring-clients.nix")
+
     {
       home-manager.users.dev =
         { pkgs, ... }:
