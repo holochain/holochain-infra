@@ -3,7 +3,6 @@
   inputs,
   self,
   pkgs,
-  nodeName,
   ...
 }:
 {

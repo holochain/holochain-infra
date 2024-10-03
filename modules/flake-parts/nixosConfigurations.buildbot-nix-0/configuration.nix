@@ -4,7 +4,6 @@
   self,
   pkgs,
   lib,
-  nodeName,
   ...
 }:
 let
