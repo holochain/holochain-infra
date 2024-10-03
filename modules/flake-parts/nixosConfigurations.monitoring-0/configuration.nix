@@ -62,9 +62,6 @@
       sopsFile = ../../../secrets/monitoring/secrets.yaml;
       owner = config.users.users.grafana.name;
     };
-    prometheus_remote_write_password = {
-      sopsFile = ../../../secrets/monitoring/secrets.yaml;
-    };
   };
 
   services = {

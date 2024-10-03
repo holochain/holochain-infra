@@ -37,6 +37,14 @@ creation_rules:
         age:
           - *age_r-vdp
           - *monitoring-0
+  - path_regex: ^secrets/monitoring-clients/.+$
+    key_groups:
+      - pgp:
+          - *steveej
+        age:
+          - *age_r-vdp
+          - *monitoring-0
+          - *buildbot-nix-0
   - path_regex: ^secrets/linux-builder-01/[^/]+$
     key_groups:
       - age:
