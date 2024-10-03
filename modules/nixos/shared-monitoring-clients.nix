@@ -1,4 +1,5 @@
 {
+  partName,
   self,
   inputs,
   config,
@@ -69,4 +70,8 @@
         cp "${configAlloy}" "$out/config.alloy"
       '';
   };
+
+  system.configurationRevision = self.sourceInfo.rev or (self.sourceInfo.dirtyRev or "dirty");
+  system.image.id = partName;
+  system.image.version = config.system.configurationRevision;
 }
