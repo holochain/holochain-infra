@@ -6,8 +6,6 @@
   config,
   ...
 }:
-let
-in
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -66,7 +64,7 @@ in
   ];
 
   networking = {
-    hostName = "x64-linux-dev-01"; # Define your hostname.
+    hostName = config.passthru.hostName; # Define your hostname.
     useNetworkd = true;
 
     nat.enable = true;
@@ -85,7 +83,18 @@ in
     };
   };
 
-  hostName = "135.181.118.162";
+  hostName = config.passthru.fqdn;
+
+  passthru = {
+    fqdn = "${config.passthru.hostName}.dev.${config.passthru.infraDomain}";
+    infraDomain =
+      (builtins.elemAt
+        (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
+        0
+      ).name;
+    hostName = "x64-linux-dev-01";
+    primaryIpv4 = "135.181.118.162";
+  };
 
   nix.settings.max-jobs = 32;
 
