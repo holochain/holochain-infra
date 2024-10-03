@@ -34,13 +34,22 @@ in
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
 
+    (self + "/modules/nixos/shared-monitoring-clients.nix")
+
     inputs.buildbot-nix.nixosModules.buildbot-master
     inputs.buildbot-nix.nixosModules.buildbot-worker
+
   ];
 
   system.stateVersion = "24.05";
 
   passthru = {
+    fqdn = "${config.passthru.hostName}.${config.passthru.infraDomain}";
+    infraDomain =
+      (builtins.elemAt
+        (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
+        0
+      ).name;
     hostName = "buildbot-nix-0";
     primaryIpv4 = "135.181.114.173";
     primaryIpv6 = "2a01:4f9:4b:1a93::1/64";

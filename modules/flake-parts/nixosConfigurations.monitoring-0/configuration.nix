@@ -18,6 +18,8 @@
     self.nixosModules.holo-users
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
+
+    (self + "/modules/nixos/shared-monitoring-clients.nix")
   ];
 
   networking.hostName = config.passthru.hostName; # Define your hostname.
@@ -35,6 +37,7 @@
   system.stateVersion = "24.05";
 
   passthru = {
+    fqdn = "${config.passthru.hostName}.${config.passthru.infraDomain}";
     hostName = "monitoring-0";
     infraDomain =
       (builtins.elemAt
@@ -43,6 +46,7 @@
       ).name;
     primaryIpv4 = "135.181.110.69";
     primaryIpv6 = "2a01:4f9:c012:fd91::1";
+
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -114,28 +118,6 @@
       };
       extraFlags = [ "--web.enable-remote-write-receiver" ];
       retentionTime = "90d";
-      scrapeConfigs = [
-        {
-          job_name = "node-static";
-          scheme = "http";
-          static_configs = [
-            {
-              targets = [ "[::1]:9100" ];
-              labels = {
-                instance = config.hostName;
-              };
-            }
-          ];
-        }
-      ];
-      exporters.node = {
-        enable = true;
-        enabledCollectors = [
-          "systemd"
-          "processes"
-        ];
-        openFirewall = false;
-      };
     };
 
     nginx = {
