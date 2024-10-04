@@ -18,7 +18,6 @@ keys:
   - &turn-0 age1yl2l760zjsxvrct97gtwfkfjlvhg3vkkwpud2usc35ktqnzhuurq3an2ns
   - &turn-1 age16thgapywna9zu3r87hfgvw097lq8r9z5rxunfjqmttcnpgxxcflqxkjycn
   - &turn-2 age1zxmut50nxveptmfyjw5rd9jfdva54p92fj02zekjneq57k626unqysq707
-  - &turn-3 age1jkgf4cnxcetwv2xhxtqacy2zw2786j3nc07ffh6z8x3nt4594quqw0xn0j
   - &sbd-0_main_infra_holo_host age1lxmwwjmvfzl6uvfe2xs9m8ppdf604acph0u88pqwhuy7wvuep4sq3cjgw0
   - &stun-0_main_infra_holo_host age162clfdx3zc7qr5au7gyxmhs44lfezt8qzpf3a2ppqh5r628enf0q70prc0
 
@@ -57,7 +56,6 @@ creation_rules:
           - *turn-0
           - *turn-1
           - *turn-2
-          - *turn-3
           - *sbd-0_main_infra_holo_host
           - *stun-0_main_infra_holo_host
   - path_regex: ^secrets/linux-builder-01/[^/]+$

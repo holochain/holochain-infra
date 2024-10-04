@@ -209,10 +209,6 @@
       signal-2.${config.passthru.infraDomain}.                 A       ${self.nixosConfigurations.turn-2.config.services.tx5-signal-server.address}
       bootstrap-2.${config.passthru.infraDomain}.              A       ${self.nixosConfigurations.turn-2.config.services.kitsune-bootstrap.address}
 
-      turn-3.${config.passthru.infraDomain}.                   A       ${self.nixosConfigurations.turn-3.config.services.holochain-turn-server.address}
-      signal-3.${config.passthru.infraDomain}.                 A       ${self.nixosConfigurations.turn-3.config.services.tx5-signal-server.address}
-      bootstrap-3.${config.passthru.infraDomain}.              A       ${self.nixosConfigurations.turn-3.config.services.kitsune-bootstrap.address}
-
       monitoring-0.${config.passthru.infraDomain}.             A       ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv4}
       monitoring-0.${config.passthru.infraDomain}.             AAAA    ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv6}
       monitoring.${config.passthru.infraDomain}.               CNAME   monitoring-0.${config.passthru.infraDomain}.
@@ -365,12 +361,6 @@
     "acme-turn-2.${config.passthru.infraDomain}:80" = {
       extraConfig = ''
         reverse_proxy http://turn-2.${config.passthru.infraDomain}:${builtins.toString self.nixosConfigurations.turn-2.config.services.holochain-turn-server.nginx-http-port}
-      '';
-    };
-
-    "acme-turn-3.${config.passthru.infraDomain}:80" = {
-      extraConfig = ''
-        reverse_proxy http://turn-3.${config.passthru.infraDomain}:${builtins.toString self.nixosConfigurations.turn-3.config.services.holochain-turn-server.nginx-http-port}
       '';
     };
   };
