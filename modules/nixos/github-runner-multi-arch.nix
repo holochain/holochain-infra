@@ -36,6 +36,12 @@ in
       default = "multi-arch";
       type = lib.types.str;
     };
+
+    url = lib.mkOption {
+      description = "github repository URL";
+      default = "https://github.com/holochain/holochain";
+      type = lib.types.str;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -48,7 +54,7 @@ in
         config.networking.hostName
       ];
       tokenFile = config.sops.secrets.github-runners-token.path;
-      url = "https://github.com/holochain/holochain";
+      url = cfg.url;
       extraPackages = config.environment.systemPackages;
     });
 
