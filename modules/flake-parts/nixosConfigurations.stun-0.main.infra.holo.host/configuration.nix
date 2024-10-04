@@ -5,13 +5,7 @@
   pkgs,
   ...
 }:
-let
-  # https://console.hetzner.cloud/projects/1982619/servers/47741841/overview
-  hostName = "stun-0";
-  domain = "main.infra.holo.host";
-  ipv4 = "37.27.39.142";
-  fqdn = "${config.networking.hostName}.${config.networking.domain}";
-in
+# https://console.hetzner.cloud/projects/1982619/servers/47741841/overview
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -31,11 +25,17 @@ in
     self.nixosModules.holochain-turn-server
   ];
 
-  networking = {
-    inherit hostName domain;
+  passthru = {
+    fqdn = "${config.passthru.hostName}.${config.passthru.domain}";
+    hostName = "stun-0";
+    domain = "main.infra.holo.host";
+    primaryIpv4 = "37.27.39.142";
   };
 
-  hostName = ipv4;
+  hostName = config.passthru.primaryIpv4;
+  networking = {
+    inherit (config.passthru) hostName domain;
+  };
 
   nix.settings.max-jobs = 8;
 
@@ -49,8 +49,8 @@ in
 
   services.holochain-turn-server = {
     enable = true;
-    url = fqdn;
-    address = ipv4;
+    url = config.passthru.fqdn;
+    address = config.passthru.primaryIpv4;
     listening-port = null;
     nginx-http-port = 80;
     verbose = false;

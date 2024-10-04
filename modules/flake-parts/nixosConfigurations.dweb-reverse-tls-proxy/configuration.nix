@@ -6,10 +6,6 @@
   pkgs,
   ...
 }:
-let
-  ipv4 = "5.78.43.185";
-  fqdn2domain = "infra.holochain.org";
-in
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -26,9 +22,18 @@ in
     (self + "/modules/nixos/shared-monitoring-clients.nix")
   ];
 
-  networking.hostName = "dweb-reverse-tls-proxy"; # Define your hostname.
+  passthru = {
+    fqdn = "${config.passthru.hostName}.${config.passthru.domain}";
+    hostName = "dweb-reverse-tls-proxy"; # Define your hostname.
+    domain = config.passthru.infraDomain;
+    infraDomain = "infra.holochain.org";
+    primaryIpv4 = "5.78.43.185";
+  };
 
-  hostName = ipv4;
+  hostName = config.passthru.primaryIpv4;
+  networking = {
+    inherit (config.passthru) hostName domain;
+  };
 
   nix.settings.max-jobs = 8;
 
@@ -160,7 +165,7 @@ in
     chown named:named /etc/bind/zones
   '';
 
-  environment.etc."bind/zones/${fqdn2domain}.zone" = {
+  environment.etc."bind/zones/${config.passthru.infraDomain}.zone" = {
     enable = true;
     user = "named";
     group = "named";
@@ -168,7 +173,7 @@ in
     text = ''
       $ORIGIN .
       $TTL 60 ; 1 minute
-      ${fqdn2domain} IN SOA ns1.${fqdn2domain}. admin.holochain.org. (
+      ${config.passthru.infraDomain} IN SOA ns1.${config.passthru.infraDomain}. admin.holochain.org. (
                                         2001062504 ; serial
                                         21600      ; refresh (6 hours)
                                         3600       ; retry (1 hour)
@@ -176,43 +181,43 @@ in
                                         86400      ; minimum (1 day)
                                       )
 
-                              NS      ns1.${fqdn2domain}.
-      $ORIGIN ${fqdn2domain}.
-      ns1                                      A       ${ipv4}
-      ${fqdn2domain}.                          A       ${ipv4}
+                              NS      ns1.${config.passthru.infraDomain}.
+      $ORIGIN ${config.passthru.infraDomain}.
+      ns1                                                      A       ${config.passthru.primaryIpv4}
+      ${config.passthru.infraDomain}.                          A       ${config.passthru.primaryIpv4}
 
-      *.${fqdn2domain}.                        CNAME   ${fqdn2domain}.
+      *.${config.passthru.infraDomain}.                        CNAME   ${config.passthru.infraDomain}.
 
-      testing.events.${fqdn2domain}.           A       127.0.0.1
-      hackathons.events.${fqdn2domain}.        A       10.1.3.37
-      hackathon.events.${fqdn2domain}.         A       10.1.3.37
-      amsterdam2023.events.${fqdn2domain}.     A       10.1.3.187
+      testing.events.${config.passthru.infraDomain}.           A       127.0.0.1
+      hackathons.events.${config.passthru.infraDomain}.        A       10.1.3.37
+      hackathon.events.${config.passthru.infraDomain}.         A       10.1.3.37
+      amsterdam2023.events.${config.passthru.infraDomain}.     A       10.1.3.187
 
-      x64-linux-dev-01.dev.${fqdn2domain}.       A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
-      s3.dev.${fqdn2domain}.                     A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
-      s3-console.dev.${fqdn2domain}.             A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
+      x64-linux-dev-01.dev.${config.passthru.infraDomain}.     A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
+      s3.dev.${config.passthru.infraDomain}.                   A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
+      s3-console.dev.${config.passthru.infraDomain}.           A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
 
-      turn-0.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-0.config.services.holochain-turn-server.address}
-      signal-0.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-0.config.services.tx5-signal-server.address}
-      bootstrap-0.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-0.config.services.kitsune-bootstrap.address}
+      turn-0.${config.passthru.infraDomain}.                   A       ${self.nixosConfigurations.turn-0.config.services.holochain-turn-server.address}
+      signal-0.${config.passthru.infraDomain}.                 A       ${self.nixosConfigurations.turn-0.config.services.tx5-signal-server.address}
+      bootstrap-0.${config.passthru.infraDomain}.              A       ${self.nixosConfigurations.turn-0.config.services.kitsune-bootstrap.address}
 
-      turn-1.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-1.config.services.holochain-turn-server.address}
-      signal-1.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-1.config.services.tx5-signal-server.address}
-      bootstrap-1.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-1.config.services.kitsune-bootstrap.address}
+      turn-1.${config.passthru.infraDomain}.                   A       ${self.nixosConfigurations.turn-1.config.services.holochain-turn-server.address}
+      signal-1.${config.passthru.infraDomain}.                 A       ${self.nixosConfigurations.turn-1.config.services.tx5-signal-server.address}
+      bootstrap-1.${config.passthru.infraDomain}.              A       ${self.nixosConfigurations.turn-1.config.services.kitsune-bootstrap.address}
 
-      turn-2.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-2.config.services.holochain-turn-server.address}
-      signal-2.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-2.config.services.tx5-signal-server.address}
-      bootstrap-2.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-2.config.services.kitsune-bootstrap.address}
+      turn-2.${config.passthru.infraDomain}.                   A       ${self.nixosConfigurations.turn-2.config.services.holochain-turn-server.address}
+      signal-2.${config.passthru.infraDomain}.                 A       ${self.nixosConfigurations.turn-2.config.services.tx5-signal-server.address}
+      bootstrap-2.${config.passthru.infraDomain}.              A       ${self.nixosConfigurations.turn-2.config.services.kitsune-bootstrap.address}
 
-      turn-3.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-3.config.services.holochain-turn-server.address}
-      signal-3.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-3.config.services.tx5-signal-server.address}
-      bootstrap-3.${fqdn2domain}.                A       ${self.nixosConfigurations.turn-3.config.services.kitsune-bootstrap.address}
+      turn-3.${config.passthru.infraDomain}.                   A       ${self.nixosConfigurations.turn-3.config.services.holochain-turn-server.address}
+      signal-3.${config.passthru.infraDomain}.                 A       ${self.nixosConfigurations.turn-3.config.services.tx5-signal-server.address}
+      bootstrap-3.${config.passthru.infraDomain}.              A       ${self.nixosConfigurations.turn-3.config.services.kitsune-bootstrap.address}
 
-      monitoring-0.${fqdn2domain}.               A       ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv4}
-      monitoring-0.${fqdn2domain}.               AAAA    ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv6}
-      monitoring.${fqdn2domain}.                 CNAME   monitoring-0.${fqdn2domain}.
+      monitoring-0.${config.passthru.infraDomain}.             A       ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv4}
+      monitoring-0.${config.passthru.infraDomain}.             AAAA    ${self.nixosConfigurations.monitoring-0.config.passthru.primaryIpv6}
+      monitoring.${config.passthru.infraDomain}.               CNAME   monitoring-0.${config.passthru.infraDomain}.
 
-      buildbot-nix-0.${fqdn2domain}.             A       ${self.nixosConfigurations.buildbot-nix-0.config.passthru.primaryIpv4}
+      buildbot-nix-0.${config.passthru.infraDomain}.           A       ${self.nixosConfigurations.buildbot-nix-0.config.passthru.primaryIpv4}
     '';
   };
 
@@ -223,18 +228,18 @@ in
     '';
     zones = [
       {
-        name = fqdn2domain;
+        name = config.passthru.infraDomain;
         allowQuery = [ "any" ];
-        file = "/etc/bind/zones/${fqdn2domain}.zone";
+        file = "/etc/bind/zones/${config.passthru.infraDomain}.zone";
         master = true;
-        extraConfig = "allow-update { key rfc2136key.${fqdn2domain}.; };";
+        extraConfig = "allow-update { key rfc2136key.${config.passthru.infraDomain}.; };";
       }
     ];
   };
 
   # Reload the bind config when the zone file changed
   systemd.services.bind.reloadTriggers = [
-    config.environment.etc."bind/zones/${fqdn2domain}.zone".source
+    config.environment.etc."bind/zones/${config.passthru.infraDomain}.zone".source
   ];
 
   security.acme = {
@@ -243,11 +248,11 @@ in
       email = "admin@holochain.org";
     };
 
-    certs."${fqdn2domain}" = {
-      domain = "*.${fqdn2domain}";
-      extraDomainNames = [ "*.cachix.${fqdn2domain}" ];
+    certs."${config.passthru.infraDomain}" = {
+      domain = "*.${config.passthru.infraDomain}";
+      extraDomainNames = [ "*.cachix.${config.passthru.infraDomain}" ];
       dnsProvider = "rfc2136";
-      credentialsFile = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
+      credentialsFile = "/var/lib/secrets/${config.passthru.infraDomain}-dnskeys.secret";
       # We don't need to wait for propagation since this is a local DNS server
       dnsPropagationCheck = false;
     };
@@ -259,16 +264,16 @@ in
 
   systemd.services.dns-rfc2136-2-conf =
     let
-      dnskeysConfPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.conf";
-      dnskeysSecretPath = "/var/lib/secrets/${fqdn2domain}-dnskeys.secret";
+      dnskeysConfPath = "/var/lib/secrets/${config.passthru.infraDomain}-dnskeys.conf";
+      dnskeysSecretPath = "/var/lib/secrets/${config.passthru.infraDomain}-dnskeys.secret";
     in
     {
       requiredBy = [
-        "acme-${fqdn2domain}.service"
+        "acme-${config.passthru.infraDomain}.service"
         "bind.service"
       ];
       before = [
-        "acme-${fqdn2domain}.service"
+        "acme-${config.passthru.infraDomain}.service"
         "bind.service"
       ];
       unitConfig = {
@@ -282,7 +287,7 @@ in
       script = ''
         mkdir -p /var/lib/secrets
         chmod 755 /var/lib/secrets
-        tsig-keygen rfc2136key.${fqdn2domain} > ${dnskeysConfPath}
+        tsig-keygen rfc2136key.${config.passthru.infraDomain} > ${dnskeysConfPath}
         chown named:root ${dnskeysConfPath}
         chmod 400 ${dnskeysConfPath}
 
@@ -292,7 +297,7 @@ in
         cat > ${dnskeysSecretPath} << EOF
         RFC2136_NAMESERVER='127.0.0.1:53'
         RFC2136_TSIG_ALGORITHM='hmac-sha256.'
-        RFC2136_TSIG_KEY='rfc2136key.${fqdn2domain}'
+        RFC2136_TSIG_KEY='rfc2136key.${config.passthru.infraDomain}'
         RFC2136_TSIG_SECRET='$secret'
         EOF
         chmod 400 ${dnskeysSecretPath}
@@ -303,8 +308,8 @@ in
   users.users.caddy.extraGroups = [ "acme" ];
   services.caddy.enable = true;
   services.caddy.virtualHosts = {
-    "steveej.${fqdn2domain}:443" = {
-      useACMEHost = fqdn2domain;
+    "steveej.${config.passthru.infraDomain}:443" = {
+      useACMEHost = config.passthru.infraDomain;
       extraConfig = ''
         reverse_proxy http://172.24.154.109:80 {
           transport http {
@@ -315,8 +320,8 @@ in
     };
 
     # zippy 1 / emerge-3
-    "dweb1.${fqdn2domain}:443" = {
-      useACMEHost = fqdn2domain;
+    "dweb1.${config.passthru.infraDomain}:443" = {
+      useACMEHost = config.passthru.infraDomain;
       extraConfig = ''
         reverse_proxy http://172.24.135.11:80 {
           transport http {
@@ -328,8 +333,8 @@ in
 
     # stub for redirecting the holochain-ci cachix to a DNS we're in control of.
     # the use-case is that we can now override this DNS at local events and insert a transparent nix cache
-    "cachix.${fqdn2domain}:443" = {
-      useACMEHost = fqdn2domain;
+    "cachix.${config.passthru.infraDomain}:443" = {
+      useACMEHost = config.passthru.infraDomain;
       extraConfig = ''
         respond /api/v1/cache/holochain-ci `{"githubUsername":"","isPublic":true,"name":"holochain-ci","permission":"Read","preferredCompressionMethod":"ZSTD","publicSigningKeys":["holochain-ci.cachix.org-1:5IUSkZc0aoRS53rfkvH9Kid40NpyjwCMCzwRTXy+QN8="],"uri":"https://holochain-ci.cachix.infra.holochain.org"}`
 
@@ -337,35 +342,35 @@ in
       '';
     };
 
-    "holochain-ci.cachix.${fqdn2domain}:443" = {
-      useACMEHost = fqdn2domain;
+    "holochain-ci.cachix.${config.passthru.infraDomain}:443" = {
+      useACMEHost = config.passthru.infraDomain;
       extraConfig = ''
         redir https://holochain-ci.cachix.org{uri}
         # reverse_proxy https://holochain-ci.cachix.org
       '';
     };
 
-    "acme-turn-0.${fqdn2domain}:80" = {
+    "acme-turn-0.${config.passthru.infraDomain}:80" = {
       extraConfig = ''
-        reverse_proxy http://turn-0.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-0.config.services.holochain-turn-server.nginx-http-port}
+        reverse_proxy http://turn-0.${config.passthru.infraDomain}:${builtins.toString self.nixosConfigurations.turn-0.config.services.holochain-turn-server.nginx-http-port}
       '';
     };
 
-    "acme-turn-1.${fqdn2domain}:80" = {
+    "acme-turn-1.${config.passthru.infraDomain}:80" = {
       extraConfig = ''
-        reverse_proxy http://turn-1.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-1.config.services.holochain-turn-server.nginx-http-port}
+        reverse_proxy http://turn-1.${config.passthru.infraDomain}:${builtins.toString self.nixosConfigurations.turn-1.config.services.holochain-turn-server.nginx-http-port}
       '';
     };
 
-    "acme-turn-2.${fqdn2domain}:80" = {
+    "acme-turn-2.${config.passthru.infraDomain}:80" = {
       extraConfig = ''
-        reverse_proxy http://turn-2.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-2.config.services.holochain-turn-server.nginx-http-port}
+        reverse_proxy http://turn-2.${config.passthru.infraDomain}:${builtins.toString self.nixosConfigurations.turn-2.config.services.holochain-turn-server.nginx-http-port}
       '';
     };
 
-    "acme-turn-3.${fqdn2domain}:80" = {
+    "acme-turn-3.${config.passthru.infraDomain}:80" = {
       extraConfig = ''
-        reverse_proxy http://turn-3.${fqdn2domain}:${builtins.toString self.nixosConfigurations.turn-3.config.services.holochain-turn-server.nginx-http-port}
+        reverse_proxy http://turn-3.${config.passthru.infraDomain}:${builtins.toString self.nixosConfigurations.turn-3.config.services.holochain-turn-server.nginx-http-port}
       '';
     };
   };

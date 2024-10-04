@@ -24,7 +24,7 @@
 
   networking.hostName = config.passthru.hostName; # Define your hostname.
 
-  hostName = "${config.passthru.hostName}.${config.passthru.infraDomain}";
+  hostName = config.passthru.primaryIpv4;
 
   nix.settings.max-jobs = 3;
 
@@ -37,16 +37,11 @@
   system.stateVersion = "24.05";
 
   passthru = {
-    fqdn = "${config.passthru.hostName}.${config.passthru.infraDomain}";
+    fqdn = "${config.passthru.hostName}.${config.passthru.domain}";
     hostName = "monitoring-0";
-    infraDomain =
-      (builtins.elemAt
-        (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
-        0
-      ).name;
+    domain = self.specialArgs.infraDomain;
     primaryIpv4 = "135.181.110.69";
     primaryIpv6 = "2a01:4f9:c012:fd91::1";
-
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -76,8 +71,8 @@
         server.http_port = 2432;
         date_formats.default_timezone = "utc";
         server = {
-          domain = config.hostName;
-          root_url = "https://${config.hostName}";
+          domain = config.passthru.fqdn;
+          root_url = "https://${config.passthru.fqdn}";
         };
       };
       provision = {
@@ -128,8 +123,8 @@
       recommendedTlsSettings = true;
       proxyTimeout = "600s";
       virtualHosts = {
-        "${config.hostName}" = {
-          serverAliases = [ "monitoring.${config.passthru.infraDomain}" ];
+        "${config.passthru.fqdn}" = {
+          serverAliases = [ "monitoring.${config.passthru.domain}" ];
           default = true;
           forceSSL = true;
           enableACME = true;
