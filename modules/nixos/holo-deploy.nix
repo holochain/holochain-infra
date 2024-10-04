@@ -16,6 +16,11 @@
       type = lib.types.str;
       description = "IP addres or host name to connect to the host";
     };
+
+    deploySkipAll = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+    };
   };
 
   config = {

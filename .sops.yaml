@@ -15,6 +15,11 @@ keys:
   - &tfgrid-shared age194xfar0gfdauu2dcxwqk9lh9d0vjfrzzs2ke0ppanpwv9eqxzs2qp7q7cn
   - &buildbot-nix-0 age1w99tzxl88z7ct3ekpatl62wvhrx29pg450qmn822dpmz0evhxqxqy3scux
   - &monitoring-0 age1cpcwv2wlszwase38zpngk6ld3vx8ev8jsv38m9pp74jvlutvxpsqt49yrr
+  - &turn-0 age1yl2l760zjsxvrct97gtwfkfjlvhg3vkkwpud2usc35ktqnzhuurq3an2ns
+  - &turn-1 age16thgapywna9zu3r87hfgvw097lq8r9z5rxunfjqmttcnpgxxcflqxkjycn
+  - &turn-2 age1zxmut50nxveptmfyjw5rd9jfdva54p92fj02zekjneq57k626unqysq707
+  - &sbd-0_main_infra_holo_host age1lxmwwjmvfzl6uvfe2xs9m8ppdf604acph0u88pqwhuy7wvuep4sq3cjgw0
+  - &stun-0_main_infra_holo_host age162clfdx3zc7qr5au7gyxmhs44lfezt8qzpf3a2ppqh5r628enf0q70prc0
 
 creation_rules:
   - path_regex: ^(.+/|)secrets/[^/]+$
@@ -46,6 +51,13 @@ creation_rules:
           - *monitoring-0
           - *buildbot-nix-0
           - *x64-linux-dev-01
+          - *dweb-reverse-proxy
+          - *linux-builder-01
+          - *turn-0
+          - *turn-1
+          - *turn-2
+          - *sbd-0_main_infra_holo_host
+          - *stun-0_main_infra_holo_host
   - path_regex: ^secrets/linux-builder-01/[^/]+$
     key_groups:
       - age:

@@ -27,11 +27,23 @@
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
+
+    (self + "/modules/nixos/shared-monitoring-clients.nix")
   ];
 
-  networking.hostName = "linux-builder-01"; # Define your hostname.
+  passthru = {
+    fqdn = "${config.passthru.hostName}.${config.passthru.domain}";
 
-  hostName = "95.217.193.35";
+    domain = self.specialArgs.infraDomain;
+    hostName = "linux-builder-01"; # Define your hostname.
+
+    primaryIpv4 = "95.217.193.35";
+  };
+
+  networking = {
+    inherit (config.passthru) hostName domain;
+  };
+  hostName = config.passthru.primaryIpv4;
 
   nix.settings.max-jobs = 32;
 

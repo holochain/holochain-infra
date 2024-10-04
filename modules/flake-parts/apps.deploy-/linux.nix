@@ -4,9 +4,11 @@
   perSystem =
     { pkgs, ... }:
     let
+      prefix = "deploy-";
+      prefixDirect = "deploy-direct";
       mkLinuxDeploy =
         { attrName, hostName }:
-        pkgs.writeShellScript "deploy-${hostName}" ''
+        pkgs.writeShellScript "${prefix}${hostName}" ''
           set -Eeo pipefail
           export PATH="${
             lib.makeBinPath (
@@ -26,7 +28,7 @@
 
       mkLinuxDeployApp =
         attrName: config:
-        lib.nameValuePair "deploy-${attrName}" {
+        lib.nameValuePair "${prefix}${attrName}" {
           type = "app";
           program = builtins.toString (mkLinuxDeploy {
             inherit attrName;
@@ -36,7 +38,7 @@
 
       mkLinuxDeployDirect =
         { attrName, hostName }:
-        pkgs.writeShellScript "deploy-direct-${hostName}" ''
+        pkgs.writeShellScript "${prefixDirect}${hostName}" ''
           set -Eeo pipefail
           export PATH="${
             lib.makeBinPath (
@@ -59,18 +61,62 @@
 
       mkLinuxDeployDirectApp =
         attrName: config:
-        lib.nameValuePair "deploy-direct-${attrName}" {
+        lib.nameValuePair "${prefixDirect}${attrName}" {
           type = "app";
           program = builtins.toString (mkLinuxDeployDirect {
             inherit attrName;
             inherit (config.config) hostName;
           });
         };
+
+      configurations = self.nixosConfigurations;
+      individual = lib.mapAttrs' mkLinuxDeployApp configurations;
+      individualDirect = lib.mapAttrs' mkLinuxDeployDirectApp configurations;
     in
     {
       config.apps =
-        (lib.mapAttrs' mkLinuxDeployApp self.nixosConfigurations)
-        // (lib.mapAttrs' mkLinuxDeployDirectApp self.nixosConfigurations)
-        // { };
+        individual
+        // individualDirect
+        // {
+          "${prefix}linux-all" = {
+            type = "app";
+            program = builtins.toString (
+              pkgs.writeShellScript "${prefix}all" (
+                builtins.concatStringsSep "\n" (
+                  lib.mapAttrsToList
+                    (name: value: ''
+                      echo \# ${name}: running ${value.program} ''${@}
+                      ${value.program} ''${@}
+                    '')
+                    (
+                      lib.filterAttrs (
+                        name: _: !configurations.${builtins.replaceStrings [ prefix ] [ "" ] name}.config.deploySkipAll
+                      ) individual
+                    )
+                )
+              )
+            );
+          };
+          "${prefixDirect}linux-all" = {
+            type = "app";
+            program = builtins.toString (
+              pkgs.writeShellScript "${prefixDirect}-all" (
+                builtins.concatStringsSep "\n" (
+                  lib.mapAttrsToList
+                    (name: value: ''
+                      echo \# ${name}: running ${value.program} ''${@}
+                      ${value.program} ''${@}
+                    '')
+                    (
+                      lib.filterAttrs (
+                        name: _:
+                        !configurations.${builtins.replaceStrings [ prefixDirect ] [ "" ] name}.config.deploySkipAll
+                      ) individualDirect
+                    )
+                )
+              )
+            );
+          };
+        };
     };
 }

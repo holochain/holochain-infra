@@ -10,6 +10,8 @@ let
   hostName = "tfgrid-base";
 in
 {
+  deploySkipAll = true;
+
   imports = [
     inputs.srvos.nixosModules.server
     inputs.srvos.nixosModules.mixins-terminfo

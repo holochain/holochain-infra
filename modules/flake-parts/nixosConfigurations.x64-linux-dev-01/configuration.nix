@@ -66,7 +66,7 @@
   ];
 
   networking = {
-    hostName = config.passthru.hostName; # Define your hostname.
+    inherit (config.passthru) hostName domain;
     useNetworkd = true;
 
     nat.enable = true;
@@ -88,13 +88,9 @@
   hostName = config.passthru.fqdn;
 
   passthru = {
-    fqdn = "${config.passthru.hostName}.dev.${config.passthru.infraDomain}";
-    infraDomain =
-      (builtins.elemAt
-        (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
-        0
-      ).name;
+    fqdn = "${config.passthru.hostName}.dev.${config.passthru.domain}";
     hostName = "x64-linux-dev-01";
+    domain = self.specialArgs.infraDomain;
     primaryIpv4 = "135.181.118.162";
   };
 
