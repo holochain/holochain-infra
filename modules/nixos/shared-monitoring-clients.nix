@@ -72,6 +72,9 @@
   };
 
   system.configurationRevision = self.sourceInfo.rev or (self.sourceInfo.dirtyRev or "dirty");
-  system.image.id = partName;
+  system.image.id = {
+    name = partName;
+    branch = if config.services.self-deploy.enable then config.services.self-deploy.branch else null;
+  };
   system.image.version = config.system.configurationRevision;
 }
