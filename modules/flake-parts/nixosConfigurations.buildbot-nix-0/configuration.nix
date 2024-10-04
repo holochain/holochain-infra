@@ -43,25 +43,19 @@ in
   system.stateVersion = "24.05";
 
   passthru = {
-    fqdn = "${config.passthru.hostName}.${config.passthru.infraDomain}";
-    infraDomain =
-      (builtins.elemAt
-        (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
-        0
-      ).name;
+    fqdn = "${config.passthru.hostName}.${config.passthru.domain}";
+
+    domain = self.specialArgs.infraDomain;
     hostName = "buildbot-nix-0";
+
     primaryIpv4 = "135.181.114.173";
     primaryIpv6 = "2a01:4f9:4b:1a93::1/64";
   };
 
-  networking.hostName = config.passthru.hostName; # Define your hostname.
-
-  hostName = "${config.passthru.hostName}.${
-    (builtins.elemAt
-      (builtins.attrValues self.nixosConfigurations.dweb-reverse-tls-proxy.config.services.bind.zones)
-      0
-    ).name
-  }";
+  networking = {
+    inherit (config.passthru) hostName domain;
+  };
+  hostName = config.passthru.primaryIpv4;
 
   nix.settings.max-jobs = 12;
 

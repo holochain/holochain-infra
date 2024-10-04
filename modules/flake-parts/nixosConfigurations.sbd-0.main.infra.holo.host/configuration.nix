@@ -5,13 +5,7 @@
   pkgs,
   ...
 }:
-let
-  # https://console.hetzner.cloud/projects/1982619/servers/47746862/overview
-  hostName = "sbd-0";
-  domain = "main.infra.holo.host";
-  ipv4 = "65.108.241.120";
-  fqdn = "${config.networking.hostName}.${config.networking.domain}";
-in
+# https://console.hetzner.cloud/projects/1982619/servers/47746862/overview
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -32,11 +26,19 @@ in
     self.nixosModules.sbd-server
   ];
 
-  networking = {
-    inherit hostName domain;
+  passthru = {
+    fqdn = "${config.passthru.hostName}.${config.passthru.domain}";
+
+    domain = "main.infra.holo.host";
+    hostName = "sbd-0";
+
+    primaryIpv4 = "65.108.241.120";
   };
 
-  hostName = ipv4;
+  networking = {
+    inherit (config.passthru) hostName domain;
+  };
+  hostName = "${config.passthru.primaryIpv4}";
 
   nix.settings.max-jobs = 8;
 
@@ -50,8 +52,8 @@ in
 
   services.sbd-server = {
     enable = true;
-    url = fqdn;
-    address = ipv4;
+    url = config.passthru.fqdn;
+    address = config.passthru.primaryIpv4;
     tls-port = 443;
     trusted-ip-header = "cf-connecting-ip";
 

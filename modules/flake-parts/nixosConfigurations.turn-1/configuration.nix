@@ -5,18 +5,6 @@
   pkgs,
   ...
 }:
-let
-  hostName = "turn-1";
-
-  turnIpv4 = "65.109.5.38";
-  turnFqdn = "${hostName}.infra.holochain.org";
-
-  signalIpv4 = "95.217.243.165";
-  signalFqdn = "signal-1.infra.holochain.org";
-
-  bootstrapIpv4 = "65.109.242.27";
-  bootstrapFqdn = "bootstrap-1.infra.holochain.org";
-in
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -38,9 +26,27 @@ in
     self.nixosModules.kitsune-bootstrap
   ];
 
-  networking.hostName = hostName; # Define your hostname.
+  passthru = {
+    fqdn = "${config.passthru.hostName}.${config.passthru.domain}";
 
-  hostName = turnIpv4;
+    domain = self.specialArgs.infraDomain;
+    hostName = "turn-1";
+
+    primaryIpv4 = "65.109.5.38";
+
+    turnIpv4 = config.passthru.primaryIpv4;
+    signalIpv4 = "95.217.243.165";
+    bootstrapIpv4 = "65.109.242.27";
+
+    turnFqdn = "${config.passthru.hostName}.${config.passthru.domain}";
+    signalFqdn = "signal-1.${config.passthru.domain}";
+    bootstrapFqdn = "bootstrap-1.${config.passthru.domain}";
+  };
+
+  hostName = config.passthru.primaryIpv4;
+  networking = {
+    inherit (config.passthru) hostName domain;
+  };
 
   nix.settings.max-jobs = 8;
 
@@ -53,16 +59,16 @@ in
   # FIXME: is there a better way to do this?
   environment.etc."systemd/network/10-cloud-init-eth0.network.d/00-floating-ips.conf".text = ''
     [Network]
-    Address = ${signalIpv4}/32
-    Address = ${bootstrapIpv4}/32
+    Address = ${config.passthru.signalIpv4}/32
+    Address = ${config.passthru.bootstrapIpv4}/32
   '';
 
   system.stateVersion = "23.11";
 
   services.holochain-turn-server = {
     enable = true;
-    url = turnFqdn;
-    address = turnIpv4;
+    url = config.passthru.turnFqdn;
+    address = config.passthru.turnIpv4;
     username = "test";
     credential = "test";
     verbose = false;
@@ -74,10 +80,10 @@ in
 
   services.tx5-signal-server = {
     enable = true;
-    address = signalIpv4;
+    address = config.passthru.signalIpv4;
     port = 8443;
     tls-port = 443;
-    url = signalFqdn;
+    url = config.passthru.signalFqdn;
     iceServers = [
       { urls = [ "stun:${config.services.holochain-turn-server.url}:80" ]; }
       {
@@ -94,9 +100,9 @@ in
 
   services.kitsune-bootstrap = {
     enable = true;
-    address = bootstrapIpv4;
+    address = config.passthru.bootstrapIpv4;
     port = 8444;
     tls-port = 443;
-    url = bootstrapFqdn;
+    url = config.passthru.bootstrapFqdn;
   };
 }
