@@ -9,6 +9,8 @@ let
   svcName = "populate-cache";
 in
 {
+  deploySkipAll = true;
+
   imports = [
     self.nixosModules.holo-users
 

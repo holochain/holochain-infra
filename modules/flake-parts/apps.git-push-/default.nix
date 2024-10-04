@@ -3,9 +3,10 @@
   perSystem =
     { pkgs, ... }:
     let
+      prefix = "git-push-";
       mkGitPush =
         { attrName, hostName }:
-        pkgs.writeShellScript "git-push-${hostName}" ''
+        pkgs.writeShellScript "${prefix}${hostName}" ''
           set -Eeou pipefail
           export PATH="${lib.makeBinPath (with pkgs; [ git ])}:$PATH"
           set -x
@@ -20,15 +21,37 @@
 
       mkGitPushApp =
         attrName: config:
-        lib.nameValuePair "git-push-${attrName}" {
+        lib.nameValuePair "${prefix}${attrName}" {
           type = "app";
           program = builtins.toString (mkGitPush {
             inherit attrName;
             inherit (config.config) hostName;
           });
         };
+      configurations = self.darwinConfigurations // self.nixosConfigurations;
+      individual = lib.mapAttrs' mkGitPushApp configurations;
     in
     {
-      config.apps = lib.mapAttrs' mkGitPushApp (self.darwinConfigurations // self.nixosConfigurations);
+      config.apps = individual // {
+        "${prefix}all" = {
+          type = "app";
+          program = builtins.toString (
+            pkgs.writeShellScript "${prefix}all" (
+              builtins.concatStringsSep "\n" (
+                lib.mapAttrsToList
+                  (name: value: ''
+                    echo \# ${name}: running ${value.program} ''${@}
+                    ${value.program} ''${@}
+                  '')
+                  (
+                    lib.filterAttrs (
+                      name: _: !configurations.${builtins.replaceStrings [ prefix ] [ "" ] name}.config.deploySkipAll
+                    ) individual
+                  )
+              )
+            )
+          );
+        };
+      };
     };
 }

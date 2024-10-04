@@ -45,8 +45,25 @@
             inherit (config.config) hostName deployUser;
           });
         };
+
+      individual = lib.mapAttrs' mkDarwinDeployApp self.darwinConfigurations;
     in
     {
-      config.apps = lib.mapAttrs' mkDarwinDeployApp self.darwinConfigurations;
+      config.apps = individual // {
+        deploy-darwin-all = {
+          type = "app";
+          program = builtins.toString (
+            pkgs.writeShellScript "deploy-all" (
+              builtins.concatStringsSep "\n" (
+                lib.mapAttrsToList (name: value: ''
+                  echo \# ${name}: running ${value.program} ''${@}
+                  ${value.program} ''${@}
+                '') individual
+              )
+            )
+          );
+        };
+
+      };
     };
 }
