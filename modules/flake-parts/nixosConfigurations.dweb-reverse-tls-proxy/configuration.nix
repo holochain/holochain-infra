@@ -22,6 +22,8 @@ in
     self.nixosModules.holo-users
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
+
+    (self + "/modules/nixos/shared-monitoring-clients.nix")
   ];
 
   networking.hostName = "dweb-reverse-tls-proxy"; # Define your hostname.

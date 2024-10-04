@@ -26,6 +26,8 @@ in
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
 
+    (self + "/modules/nixos/shared-monitoring-clients.nix")
+
     self.nixosModules.holochain-turn-server
   ];
 

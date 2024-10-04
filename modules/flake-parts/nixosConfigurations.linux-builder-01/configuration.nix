@@ -27,6 +27,8 @@
     ../../nixos/shared.nix
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
+
+    (self + "/modules/nixos/shared-monitoring-clients.nix")
   ];
 
   networking.hostName = "linux-builder-01"; # Define your hostname.
