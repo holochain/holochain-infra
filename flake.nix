@@ -219,9 +219,19 @@
     inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       # auto import all nix code from `./modules`
-      imports = map (m: "${./.}/modules/flake-parts/${m}") (
-        builtins.attrNames (builtins.readDir ./modules/flake-parts)
-      );
+      imports = map (
+        name:
+        let
+          lib = inputs.nixpkgs.lib;
+          partFile = "${./.}/modules/flake-parts/${name}";
+          part = import partFile;
+          # some of the parts are just a set, and in order to inject a new function argument we construct a function from them.
+          partFn = if (!builtins.isFunction part) then _: part else part;
+          # make the part name available to each part via the specialArgs mechanism.
+          partFn' = args: (partFn (lib.recursiveUpdate args { self.specialArgs.partName = name; }));
+        in
+        partFn'
+      ) (builtins.attrNames (builtins.readDir ./modules/flake-parts));
 
       systems = [
         "aarch64-darwin"

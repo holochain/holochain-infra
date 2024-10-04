@@ -1,4 +1,10 @@
-{ self, lib, ... }:
+{
+  self,
+  lib,
+  config,
+  ...
+}:
+
 {
   options = {
     deployUser = lib.mkOption {

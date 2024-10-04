@@ -186,9 +186,9 @@ in
       hackathon.events.${fqdn2domain}.         A       10.1.3.37
       amsterdam2023.events.${fqdn2domain}.     A       10.1.3.187
 
-      x64-linux-dev-01.dev.${fqdn2domain}.       A       ${self.nixosConfigurations.x64-linux-dev-01.config.hostName}
-      s3.dev.${fqdn2domain}.                     A       ${self.nixosConfigurations.x64-linux-dev-01.config.hostName}
-      s3-console.dev.${fqdn2domain}.             A       ${self.nixosConfigurations.x64-linux-dev-01.config.hostName}
+      x64-linux-dev-01.dev.${fqdn2domain}.       A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
+      s3.dev.${fqdn2domain}.                     A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
+      s3-console.dev.${fqdn2domain}.             A       ${self.nixosConfigurations.x64-linux-dev-01.config.passthru.primaryIpv4}
 
       turn-0.${fqdn2domain}.                     A       ${self.nixosConfigurations.turn-0.config.services.holochain-turn-server.address}
       signal-0.${fqdn2domain}.                   A       ${self.nixosConfigurations.turn-0.config.services.tx5-signal-server.address}
