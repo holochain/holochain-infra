@@ -264,6 +264,7 @@ in
   nix.settings.system-features = [
     "kvm"
     "nixos-test"
+    "big-parallel"
   ];
 
   sops.secrets.holo-host-github-environment-secrets = { };
