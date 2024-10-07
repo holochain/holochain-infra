@@ -314,11 +314,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1710724748,
-        "narHash": "sha256-aXlifKr6Brg0SBUBgRNEBaZf3JLUeGhM9BX2gam+vvo=",
+        "lastModified": 1728109432,
+        "narHash": "sha256-wmbErh8FG7dRKOtMMpHUqDtFjeqt9Zjx4zssSeTalwU=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "c09c3a9639690f94ddff44c3dd25c85602e5aeb2",
+        "rev": "48ebb577855fb2398653f033b3b2208a9249203d",
         "type": "github"
       },
       "original": {
@@ -1043,22 +1043,6 @@
         "type": "github"
       }
     },
-    "nixos-2305": {
-      "locked": {
-        "lastModified": 1686478675,
-        "narHash": "sha256-EBm0oKY+B+BF/wQzegHCLPZQ2BxfgRSfEJhAd9N2XyA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "207e4680b5ffe797038955949ab20ddc4a31c835",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "release-23.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixos-anywhere": {
       "inputs": {
         "disko": [
@@ -1067,8 +1051,8 @@
         "flake-parts": [
           "flake-parts"
         ],
-        "nixos-2305": "nixos-2305",
         "nixos-images": "nixos-images",
+        "nixos-stable": "nixos-stable",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -1077,11 +1061,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1686482719,
-        "narHash": "sha256-1GdZdNru73F5K+xHkfC6qDidtHYySeGP+OmWUMyS2Os=",
+        "lastModified": 1727531568,
+        "narHash": "sha256-lt8fmizvl6iRDNz7/Yqor1MmU5fcUyv3oajtUsUmthA=",
         "owner": "numtide",
         "repo": "nixos-anywhere",
-        "rev": "bca7792e794a6b1864d7641063a5aebc0c9268ec",
+        "rev": "b6168ba67a8fad0636b5111a906dfbdf3abe2dee",
         "type": "github"
       },
       "original": {
@@ -1113,9 +1097,9 @@
     },
     "nixos-images": {
       "inputs": {
-        "nixos-2305": [
+        "nixos-stable": [
           "nixos-anywhere",
-          "nixos-2305"
+          "nixos-stable"
         ],
         "nixos-unstable": [
           "nixos-anywhere",
@@ -1123,16 +1107,32 @@
         ]
       },
       "locked": {
-        "lastModified": 1686466496,
-        "narHash": "sha256-HYSUVZ85+POkLOo1Om7yw1870xqwJp3ABu+Fz7hBJY8=",
+        "lastModified": 1727367213,
+        "narHash": "sha256-7O4pi8MmcJpA0nYUQkdolvKGyu6zNjf2gFYD1Q0xppc=",
         "owner": "nix-community",
         "repo": "nixos-images",
-        "rev": "13e5db35e8b5a646d0efa81ff1dd003336ffe65f",
+        "rev": "3e7978bab153f39f3fc329ad346d35a8871420f7",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "nixos-images",
+        "type": "github"
+      }
+    },
+    "nixos-stable": {
+      "locked": {
+        "lastModified": 1727264057,
+        "narHash": "sha256-KQPI8CTTnB9CrJ7LrmLC4VWbKZfljEPBXOFGZFRpxao=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "759537f06e6999e141588ff1c9be7f3a5c060106",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-24.05",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },
