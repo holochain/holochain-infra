@@ -12,8 +12,7 @@ keys:
   - &dweb-reverse-proxy age1ygzy9clj0xavlmau0ham7j5nw8yy4z0q8hvkfpdgwc4fcr8nufpqrdxgvx
   - &linux-builder-01 age1kxkr407jz77ljrhgsfwfmv2yvqjprc6unvx389xp2f48xj8r0vqq2wew5r
   - &x64-linux-dev-01 age1vlxerq9j9jd00qvxj2gxds9re4dz2djqmllkhzsf44gz9a5y4ghs7807h9
-  # TODO: replace this during the machine's setup
-  - &linux-builder-2 age1kxwxjpk0d8uepglyk63vdht4ct5vhf6n3mml86596a3ut9wfhassfjgh5w
+  - &linux-builder-2 age1w99tzxl88z7ct3ekpatl62wvhrx29pg450qmn822dpmz0evhxqxqy3scux
   - &tfgrid-shared age194xfar0gfdauu2dcxwqk9lh9d0vjfrzzs2ke0ppanpwv9eqxzs2qp7q7cn
   - &buildbot-nix-0 age1eel2m3jsanly3np5anytwyjze70v509mje2yu562e2k70ctdsvrqj23x20
   - &monitoring-0 age1cpcwv2wlszwase38zpngk6ld3vx8ev8jsv38m9pp74jvlutvxpsqt49yrr

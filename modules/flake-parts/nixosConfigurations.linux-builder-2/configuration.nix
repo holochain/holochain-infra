@@ -7,6 +7,7 @@
   ...
 }:
 # Hetzner AX41-NVMe #2491007
+# BIOS/Legacy - came with this setting from the factory
 {
   imports = [
     inputs.disko.nixosModules.disko
@@ -52,14 +53,12 @@
   nix.settings.max-jobs = 16;
 
   roles.nix-remote-builder.schedulerPublicKeys = [
-    # TODO: is this needed?
+    # we shouldn't allow anything non-test related here because the benchmark workloads on this builder expect to have exclusive hardware access
   ];
 
   boot.loader.grub = {
     efiSupport = false;
   };
-  # boot.loader.systemd-boot.enable = true;
-  # boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   systemd.network.networks."10-uplink".networkConfig.Address = config.passthru.primaryIpv6;
