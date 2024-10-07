@@ -24,7 +24,6 @@
         url = "https://github.com/holochain/wind-tunnel";
       };
     }
-    self.nixosModules.nix-build-distributor
 
     inputs.sops-nix.nixosModules.sops
 
