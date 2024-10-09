@@ -34,7 +34,36 @@
     self.nixosModules.shared-monitoring-clients
 
     self.nixosModules.zerotier
-    { zerotier-stealth.enable = true; }
+    {
+      zerotier-stealth.enable = true;
+      zerotier-stealth.autostart = false;
+
+      # zerotier makes outgoing requests to private ranges, this trips up the detection system at hetzner.
+      networking.nftables = {
+        enable = true;
+        tables.filter.family = "inet";
+        tables.filter.content =
+          let
+            uplinkInterface = "enp35s0";
+            privateDaddrs = builtins.concatStringsSep "," [
+              "192.168.0.0/16"
+              "10.0.0.0/8"
+              "100.64.0.0/10"
+              "172.16.0.0/12"
+              "192.0.0.0/24"
+              "198.18.0.0/15"
+            ];
+          in
+          ''
+            chain output {
+              type filter hook output priority 0;
+              policy accept;
+
+              oifname ${uplinkInterface} ip daddr { ${privateDaddrs} } counter drop
+            }
+          '';
+      };
+    }
   ];
 
   passthru = {
