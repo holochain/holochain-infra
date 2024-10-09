@@ -21,7 +21,7 @@
     ../../nixos/shared-nix-settings.nix
     self.nixosModules.ps1
 
-    (self + "/modules/nixos/shared-monitoring-clients.nix")
+    self.nixosModules.shared-monitoring-clients
 
     self.nixosModules.sbd-server
   ];

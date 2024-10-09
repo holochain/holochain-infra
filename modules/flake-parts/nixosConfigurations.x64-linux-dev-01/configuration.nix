@@ -23,7 +23,7 @@
     ../../nixos/shared-nix-settings.nix
     ../../nixos/shared-linux.nix
 
-    (self + "/modules/nixos/shared-monitoring-clients.nix")
+    self.nixosModules.shared-monitoring-clients
 
     {
       home-manager.users.dev =
