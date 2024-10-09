@@ -36,7 +36,7 @@
     self.nixosModules.zerotier
     {
       zerotier-stealth.enable = true;
-      zerotier-stealth.autostart = false;
+      zerotier-stealth.autostart = true;
 
       # zerotier makes outgoing requests to private ranges, this trips up the detection system at hetzner.
       networking.nftables = {
