@@ -32,6 +32,9 @@
     ../../nixos/shared-linux.nix
 
     self.nixosModules.shared-monitoring-clients
+
+    self.nixosModules.zerotier
+    { zerotier-stealth.enable = true; }
   ];
 
   passthru = {

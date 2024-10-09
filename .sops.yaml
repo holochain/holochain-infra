@@ -66,12 +66,16 @@ creation_rules:
           - *linux-builder-01
           - *age_steveej
           - *age_r-vdp
+        pgp:
+          - *steveej
   - path_regex: ^secrets/linux-builder-2/[^/]+$
     key_groups:
       - age:
           - *linux-builder-2
           - *age_steveej
           - *age_r-vdp
+        pgp:
+          - *steveej
   - path_regex: ^secrets/x64-linux-dev-01/[^/]+$
     key_groups:
       - pgp:

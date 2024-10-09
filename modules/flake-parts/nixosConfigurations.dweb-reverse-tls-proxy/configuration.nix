@@ -89,47 +89,6 @@
 
   system.stateVersion = "23.11";
 
-  ### ZeroTier
-  services.zerotierone = {
-    enable = lib.mkDefault true;
-  };
-
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (builtins.trace (lib.getName pkg) (lib.getName pkg)) [
-      "zerotierone"
-      "nomad"
-    ];
-
-  sops.secrets.zerotieroneNetworks = {
-    sopsFile = ../../../secrets/dweb-reverse-tls-proxy/zerotier.txt;
-    format = "binary";
-  };
-  systemd.services.zerotieroneSecretNetworks = {
-    enable = true;
-    requiredBy = [ "zerotierone.service" ];
-    partOf = [ "zerotierone.service" ];
-
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = true;
-
-    script =
-      let
-        secret = config.sops.secrets.zerotieroneNetworks;
-      in
-      ''
-        # include the secret's hash to trigger a restart on change
-        # ${builtins.hashString "sha256" (builtins.toJSON secret)}
-
-        ${config.systemd.services.zerotierone.preStart}
-
-        rm -rf /var/lib/zerotier-one/networks.d/*.conf
-        for network in `grep -v '#' ${secret.path}`; do
-          touch /var/lib/zerotier-one/networks.d/''${network}.conf
-        done
-      '';
-  };
-
   networking.firewall.allowedTCPPorts = [
     53
     80
