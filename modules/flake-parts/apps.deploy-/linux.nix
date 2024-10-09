@@ -5,7 +5,7 @@
     { pkgs, ... }:
     let
       prefix = "deploy-";
-      prefixDirect = "deploy-direct";
+      prefixDirect = "deploy-direct-";
       mkLinuxDeploy =
         { attrName, hostName }:
         pkgs.writeShellScript "${prefix}${hostName}" ''
@@ -23,7 +23,7 @@
 
           ssh root@${hostName} nixos-rebuild \
             -j4 \
-            "''${1:-switch}" --refresh --flake github:holochain/holochain-infra/deploy/${attrName}#'"${attrName}"'
+            "''${1:-switch}" --refresh --flake "''${DEPLOY_FLAKE:-github:holochain/holochain-infra/deploy/${attrName}}#${attrName}"
         '';
 
       mkLinuxDeployApp =
@@ -52,7 +52,7 @@
           }:$PATH"
           set -uxeE -o pipefail
 
-          closure_path=$(nix build --print-out-paths --refresh github:holochain/holochain-infra/deploy/${attrName}#nixosConfigurations.${attrName}.config.system.build.toplevel)
+          closure_path=$(nix build --print-out-paths --refresh "''${DEPLOY_FLAKE:-github:holochain/holochain-infra/deploy/${attrName}}"#nixosConfigurations.${attrName}.config.system.build.toplevel)
 
           nix-copy-closure --to root@${hostName} $closure_path
 
