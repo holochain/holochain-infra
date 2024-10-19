@@ -329,29 +329,7 @@
                 )
               ) (builtins.attrNames config.passthru.buildbot-secrets)
             );
-          command = [
-            (builtins.toString (
-              pkgs.writeShellScript "sign-and-upload" ''
-                set -Eu -o pipefail
-
-                env
-
-                ls -lha ''${SECRET_cacheHoloHost2public}
-                cat ''${SECRET_cacheHoloHost2public}
-
-                echo ''${SECRET_cacheHoloHost2public} > public-key
-                cat public-key
-
-                if [[ "$PROP_owners" = "['steveej']" ]]; then
-                  echo only steveej owns this change.
-                else
-                  echo "$PROP_owners" own this change.
-                fi
-
-                exec ${lib.getExe' self.packages.${pkgs.system}.postbuildstepper "postbuildstepper"} "$@"
-              ''
-            ))
-          ];
+          command = [ (lib.getExe' self.packages.${pkgs.system}.postbuildstepper "postbuildstepper") ];
         }
 
       ];

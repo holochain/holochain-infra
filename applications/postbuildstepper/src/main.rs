@@ -2,6 +2,19 @@ use anyhow::{bail, Context};
 use log::{debug, info, trace};
 use std::collections::{HashMap, HashSet};
 
+/*
+set -Eu -o pipefail
+
+env
+
+ls -lha ''${SECRET_cacheHoloHost2public}
+cat ''${SECRET_cacheHoloHost2public}
+
+echo ''${SECRET_cacheHoloHost2public} > public-key
+cat public-key
+
+*/
+
 fn main() -> anyhow::Result<()> {
     env_logger::builder()
         .filter_level(log::LevelFilter::Debug)
