@@ -49,8 +49,8 @@
     };
 
     buildbot-secrets = {
-      "cache.holo.host-2-secret" = "/var/lib/secrets/cache.holo.host-2/secret";
-      "cache.holo.host-2-public" = "/var/lib/secrets/cache.holo.host-2/public";
+      "cacheHoloHost2secret" = "/var/lib/secrets/cache.holo.host-2/secret";
+      "cacheHoloHost2public" = "/var/lib/secrets/cache.holo.host-2/public";
     };
   };
 
