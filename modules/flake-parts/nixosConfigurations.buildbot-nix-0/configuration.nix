@@ -365,14 +365,13 @@
   ];
 
   sops.secrets.holo-host-github-environment-secrets = { };
-  sops.secrets.holo-host-aws-environment-credentials = { };
+  sops.secrets.holo-host-aws-shared-credentials = { };
   systemd.services.nix-daemon.serviceConfig = {
     Environment = [ "AWS_SHARED_CREDENTIALS_FILE=%d/AWS_SHARED_CREDENTIALS_FILE" ];
-    LoadCredential = [ "AWS_SHARED_CREDENTIALS_FILE:/etc/secrets/aws/credentials" ];
-
-    EnvironmentFile = [
-      config.sops.secrets.holo-host-github-environment-secrets.path
-      config.sops.secrets.holo-host-aws-environment-credentials.path
+    LoadCredential = [
+      "AWS_SHARED_CREDENTIALS_FILE:${config.sops.secrets.holo-host-aws-shared-credentials.path}"
     ];
+
+    EnvironmentFile = [ config.sops.secrets.holo-host-github-environment-secrets.path ];
   };
 }
