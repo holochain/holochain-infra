@@ -111,6 +111,7 @@
 
           linux-builder-01-ping-buildmachines = mkPingBuildmachines { builderName = "linux-builder-01"; };
 
+          # TODO: extract this into modules/flake-parts/packages.postbuildstepper, including the source code
           postbuildstepper = lib.makeOverridable craneLib.buildPackage (
             postbuildstepperArgs // { cargoArtifacts = postbuildstepperDeps; }
           );
