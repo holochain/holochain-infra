@@ -49,10 +49,11 @@
           postbuildstepperArgs =
             let
               src = craneLib.cleanCargoSource self;
-              nesting = "applications/postbuildstepper";
+              pname = "postbuildstepper";
+              nesting = "applications/${pname}";
             in
             {
-              pname = "postbuildstepper";
+              inherit pname;
               inherit src;
 
               cargoLock = src + "/${nesting}/Cargo.lock";
