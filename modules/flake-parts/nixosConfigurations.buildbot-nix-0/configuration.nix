@@ -348,7 +348,7 @@
                   echo "$PROP_owners" own this change.
                 fi
 
-                exec ${builtins.toString (lib.getExe' self.packages.${pkgs.system}.postbuildstepper)} "$@"
+                exec ${lib.getExe' self.packages.${pkgs.system}.postbuildstepper "postbuildstepper"} "$@"
               ''
             ))
           ];
