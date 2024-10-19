@@ -96,5 +96,14 @@ in
     #   maxJobs = 32;
     #   inherit supportedFeatures;
     # }
+
+    {
+      hostName = "aarch64-linux-builder-0.infra.holochain.org";
+      sshUser = "nix-remote-builder";
+      protocol = "ssh-ng";
+      system = "aarch64-linux";
+      maxJobs = 16;
+      inherit supportedFeatures;
+    }
   ];
 }
