@@ -18,7 +18,7 @@
       packages =
         let
           system = pkgs.system;
-          craneLib = inputs.crane.lib.${system};
+          craneLib = inputs.crane.mkLib pkgs;
           cranePkgs = inputs.crane.inputs.nixpkgs.legacyPackages.${system};
 
           tx5Args = {

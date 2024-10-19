@@ -17,8 +17,7 @@
 
       packages =
         let
-          system = pkgs.system;
-          craneLib = inputs.crane.lib.${system};
+          craneLib = inputs.crane.mkLib pkgs;
 
           sbdArgs = {
             pname = "sbd";
