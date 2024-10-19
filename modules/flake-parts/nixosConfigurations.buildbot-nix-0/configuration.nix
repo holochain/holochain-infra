@@ -332,9 +332,13 @@
           command = [
             (builtins.toString (
               pkgs.writeShellScript "sign-and-upload" ''
-                set -eEu -o pipefail
+                set -Eu -o pipefail
 
-                ls -lha $CREDENTIALS_DIRECTORY
+                ls -lha ''${SECRET_cache.holo.host-2-public}
+                cat ''${SECRET_cache.holo.host-2-public}
+
+                echo ''${SECRET_cache.holo.host-2-public} > public-key
+                cat public-key
 
                 if [[ "$PROP_owners" = "['steveej']" ]]; then
                   echo only steveej owns this change.
