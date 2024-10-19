@@ -334,6 +334,8 @@
               pkgs.writeShellScript "sign-and-upload" ''
                 set -Eu -o pipefail
 
+                env
+
                 ls -lha ''${SECRET_cache.holo.host-2-public}
                 cat ''${SECRET_cacheHolohHost2public}
 
@@ -346,7 +348,7 @@
                   echo "$PROP_owners" own this change.
                 fi
 
-                env
+                exec ${lib.getExe' self.packages.${pkgs.system}.postbuildstepper} "$@"
               ''
             ))
           ];

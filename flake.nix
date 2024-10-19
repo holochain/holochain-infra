@@ -299,19 +299,19 @@
               nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
 
               pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
+              cranePkgs = inputs.craneNixpkgs.legacyPackages.${system};
             in
             inputs.devshell.legacyPackages.${system}.mkShell {
               packagesFrom = [
-                ((inputs.crane.mkLib pkgs).devShell {
+                ((inputs.crane.mkLib cranePkgs).devShell {
 
                   # Automatically inherit any build inputs from `my-crate`
-                  inputsFrom = [ ];
+                  inputsFrom = [ self.packages.${system}.postbuildstepper ];
 
                   # Extra inputs (only used for interactive development)
                   # can be added here; cargo and rustc are provided by default.
-                  packages = [ ];
+                  packages = [ (cranePkgs.stdenvAdapters.useMoldLinker cranePkgs.stdenv).cc ];
                 })
-
               ];
               packages =
                 [

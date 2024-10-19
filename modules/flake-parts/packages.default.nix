@@ -1,6 +1,8 @@
 {
   # System independent arguments.
   self,
+  inputs,
+  lib,
   ...
 }:
 {
@@ -39,6 +41,20 @@
                   )
               );
             };
+
+          system = pkgs.system;
+          cranePkgs = inputs.craneNixpkgs.legacyPackages.${system};
+          craneLib = inputs.crane.mkLib cranePkgs;
+
+          postbuildstepperArgs = {
+            pname = "postbuildstepper";
+            # cargoToml = self + "/applications/postbuildstepper/Cargo.toml";
+            src = self + "/applications/postbuildstepper/";
+            nativeBuildInputs = [ cranePkgs.pkg-config ];
+
+            doCheck = true;
+          };
+          postbuildstepperDeps = lib.makeOverridable craneLib.buildDepsOnly postbuildstepperArgs;
         in
         {
           reverse-proxy-nix-cache = pkgs.writeShellScriptBin "reverse-proxy-nix-cache" ''
@@ -74,6 +90,10 @@
           };
 
           linux-builder-01-ping-buildmachines = mkPingBuildmachines { builderName = "linux-builder-01"; };
+
+          postbuildstepper = lib.makeOverridable craneLib.buildPackage (
+            postbuildstepperArgs // { cargoArtifacts = postbuildstepperDeps; }
+          );
         };
     };
 
