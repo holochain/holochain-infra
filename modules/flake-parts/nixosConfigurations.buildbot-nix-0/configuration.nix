@@ -322,9 +322,12 @@
             # verified with
             # nix-repl> (builtins.elemAt nixosConfigurations.buildbot-nix-0.config.services.buildbot-nix.master.postBuildSteps 1).environment
             // builtins.listToAttrs (
-              builtins.map (name: lib.attrsets.nameValuePair "SECRET_${name}" "%(secret:${name})s") (
-                builtins.attrNames config.passthru.buildbot-secrets
-              )
+              builtins.map (
+                name:
+                lib.attrsets.nameValuePair "SECRET_${name}" (
+                  self.inputs.buildbot-nix.lib.interpolate "%(secret:${name})s"
+                )
+              ) (builtins.attrNames config.passthru.buildbot-secrets)
             );
           command = [
             (builtins.toString (
