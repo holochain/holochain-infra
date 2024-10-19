@@ -200,7 +200,7 @@
   # sops.secrets.cachix-auth-token = {};
 
   systemd.services.buildbot-master.serviceConfig.LoadCredential = builtins.map (
-    kv: "${kv.name}=${kv.value}"
+    kv: "${kv.name}:${kv.value}"
   ) (lib.attrsets.attrsToList config.passthru.buildbot-secrets);
   services.buildbot-nix.master = {
     enable = true;
