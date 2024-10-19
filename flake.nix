@@ -3,6 +3,8 @@
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat.url = "github:edolstra/flake-compat";
 
+    nix-filter.url = "github:numtide/nix-filter";
+
     nixpkgs.follows = "nixpkgs-24-05";
     nixpkgs-23-11 = {
       url = "github:nixos/nixpkgs/nixos-23.11";
@@ -300,13 +302,23 @@
 
               pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
               cranePkgs = inputs.craneNixpkgs.legacyPackages.${system};
+              craneLib = (inputs.crane.mkLib cranePkgs).overrideToolchain (
+                p:
+                (inputs.rust-overlay.lib.mkRustBin { } p.buildPackages).stable.latest.default.override {
+                  extensions = [
+                    "rust-src"
+                    "rust-analyzer"
+                    "clippy"
+                    "rustfmt"
+                  ];
+                }
+              );
             in
             inputs.devshell.legacyPackages.${system}.mkShell {
               packagesFrom = [
-                ((inputs.crane.mkLib cranePkgs).devShell {
-
+                (craneLib.devShell {
                   # Automatically inherit any build inputs from `my-crate`
-                  inputsFrom = [ self.packages.${system}.postbuildstepper ];
+                  inputsFrom = [ ];
 
                   # Extra inputs (only used for interactive development)
                   # can be added here; cargo and rustc are provided by default.

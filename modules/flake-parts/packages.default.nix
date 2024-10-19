@@ -48,26 +48,31 @@
 
           postbuildstepperArgs =
             let
-              src = craneLib.cleanCargoSource self;
               pname = "postbuildstepper";
-              nesting = "applications/${pname}";
             in
             {
               inherit pname;
-              inherit src;
 
-              cargoLock = src + "/${nesting}/Cargo.lock";
-              cargoToml = src + "/${nesting}/Cargo.toml";
+              src = self.inputs.nix-filter {
+                root = self;
+                # If no include is passed, it will include all the paths.
+                include = [
+                  # Include the "src" path relative to the root.
+                  "applications"
+                  # Include this specific path. The path must be under the root.
+                  "Cargo.toml"
+                  "Cargo.lock"
+                  # Include all files with the .js extension
+                ];
+              };
 
-              postUnpack = ''
-                cd $sourceRoot/${nesting}
-                sourceRoot="."
-              '';
+              version = self.sourceInfo.rev or "unknown";
+
+              cargoExtraArgs = "--bins";
 
               nativeBuildInputs = [ cranePkgs.pkg-config ];
 
               doCheck = true;
-
             };
           postbuildstepperDeps = lib.makeOverridable craneLib.buildDepsOnly postbuildstepperArgs;
         in
