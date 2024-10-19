@@ -46,14 +46,28 @@
           cranePkgs = inputs.craneNixpkgs.legacyPackages.${system};
           craneLib = inputs.crane.mkLib cranePkgs;
 
-          postbuildstepperArgs = {
-            pname = "postbuildstepper";
-            # cargoToml = self + "/applications/postbuildstepper/Cargo.toml";
-            src = self + "/applications/postbuildstepper/";
-            nativeBuildInputs = [ cranePkgs.pkg-config ];
+          postbuildstepperArgs =
+            let
+              src = craneLib.cleanCargoSource self;
+              nesting = "applications/postbuildstepper";
+            in
+            {
+              pname = "postbuildstepper";
+              inherit src;
 
-            doCheck = true;
-          };
+              cargoLock = src + "/${nesting}/Cargo.lock";
+              cargoToml = src + "/${nesting}/Cargo.toml";
+
+              postUnpack = ''
+                cd $sourceRoot/${nesting}
+                sourceRoot="."
+              '';
+
+              nativeBuildInputs = [ cranePkgs.pkg-config ];
+
+              doCheck = true;
+
+            };
           postbuildstepperDeps = lib.makeOverridable craneLib.buildDepsOnly postbuildstepperArgs;
         in
         {
