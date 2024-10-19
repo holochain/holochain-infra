@@ -22,11 +22,15 @@ fn check_owners(env_vars: &HashMap<String, String>) -> Result<(), anyhow::Error>
     let trusted_owners = HashSet::<String>::from_iter(["steveej"].map(ToString::to_string));
     let owners: HashSet<String> = {
         let var = "PROP_owners";
-        serde_json::from_str(
-            env_vars
-                .get(var)
-                .context(format!("looking up {var} in {env_vars:#?}"))?,
-        )?
+
+        let value = env_vars
+            .get(var)
+            .context(format!("looking up {var} in {env_vars:#?}"))?;
+
+        let vec: Vec<String> = serde_json::from_str(&value.replace("\'", "\""))
+            .context(format!("parsing {value:?} as JSON"))?;
+
+        HashSet::from_iter(vec)
     };
     let owner_is_trusted = owners.is_subset(&trusted_owners);
     if !owner_is_trusted {

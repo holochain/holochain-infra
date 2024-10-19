@@ -66,7 +66,7 @@
                 ];
               };
 
-              version = self.sourceInfo.rev or "unknown";
+              version = "alpha";
 
               cargoExtraArgs = "--bins";
 
