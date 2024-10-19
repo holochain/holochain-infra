@@ -47,6 +47,11 @@
       oauthId = "Iv23liqmAiBw8ab9EF61";
       topic = "holo-chain-buildbot-nix-0";
     };
+
+    buildbot-secrets = {
+      "cache.holo.host-2-secret" = "/var/lib/secrets/cache.holo.host-2/secret";
+      "cache.holo.host-2-public" = "/var/lib/secrets/cache.holo.host-2/public";
+    };
   };
 
   networking = {
@@ -194,6 +199,9 @@
   sops.secrets.buildbot-nix-workers = { };
   # sops.secrets.cachix-auth-token = {};
 
+  systemd.services.buildbot-master.serviceConfig.LoadCredential = builtins.map (
+    kv: "${kv.name} = ${kv.value}"
+  ) (lib.attrsets.attrsToList config.passthru.buildbot-secrets);
   services.buildbot-nix.master = {
     enable = true;
     admins = [
@@ -230,10 +238,9 @@
       inherit (config.passthru.buildbot-nix) oauthId topic;
     };
 
-    postBuildSteps = [
-      {
-        name = "post-build-step-test";
-        environment =
+    postBuildSteps =
+      let
+        commonEnvironment =
           let
             props = lib.attrsets.genAttrs [
               "attr"
@@ -267,27 +274,78 @@
             props' = lib.attrsets.mapAttrs' (name: value: lib.nameValuePair "PROP_${name}" value) props;
           in
           props';
-        command = [
-          (builtins.toString (
-            pkgs.writeShellScript "post-buld-step-test-script" ''
-              set -eEu -o pipefail
 
-              echo Running example postBuildStep...
+      in
+      [
+        {
+          name = "post-build-step-test";
+          environment = commonEnvironment;
+          command = [
+            (builtins.toString (
+              pkgs.writeShellScript "post-buld-step-test-script" ''
+                set -eEu -o pipefail
 
-              echo args: "$@"
-              env
-              pwd
-              ls -lha
-              ls -lha ..
-              ls -lha ../..
+                echo Running example postBuildStep...
 
-              echo Done.
-            ''
-          ))
-        ];
-      }
+                id
 
-    ];
+                echo args: "$@"
+                env
+                pwd
+                ls -lha
+                ls -lha ..
+                ls -lha ../..
+
+                echo Done.
+              ''
+            ))
+          ];
+        }
+
+        {
+          /*
+            replicate this hydra config
+
+            ```nix
+            binary_cache_public_uri = https://cache.holo.host
+            log_prefix = https://cache.holo.host/
+            server_store_uri = https://cache.holo.host?local-nar-cache=/var/cache/hydra/nar-cache
+            store_uri = s3://${wasabiBucket}?endpoint=${wasabiEndpoint}&log-compression=br&ls-compression=br&parallel-compression=1&secret-key=/var/lib/hydra/queue-runner/keys/${signingKeyName}/secret&write-nar-listing=1
+            upload_logs_to_binary_cache = true
+            ```
+
+            # nix store sign --recursive --key-file /var/lib/secrets/cache.holo.host-2/secret /nix/store/shhhmg50pwfbhi0f4w6wzav5zxmlxcq2-holo-nixpkgs-release/
+          */
+          name = "sign-and-upload";
+          environment =
+            commonEnvironment
+            # verified with
+            # nix-repl> (builtins.elemAt nixosConfigurations.buildbot-nix-0.config.services.buildbot-nix.master.postBuildSteps 1).environment
+            // builtins.listToAttrs (
+              builtins.map (name: lib.attrsets.nameValuePair "SECRET_${name}" "%(secret:${name})s") (
+                builtins.attrNames config.passthru.buildbot-secrets
+              )
+            );
+          command = [
+            (builtins.toString (
+              pkgs.writeShellScript "sign-and-upload" ''
+                set -eEu -o pipefail
+
+                ls -lha $CREDENTIALS_DIRECTORY
+
+                if [[ "$PROP_owners" = "['steveej']" ]]; then
+                  echo only steveej owns this change.
+                else
+                  echo "$PROP_owners" own this change.
+                fi
+
+                env
+              ''
+            ))
+          ];
+        }
+
+      ];
   };
 
   # magic_rb:
@@ -307,6 +365,14 @@
   ];
 
   sops.secrets.holo-host-github-environment-secrets = { };
-  systemd.services.nix-daemon.serviceConfig.EnvironmentFile =
-    config.sops.secrets.holo-host-github-environment-secrets.path;
+  sops.secrets.holo-host-aws-environment-credentials = { };
+  systemd.services.nix-daemon.serviceConfig = {
+    Environment = [ "AWS_SHARED_CREDENTIALS_FILE=%d/AWS_SHARED_CREDENTIALS_FILE" ];
+    LoadCredential = [ "AWS_SHARED_CREDENTIALS_FILE:/etc/secrets/aws/credentials" ];
+
+    EnvironmentFile = [
+      config.sops.secrets.holo-host-github-environment-secrets.path
+      config.sops.secrets.holo-host-aws-environment-credentials.path
+    ];
+  };
 }

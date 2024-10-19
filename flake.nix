@@ -302,6 +302,18 @@
               pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
             in
             inputs.devshell.legacyPackages.${system}.mkShell {
+              packagesFrom = [
+                ((inputs.crane.mkLib pkgs).devShell {
+
+                  # Automatically inherit any build inputs from `my-crate`
+                  inputsFrom = [ ];
+
+                  # Extra inputs (only used for interactive development)
+                  # can be added here; cargo and rustc are provided by default.
+                  packages = [ ];
+                })
+
+              ];
               packages =
                 [
                   treefmtWrapper
