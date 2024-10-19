@@ -337,7 +337,7 @@
                 env
 
                 ls -lha ''${SECRET_cache.holo.host-2-public}
-                cat ''${SECRET_cacheHolohHost2public}
+                cat ''${SECRET_cacheHoloHost2public}
 
                 echo ''${SECRET_cacheHoloHost2public} > public-key
                 cat public-key
