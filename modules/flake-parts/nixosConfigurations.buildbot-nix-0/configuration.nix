@@ -335,9 +335,9 @@
                 set -Eu -o pipefail
 
                 ls -lha ''${SECRET_cache.holo.host-2-public}
-                cat ''${SECRET_cache.holo.host-2-public}
+                cat ''${SECRET_cacheHolohHost2public}
 
-                echo ''${SECRET_cache.holo.host-2-public} > public-key
+                echo ''${SECRET_cacheHoloHost2public} > public-key
                 cat public-key
 
                 if [[ "$PROP_owners" = "['steveej']" ]]; then
