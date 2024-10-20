@@ -58,7 +58,7 @@
                 # If no include is passed, it will include all the paths.
                 include = [
                   # Include the "src" path relative to the root.
-                  "applications"
+                  "applications/postbuildstepper"
                   # Include this specific path. The path must be under the root.
                   "Cargo.toml"
                   "Cargo.lock"
