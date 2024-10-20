@@ -1,22 +1,11 @@
+/// This designed to be executed from within buildbot-nix in a postBuildStep.
+/// It currently hardcodes assumptions that are specific to Holo/Holochain's build environment.
+///
 use anyhow::Ok;
-use log::{info, trace, warn};
-use std::{
-    collections::HashMap,
-    ffi::{OsStr, OsString},
-};
+use business::SigningAndCopyInfo;
+use log::{info, warn};
+use std::collections::HashMap;
 
-/*
-set -Eu -o pipefail
-
-env
-
-ls -lha ''${SECRET_cacheHoloHost2public}
-cat ''${SECRET_cacheHoloHost2public}
-
-echo ''${SECRET_cacheHoloHost2public} > public-key
-cat public-key
-
-*/
 fn main() -> anyhow::Result<()> {
     env_logger::builder()
         .filter_level(log::LevelFilter::Debug)
@@ -26,13 +15,16 @@ fn main() -> anyhow::Result<()> {
 
     let _ = business::check_owners(build_info.try_owners()?);
 
-    let (signing_key_file, copy_envs, copy_destination) =
-        if let Some(info) = business::may_get_signing_key_and_copy_info(&build_info)? {
-            info
-        } else {
-            warn!("got no signing/uploading credentials, exiting.");
-            return Ok(());
-        };
+    let SigningAndCopyInfo {
+        signing_key_file,
+        copy_envs,
+        copy_destination,
+    } = if let Some(info) = business::may_get_signing_key_and_copy_info(&build_info)? {
+        info
+    } else {
+        warn!("got no signing/uploading credentials, exiting.");
+        return Ok(());
+    };
     let signing_key_file_path = signing_key_file.path().to_str().ok_or_else(|| {
         anyhow::anyhow!(
             "could not convert {} (lossy) to string",
@@ -104,7 +96,6 @@ mod business {
         collections::{HashMap, HashSet},
         ffi::OsString,
         io::Write,
-        str::FromStr,
     };
 
     use anyhow::{bail, Context, Result};
@@ -179,10 +170,17 @@ mod business {
         Ok(())
     }
 
+    /// Contains information to sign and upload the build results
+    pub(crate) struct SigningAndCopyInfo {
+        pub(crate) signing_key_file: NamedTempFile,
+        pub(crate) copy_envs: HashMap<OsString, NamedTempFile>,
+        pub(crate) copy_destination: String,
+    }
+
     /// Evaluates the project org and accordingly returns a signing key.
     pub(crate) fn may_get_signing_key_and_copy_info(
         build_info: &BuildInfo,
-    ) -> anyhow::Result<Option<(NamedTempFile, HashMap<OsString, NamedTempFile>, String)>> {
+    ) -> anyhow::Result<Option<SigningAndCopyInfo>> {
         let (org, repo) = build_info.try_org_repo()?;
 
         let wrap_secret_in_tempfile = |s: &str| -> anyhow::Result<_> {
@@ -236,11 +234,11 @@ mod business {
                     .join("&")
             };
 
-            Some((
-                wrap_secret_in_tempfile(signing_secret)?,
+            Some(SigningAndCopyInfo {
+                signing_key_file: wrap_secret_in_tempfile(signing_secret)?,
                 copy_envs,
                 copy_destination,
-            ))
+            })
         } else if org.to_lowercase() == "holochain" {
             info!("TODO: sign with holochain's key");
             None
@@ -289,10 +287,9 @@ mod business {
     }
 }
 
-/*
-    initial testing done manually using `nix run .#postbuildstepper-test``
-*/
 #[cfg(test)]
 mod tests {
-    // TODO
+    /*
+        TODO: initial testing done manually using `nix run .#postbuildstepper-test``
+    */
 }
