@@ -203,7 +203,7 @@ mod business {
             let signing_secret = build_info.get("SECRET_cacheHoloHost2secret")?;
             let copy_envs = HashMap::from_iter([(
                 // FIXME: create a constant or config value for this
-                OsString::from("AWS_SHARED_CREDENTIALS_PATH"),
+                OsString::from("AWS_SHARED_CREDENTIALS_FILE"),
                 wrap_secret_in_tempfile(build_info.get("SECRET_awsSharedCredentialsFile")?)?,
             )]);
 
