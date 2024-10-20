@@ -306,6 +306,11 @@
           /*
             replicate this hydra config
 
+            wasabiBucket = "cache.holo.host";
+            wasabiEndpoint = "s3.wasabisys.com";
+            # TODO: bring into proper hydra module
+            signingKeyName = "cache.holo.host-2";
+
             ```nix
             binary_cache_public_uri = https://cache.holo.host
             log_prefix = https://cache.holo.host/
