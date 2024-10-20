@@ -37,8 +37,7 @@ fn main() -> anyhow::Result<()> {
         )
     })?;
 
-    // TODO: read the attribute name from the environment
-    let store_path = "./result";
+    let store_path = build_info.try_out_path()?;
 
     // sign the store path
     util::nix_cmd_helper(&[
@@ -140,6 +139,10 @@ mod business {
             attr.split_once(".")
                 .ok_or_else(|| anyhow::anyhow!("{attr} does not contain a '.'"))
                 .map(|r| r.1)
+        }
+
+        pub(crate) fn try_out_path(&self) -> Result<&String> {
+            self.get("PROP_out_path")
         }
     }
 
@@ -244,7 +247,7 @@ mod business {
 
         // pass and exclude filter for well-known attrs
         // FIXME: create a config map for this
-        const ATTR_PASS_FILTER_RE: &str = ".*pre-commit-check";
+        const ATTR_PASS_FILTER_RE: &str = "aarch64-.*\\.pre-commit-check";
         // FIXME: create a config map for this
         const ATTR_EXCLUDE_FILTER_RE: &str = "tests-.*";
         let attr = build_info.try_attr()?;
@@ -259,18 +262,18 @@ mod business {
     }
 }
 
+/*
+initial testing done manually using
+
+env \
+  PROP_owners="['steveej']" \
+  PROP_project="holochain/holochain-infra" \
+  PROP_attr="aarch64-linux.pre-commit-check" \
+  SECRET_cacheHoloHost2secret="testing-2:CoS7sAPcH1M+LD+D/fg9sc1V3uKk88VMHZ/MvAJHsuMSasehxxlUKNa0LUedGgFfA1wlRYF74BNcAldRxX2g8A==" \
+  PROP_out_path="$(readlink ./result)" \
+  nix run .\#postbuildstepper
+*/
 #[cfg(test)]
 mod tests {
     // TODO
-
-    /*
-    initial testing done manually using
-
-    env \
-        PROP_owners="['steveej']" \
-        PROP_project="holochain/holochain-infra" \
-        PROP_attr="aarch64-linux.pre-commit-check" \
-        SECRET_cacheHoloHost2secret="testing:27QUePIhJDF8BK3l3R8qP78Id9LeRsrp/ScD84ulL7BVv0McPC8+p+9zgvtsNzvCubLzyQNzpjIshSqoC7XmEQ==" \
-        nix run .\#postbuildstepper
-     */
 }
