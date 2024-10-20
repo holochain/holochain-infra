@@ -49,8 +49,8 @@
     };
 
     buildbot-secrets = {
+      # NOTE: for security reasons this secret is kept out of the public repo
       "cacheHoloHost2secret" = "/var/lib/secrets/cache.holo.host-2/secret";
-      "cacheHoloHost2public" = "/var/lib/secrets/cache.holo.host-2/public";
       "awsSharedCredentialsFile" = config.sops.secrets.holo-host-aws-shared-credentials.path;
     };
   };
@@ -279,48 +279,15 @@
       in
       [
         {
-          name = "post-build-step-test";
-          environment = commonEnvironment;
-          command = [
-            (builtins.toString (
-              pkgs.writeShellScript "post-buld-step-test-script" ''
-                set -eEu -o pipefail
-
-                echo Running example postBuildStep...
-
-                id
-
-                echo args: "$@"
-                env
-                pwd
-                ls -lha
-                ls -lha ..
-                ls -lha ../..
-
-                echo Done.
-              ''
-            ))
-          ];
-        }
-
-        {
           /*
-            replicate this hydra config
-
-            wasabiBucket = "cache.holo.host";
-            wasabiEndpoint = "s3.wasabisys.com";
-            # TODO: bring into proper hydra module
-            signingKeyName = "cache.holo.host-2";
+            TODO: verify any of these aren't required
 
             ```nix
             binary_cache_public_uri = https://cache.holo.host
             log_prefix = https://cache.holo.host/
             server_store_uri = https://cache.holo.host?local-nar-cache=/var/cache/hydra/nar-cache
-            store_uri = s3://${wasabiBucket}?endpoint=${wasabiEndpoint}&log-compression=br&ls-compression=br&parallel-compression=1&secret-key=/var/lib/hydra/queue-runner/keys/${signingKeyName}/secret&write-nar-listing=1
             upload_logs_to_binary_cache = true
             ```
-
-            # nix store sign --recursive --key-file /var/lib/secrets/cache.holo.host-2/secret /nix/store/shhhmg50pwfbhi0f4w6wzav5zxmlxcq2-holo-nixpkgs-release/
           */
           name = "sign-and-upload";
           environment =
