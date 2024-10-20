@@ -1,6 +1,9 @@
 use anyhow::Ok;
 use log::{info, trace, warn};
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    ffi::{OsStr, OsString},
+};
 
 /*
 set -Eu -o pipefail
@@ -23,8 +26,8 @@ fn main() -> anyhow::Result<()> {
 
     let _ = business::check_owners(build_info.try_owners()?);
 
-    let (signing_key_file, copy_destination) =
-        if let Some(info) = business::may_get_signing_key_and_copy_destination(&build_info)? {
+    let (signing_key_file, copy_envs, copy_destination) =
+        if let Some(info) = business::may_get_signing_key_and_copy_info(&build_info)? {
             info
         } else {
             warn!("got no signing/uploading credentials, exiting.");
@@ -40,32 +43,46 @@ fn main() -> anyhow::Result<()> {
     let store_path = build_info.try_out_path()?;
 
     // sign the store path
-    util::nix_cmd_helper(&[
-        "store",
-        "sign",
-        "--verbose",
-        "--recursive",
-        "--key-file",
-        signing_key_file_path,
-        store_path,
-    ])?;
+    util::nix_cmd_helper(
+        [
+            "store",
+            "sign",
+            "--verbose",
+            "--recursive",
+            "--key-file",
+            signing_key_file_path,
+            store_path,
+        ],
+        HashMap::<&&str, &str>::new(),
+    )?;
     info!("successfully signed store path {store_path}");
 
     // copy the store path
-    util::nix_cmd_helper(&["copy", "--verbose", "--to", &copy_destination, store_path])?;
+    util::nix_cmd_helper(
+        ["copy", "--verbose", "--to", &copy_destination, store_path],
+        copy_envs.iter().map(|(k, v)| (k, v.path().as_os_str())),
+    )?;
     info!("successfully pushed store path {store_path}");
 
     Ok(())
 }
 
 mod util {
-    use std::process::Stdio;
+    use std::{ffi::OsStr, process::Stdio};
 
     use anyhow::{bail, Context};
 
-    pub(crate) fn nix_cmd_helper(args: &[&str]) -> anyhow::Result<()> {
+    pub(crate) fn nix_cmd_helper<I, J, K, V, L>(args: I, envs: J) -> anyhow::Result<()>
+    where
+        I: IntoIterator<Item = K>,
+        J: IntoIterator<Item = (V, L)>,
+        K: AsRef<OsStr>,
+        V: AsRef<OsStr>,
+        L: AsRef<OsStr>,
+    {
         let mut cmd = std::process::Command::new("nix");
         cmd.args(args)
+            .envs(envs)
             // pass stdio through so it becomes visible in the log
             .stdout(Stdio::inherit())
             .stderr(Stdio::inherit());
@@ -85,7 +102,9 @@ mod util {
 mod business {
     use std::{
         collections::{HashMap, HashSet},
+        ffi::OsString,
         io::Write,
+        str::FromStr,
     };
 
     use anyhow::{bail, Context, Result};
@@ -161,9 +180,9 @@ mod business {
     }
 
     /// Evaluates the project org and accordingly returns a signing key.
-    pub(crate) fn may_get_signing_key_and_copy_destination(
+    pub(crate) fn may_get_signing_key_and_copy_info(
         build_info: &BuildInfo,
-    ) -> anyhow::Result<Option<(NamedTempFile, String)>> {
+    ) -> anyhow::Result<Option<(NamedTempFile, HashMap<OsString, NamedTempFile>, String)>> {
         let (org, repo) = build_info.try_org_repo()?;
 
         let wrap_secret_in_tempfile = |s: &str| -> anyhow::Result<_> {
@@ -181,12 +200,16 @@ mod business {
 
         let maybe_data = if org.to_lowercase() == "holo-host" || override_holo_sign {
             // FIXME: create a constant or config value for this
-            let secret = build_info.get("SECRET_cacheHoloHost2secret")?;
+            let signing_secret = build_info.get("SECRET_cacheHoloHost2secret")?;
+            let copy_envs = HashMap::from_iter([(
+                // FIXME: create a constant or config value for this
+                OsString::from("AWS_SHARED_CREDENTIALS_PATH"),
+                wrap_secret_in_tempfile(build_info.get("SECRET_awsSharedCredentialsFile")?)?,
+            )]);
 
             let copy_destination = {
                 // FIXME: create a config map for all the below
 
-                // TODO: is the secret-key still needed when `nix sign` is performed separately? &secret-key=/var/lib/hydra/queue-runner/keys/${signingKeyName}/secret
                 // TODO: will this accumulate a cache locally that needs maintenance?
 
                 let s3_bucket = "cache.holo.host";
@@ -213,7 +236,11 @@ mod business {
                     .join("&")
             };
 
-            Some((wrap_secret_in_tempfile(secret)?, copy_destination))
+            Some((
+                wrap_secret_in_tempfile(signing_secret)?,
+                copy_envs,
+                copy_destination,
+            ))
         } else if org.to_lowercase() == "holochain" {
             info!("TODO: sign with holochain's key");
             None
@@ -263,15 +290,7 @@ mod business {
 }
 
 /*
-initial testing done manually using
-
-env \
-  PROP_owners="['steveej']" \
-  PROP_project="holochain/holochain-infra" \
-  PROP_attr="aarch64-linux.pre-commit-check" \
-  SECRET_cacheHoloHost2secret="testing-2:CoS7sAPcH1M+LD+D/fg9sc1V3uKk88VMHZ/MvAJHsuMSasehxxlUKNa0LUedGgFfA1wlRYF74BNcAldRxX2g8A==" \
-  PROP_out_path="$(readlink ./result)" \
-  nix run .\#postbuildstepper
+    initial testing done manually using `nix run .#postbuildstepper-test``
 */
 #[cfg(test)]
 mod tests {
