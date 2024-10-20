@@ -1,4 +1,4 @@
-/// This designed to be executed from within buildbot-nix in a postBuildStep.
+/// This application is designed to be executed from within buildbot-nix in a postBuildStep.
 /// It currently hardcodes assumptions that are specific to Holo/Holochain's build environment.
 ///
 use anyhow::Ok;
