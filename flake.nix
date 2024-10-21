@@ -3,6 +3,8 @@
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat.url = "github:edolstra/flake-compat";
 
+    nix-filter.url = "github:numtide/nix-filter";
+
     nixpkgs.follows = "nixpkgs-24-05";
     nixpkgs-23-11 = {
       url = "github:nixos/nixpkgs/nixos-23.11";
@@ -56,7 +58,6 @@
     };
     crane = {
       url = "github:ipetkov/crane";
-      inputs.nixpkgs.follows = "craneNixpkgs";
     };
 
     keys_steveej = {
@@ -118,7 +119,7 @@
       };
     };
 
-    tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.8-alpha";
+    tx5.url = "github:holochain/tx5/tx5-signal-srv-v0.0.15-alpha";
     tx5.flake = false;
     sbd.url = "github:holochain/sbd/sbd-server-v0.0.4-alpha";
     sbd.flake = false;
@@ -251,6 +252,7 @@
           ...
         }:
         let
+          # TODO(backlog): enable rust formatting
           treefmtConfig = {
             projectRootFile = "flake.nix";
             programs = {
@@ -300,8 +302,30 @@
               nomadClientCert = ./secrets/nomad/cli/global-cli-nomad.pem;
 
               pkgsPulumi = inputs'.nixpkgsPulumi.legacyPackages;
+              cranePkgs = inputs.craneNixpkgs.legacyPackages.${system};
+              craneLib = (inputs.crane.mkLib cranePkgs).overrideToolchain (
+                p:
+                (inputs.rust-overlay.lib.mkRustBin { } p.buildPackages).stable.latest.default.override {
+                  extensions = [
+                    "rust-src"
+                    "rust-analyzer"
+                    "clippy"
+                    "rustfmt"
+                  ];
+                }
+              );
             in
             inputs.devshell.legacyPackages.${system}.mkShell {
+              packagesFrom = [
+                (craneLib.devShell {
+                  # Automatically inherit any build inputs from `my-crate`
+                  inputsFrom = [ ];
+
+                  # Extra inputs (only used for interactive development)
+                  # can be added here; cargo and rustc are provided by default.
+                  packages = [ (cranePkgs.stdenvAdapters.useMoldLinker cranePkgs.stdenv).cc ];
+                })
+              ];
               packages =
                 [
                   treefmtWrapper
