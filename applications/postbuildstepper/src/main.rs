@@ -25,12 +25,7 @@ fn main() -> anyhow::Result<()> {
         warn!("got no signing/uploading credentials, exiting.");
         return Ok(());
     };
-    let signing_key_file_path = signing_key_file.path().to_str().ok_or_else(|| {
-        anyhow::anyhow!(
-            "could not convert {} (lossy) to string",
-            signing_key_file.path().to_string_lossy()
-        )
-    })?;
+    let signing_key_file_path = util::try_to_str(signing_key_file.path())?;
 
     let store_path = build_info.try_out_path()?;
 
@@ -43,7 +38,7 @@ fn main() -> anyhow::Result<()> {
             "--recursive",
             "--key-file",
             signing_key_file_path,
-            store_path,
+            &store_path,
         ],
         HashMap::<&&str, &str>::new(),
     )?;
@@ -51,7 +46,7 @@ fn main() -> anyhow::Result<()> {
 
     // copy the store path
     util::nix_cmd_helper(
-        ["copy", "--verbose", "--to", &copy_destination, store_path],
+        ["copy", "--verbose", "--to", &copy_destination, &store_path],
         copy_envs.iter().map(|(k, v)| (k, v.path().as_os_str())),
     )?;
     info!("successfully pushed store path {store_path}");
@@ -60,7 +55,7 @@ fn main() -> anyhow::Result<()> {
 }
 
 mod util {
-    use std::{ffi::OsStr, process::Stdio};
+    use std::{ffi::OsStr, path::Path, process::Stdio};
 
     use anyhow::{bail, Context};
 
@@ -89,6 +84,17 @@ mod util {
 
         Ok(())
     }
+
+    pub(crate) fn try_to_str(p: &Path) -> Result<&str, anyhow::Error> {
+        let signing_key_file_path = p.to_str().ok_or_else(|| {
+            anyhow::anyhow!(
+                "could not convert {} (lossy) to string",
+                p.to_string_lossy()
+            )
+        })?;
+
+        Ok(signing_key_file_path)
+    }
 }
 
 mod business {
@@ -96,6 +102,7 @@ mod business {
         collections::{HashMap, HashSet},
         ffi::OsString,
         io::Write,
+        path::PathBuf,
     };
 
     use anyhow::{bail, Context, Result};
@@ -119,7 +126,7 @@ mod business {
         fn get(&self, var: &str) -> Result<&String> {
             self.0
                 .get(var)
-                .context(format!("looking up {var} in {self:#?}"))
+                .ok_or_else(|| anyhow::anyhow!("looking up {var} in {self:#?}"))
         }
 
         pub(crate) fn try_owners(&self) -> Result<HashSet<String>> {
@@ -151,8 +158,14 @@ mod business {
                 .map(|r| r.1)
         }
 
-        pub(crate) fn try_out_path(&self) -> Result<&String> {
-            self.get("PROP_out_path")
+        pub(crate) fn try_out_path(&self) -> Result<String> {
+            let var = "PROP_out_path";
+            let from_env = self.get(var)?;
+            let canonical = std::fs::canonicalize(from_env)
+                .context(format!("canonicalizing value from {var}: '{from_env}'"))?;
+            let displayed = crate::util::try_to_str(&canonical)?;
+
+            Ok(displayed.to_string())
         }
     }
 

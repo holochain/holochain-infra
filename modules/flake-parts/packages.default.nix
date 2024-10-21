@@ -41,40 +41,6 @@
                   )
               );
             };
-
-          system = pkgs.system;
-          cranePkgs = inputs.craneNixpkgs.legacyPackages.${system};
-          craneLib = inputs.crane.mkLib cranePkgs;
-
-          postbuildstepperArgs =
-            let
-              pname = "postbuildstepper";
-            in
-            {
-              inherit pname;
-
-              src = self.inputs.nix-filter {
-                root = self;
-                # If no include is passed, it will include all the paths.
-                include = [
-                  # Include the "src" path relative to the root.
-                  "applications/postbuildstepper"
-                  # Include this specific path. The path must be under the root.
-                  "Cargo.toml"
-                  "Cargo.lock"
-                  # Include all files with the .js extension
-                ];
-              };
-
-              version = "alpha";
-
-              cargoExtraArgs = "--bins";
-
-              nativeBuildInputs = [ cranePkgs.pkg-config ];
-
-              doCheck = true;
-            };
-          postbuildstepperDeps = lib.makeOverridable craneLib.buildDepsOnly postbuildstepperArgs;
         in
         {
           reverse-proxy-nix-cache = pkgs.writeShellScriptBin "reverse-proxy-nix-cache" ''
@@ -110,22 +76,6 @@
           };
 
           linux-builder-01-ping-buildmachines = mkPingBuildmachines { builderName = "linux-builder-01"; };
-
-          # TODO: extract this into modules/flake-parts/packages.postbuildstepper, including the source code
-          postbuildstepper = lib.makeOverridable craneLib.buildPackage (
-            postbuildstepperArgs // { cargoArtifacts = postbuildstepperDeps; }
-          );
-
-          postbuildstepper-test = pkgs.writeShellScriptBin "test" ''
-            env \
-              PROP_owners="['steveej']" \
-              PROP_project="holochain/holochain-infra" \
-              PROP_attr="aarch64-linux.pre-commit-check" \
-              SECRET_cacheHoloHost2secret="testing-2:CoS7sAPcH1M+LD+D/fg9sc1V3uKk88VMHZ/MvAJHsuMSasehxxlUKNa0LUedGgFfA1wlRYF74BNcAldRxX2g8A==" \
-              SECRET_awsSharedCredentialsFile="~/.aws/credentials" \
-              PROP_out_path="$(readlink ./result)" \
-              nix run .\#postbuildstepper
-          '';
         };
     };
 
