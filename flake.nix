@@ -252,7 +252,7 @@
           ...
         }:
         let
-          # TODO: enable rust formatting
+          # TODO(backlog): enable rust formatting
           treefmtConfig = {
             projectRootFile = "flake.nix";
             programs = {
