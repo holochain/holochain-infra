@@ -280,7 +280,7 @@
       [
         {
           /*
-            TODO: verify any of these aren't required
+            TODO(observe): verify any of these aren't required
 
             ```nix
             binary_cache_public_uri = https://cache.holo.host

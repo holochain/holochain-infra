@@ -213,7 +213,7 @@ mod business {
             Ok(tempfile)
         };
 
-        let maybe_data = if org == "Holo-Host" {
+        if org == "Holo-Host" {
             // FIXME: create a constant or config value for this
             let signing_secret = build_info.get("SECRET_cacheHoloHost2secret")?;
             let copy_envs = HashMap::from_iter([(
@@ -224,8 +224,6 @@ mod business {
 
             let copy_destination = {
                 // FIXME: create a config map for all the below
-
-                // TODO: will this accumulate a cache locally that needs maintenance?
 
                 let s3_bucket = "cache.holo.host";
                 let s3_endpoint = "s3.wasabisys.com";
@@ -251,25 +249,17 @@ mod business {
                     .join("&")
             };
 
-            Some(SigningAndCopyInfo {
+            Ok(Some(SigningAndCopyInfo {
                 signing_key_file: wrap_secret_in_tempfile(signing_secret)?,
                 copy_envs,
                 copy_destination,
-            })
+            }))
         } else if org == "holochain" {
-            info!("TODO: sign with holochain's key");
-            None
+            info!("{org} doesn't have any credentials for signing and copying builds.");
+            Ok(None)
         } else {
-            bail!("unknown org: {org}");
-        };
-
-        let data = if let Some(data) = maybe_data {
-            data
-        } else {
-            return Ok(None);
-        };
-
-        Ok(Some(data))
+            bail!("unknown org: {org}")
+        }
     }
 
     pub(crate) fn evaluate_filters(build_info: &BuildInfo) -> Result<bool, anyhow::Error> {
@@ -342,6 +332,6 @@ mod business {
 #[cfg(test)]
 mod tests {
     /*
-        TODO: initial testing done manually using `nix run .#postbuildstepper-test``
+        TODO(backlog): initial testing done manually using `nix run .#postbuildstepper-test``
     */
 }
