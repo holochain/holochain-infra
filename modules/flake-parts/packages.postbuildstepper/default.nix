@@ -53,6 +53,9 @@
           postbuildstepperDeps = lib.makeOverridable craneLib.buildDepsOnly postbuildstepperArgs;
         in
         {
+          # TODO: remove this after the initial development testing phase
+          inherit (pkgs) hello;
+
           postbuildstepper = lib.makeOverridable craneLib.buildPackage (
             postbuildstepperArgs // { cargoArtifacts = postbuildstepperDeps; }
           );

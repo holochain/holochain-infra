@@ -205,15 +205,13 @@ mod business {
     pub(crate) fn may_get_signing_key_and_copy_info(
         build_info: &BuildInfo,
     ) -> anyhow::Result<Option<SigningAndCopyInfo>> {
-        let (org, repo) = build_info.try_org_repo()?;
+        let (org, _) = build_info.try_org_repo()?;
 
         let wrap_secret_in_tempfile = |s: &str| -> anyhow::Result<_> {
             let mut tempfile = NamedTempFile::new()?;
             tempfile.write_all(s.as_bytes())?;
             Ok(tempfile)
         };
-
-        let attr_name = build_info.try_attr_name()?;
 
         let maybe_data = if org == "Holo-Host" {
             // FIXME: create a constant or config value for this
@@ -275,11 +273,11 @@ mod business {
     }
 
     pub(crate) fn evaluate_filters(build_info: &BuildInfo) -> Result<bool, anyhow::Error> {
-        let is_match_lossy = |re: &str, s: &str, prefix: &str| -> anyhow::Result<bool> {
+        let is_match_lossy = |re: &str, attr: &str, prefix: &str| -> anyhow::Result<bool> {
             let compiled_re = pcre2::bytes::Regex::new(re)?;
-            let is_match = compiled_re.is_match(s.as_bytes())?;
+            let is_match = compiled_re.is_match(attr.as_bytes())?;
 
-            debug!("[prefix]: '{re}' matched '{s}': {is_match}");
+            debug!("[{attr}/{prefix}]: '{re}' matched '{attr}': {is_match}");
 
             Ok(is_match)
         };
@@ -296,17 +294,17 @@ mod business {
             (
                 HOLOCHAIN_INFRA_REPO,
                 Filters {
-                    include_filters_re: ["aarch64-.*\\.pre-commit-check".into()].into(),
+                    include_filters_re: ["aarch64-[^.]+.hello"].map(Into::into).into(),
                     exclude_filters_re: [].into(),
                 },
             ),
             (
                 HOLO_NIXPKGS_REPO,
                 Filters {
-                    include_filters_re: ["aarch64-.*\\.pre-commit-check", "aarch64-.*\\.hello"]
+                    include_filters_re: ["aarch64-[^.]+\\.hello", ".*\\.holo-nixpkgs-release"]
                         .map(Into::into)
                         .into(),
-                    exclude_filters_re: [".*\\.tests-.*".into()].into(),
+                    exclude_filters_re: [".*tests.*".into()].into(),
                 },
             ),
         ]);
@@ -330,7 +328,7 @@ mod business {
 
             let conclusion = include && !exclude;
 
-            debug!("{attr}: include: {include}, exclude: {exclude}, conclusion: {conclusion}");
+            debug!("[{attr}]: include: {include}, exclude: {exclude}, conclusion: {conclusion}");
             conclusion
         } else {
             warn!("no filters found for {repo}");
