@@ -60,11 +60,12 @@
           postbuildstepper-test = pkgs.writeShellScriptBin "test" ''
             env \
               PROP_owners="['steveej']" \
-              PROP_project="holochain/holochain-infra" \
-              PROP_attr="aarch64-linux.pre-commit-check" \
+              PROP_repository="https://github.com/Holo-Host/holo-nixpkgs" \
+              PROP_project="Holo-Host/holo-nixpkgs" \
+              PROP_attr="aarch64-linux.hello" \
               SECRET_cacheHoloHost2secret="testing-2:CoS7sAPcH1M+LD+D/fg9sc1V3uKk88VMHZ/MvAJHsuMSasehxxlUKNa0LUedGgFfA1wlRYF74BNcAldRxX2g8A==" \
               SECRET_awsSharedCredentialsFile="~/.aws/credentials" \
-              PROP_out_path="$(readlink ./result)" \
+              PROP_out_path="${pkgs.hello}" \
               nix run .\#postbuildstepper
           '';
         };

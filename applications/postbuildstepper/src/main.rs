@@ -25,6 +25,12 @@ fn main() -> anyhow::Result<()> {
         warn!("got no signing/uploading credentials, exiting.");
         return Ok(());
     };
+
+    if !business::evaluate_filters(&build_info)? {
+        warn!("excluded by filters, exiting.");
+        return Ok(());
+    }
+
     let signing_key_file_path = util::try_to_str(signing_key_file.path())?;
 
     let store_path = build_info.try_out_path()?;
@@ -102,7 +108,7 @@ mod business {
         collections::{HashMap, HashSet},
         ffi::OsString,
         io::Write,
-        path::PathBuf,
+        rc::Rc,
     };
 
     use anyhow::{bail, Context, Result};
@@ -167,6 +173,11 @@ mod business {
 
             Ok(displayed.to_string())
         }
+
+        /// Example: PROP_repository=https://github.com/holochain/holochain-infra
+        pub(crate) fn try_repository(&self) -> Result<&String> {
+            self.get("PROP_repository")
+        }
     }
 
     /// Verifies that the build current owners are trusted.
@@ -204,12 +215,7 @@ mod business {
 
         let attr_name = build_info.try_attr_name()?;
 
-        // FIXME: remove this? it's used for testing purposes
-        let override_holo_sign =
-            { org == "holochain" && repo == "holochain-infra" && attr_name == "pre-commit-check" };
-        debug!("override_holo_sign? {override_holo_sign:#?}");
-
-        let maybe_data = if org.to_lowercase() == "holo-host" || override_holo_sign {
+        let maybe_data = if org == "Holo-Host" {
             // FIXME: create a constant or config value for this
             let signing_secret = build_info.get("SECRET_cacheHoloHost2secret")?;
             let copy_envs = HashMap::from_iter([(
@@ -252,12 +258,11 @@ mod business {
                 copy_envs,
                 copy_destination,
             })
-        } else if org.to_lowercase() == "holochain" {
+        } else if org == "holochain" {
             info!("TODO: sign with holochain's key");
             None
         } else {
-            warn!("unknown org: {org}");
-            None
+            bail!("unknown org: {org}");
         };
 
         let data = if let Some(data) = maybe_data {
@@ -266,37 +271,73 @@ mod business {
             return Ok(None);
         };
 
-        let is_match_lossy = |re: &str, s: &str| {
-            let is_match = pcre2::bytes::Regex::new(re)
-                .map_err(|e| {
-                    log::error!("error parsing {re} as regex: {e}");
-                })
-                .and_then(|re| {
-                    re.is_match(s.as_bytes()).map_err(|e| {
-                        log::error!("error parsing {re:?} as regex: {e}");
-                    })
-                })
-                .unwrap_or(false);
+        Ok(Some(data))
+    }
 
-            debug!("{re} matched {s}: {is_match}");
+    pub(crate) fn evaluate_filters(build_info: &BuildInfo) -> Result<bool, anyhow::Error> {
+        let is_match_lossy = |re: &str, s: &str, prefix: &str| -> anyhow::Result<bool> {
+            let compiled_re = pcre2::bytes::Regex::new(re)?;
+            let is_match = compiled_re.is_match(s.as_bytes())?;
 
-            is_match
+            debug!("[prefix]: '{re}' matched '{s}': {is_match}");
+
+            Ok(is_match)
         };
 
-        // pass and exclude filter for well-known attrs
-        // FIXME: create a config map for this
-        const ATTR_PASS_FILTER_RE: &str = "aarch64-.*\\.pre-commit-check";
-        // FIXME: create a config map for this
-        const ATTR_EXCLUDE_FILTER_RE: &str = "tests-.*";
-        let attr = build_info.try_attr()?;
-        let pass = is_match_lossy(ATTR_PASS_FILTER_RE, attr)
-            && !is_match_lossy(ATTR_EXCLUDE_FILTER_RE, attr);
-        if !pass {
-            warn!("excluding '{attr}'.");
-            return Ok(None);
+        const HOLOCHAIN_INFRA_REPO: &str = "https://github.com/holochain/holochain-infra";
+        const HOLO_NIXPKGS_REPO: &str = "https://github.com/Holo-Host/holo-nixpkgs";
+        #[derive(Default)]
+        struct Filters {
+            include_filters_re: Rc<[Rc<str>]>,
+            exclude_filters_re: Rc<[Rc<str>]>,
         }
 
-        Ok(Some(data))
+        let filters_by_repo = HashMap::<_, _>::from_iter([
+            (
+                HOLOCHAIN_INFRA_REPO,
+                Filters {
+                    include_filters_re: ["aarch64-.*\\.pre-commit-check".into()].into(),
+                    exclude_filters_re: [].into(),
+                },
+            ),
+            (
+                HOLO_NIXPKGS_REPO,
+                Filters {
+                    include_filters_re: ["aarch64-.*\\.pre-commit-check", "aarch64-.*\\.hello"]
+                        .map(Into::into)
+                        .into(),
+                    exclude_filters_re: [".*\\.tests-.*".into()].into(),
+                },
+            ),
+        ]);
+        let repo = build_info.try_repository()?;
+        let attr = build_info.try_attr()?;
+
+        let conclusion = if let Some(filters) = filters_by_repo.get(repo.as_str()) {
+            let include = filters
+                .include_filters_re
+                .iter()
+                .try_fold(false, |prev, re| {
+                    anyhow::Ok(prev || is_match_lossy(re, attr, "include")?)
+                })?;
+
+            let exclude = filters
+                .exclude_filters_re
+                .iter()
+                .try_fold(false, |prev, re| {
+                    anyhow::Ok(prev || is_match_lossy(re, attr, "include")?)
+                })?;
+
+            let conclusion = include && !exclude;
+
+            debug!("{attr}: include: {include}, exclude: {exclude}, conclusion: {conclusion}");
+            conclusion
+        } else {
+            warn!("no filters found for {repo}");
+            false
+        };
+
+        Ok(conclusion)
     }
 }
 
