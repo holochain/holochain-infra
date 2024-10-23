@@ -72,6 +72,64 @@
               nix run .\#postbuildstepper
           '';
         };
+
+      checks =
+        let
+          s3 = {
+            bucket = "cache.holo.host";
+            endpoint = "s3.wasabisys.com";
+            key = "s3key";
+            secret = "s3secret";
+          };
+        in
+        {
+          tests-postbuildstepper-integration = inputs.nixpkgs.lib.nixos.runTest {
+            name = "postbuildstepper";
+
+            imports = [ ];
+            hostPkgs = pkgs; # the Nixpkgs package set used outside the VMs
+            # defaults.services.foo.package = self'.packages.postbuildstepper;
+
+            # One or more machines:
+            nodes = {
+              machine =
+                { config, pkgs, ... }:
+
+                {
+                  networking.hosts = {
+                    "127.0.0.1" = [
+                      "cache.holo.host"
+                      "s3.wasabisys.com"
+                    ];
+                  };
+
+                  nix.settings.experimental-features = [
+                    "nix-command"
+                    "flakes"
+                  ];
+
+                  services.minio = {
+                    enable = true;
+                    browser = false;
+                    listenAddress = "127.0.0.1:80";
+                    rootCredentialsFile = pkgs.writeText "creds" ''
+                      MINIO_ROOT_USER=${s3.key}
+                      MINIO_ROOT_PASSWORD=${s3.secret}
+                    '';
+                  };
+                };
+            };
+
+            testScript = ''
+              machine.start()
+              machine.wait_for_unit("minio.service")
+
+              # TODO: insert credentials and pass them to the test as well
+              machine.succeed("${lib.getExe self'.packages.postbuildstepper-test}", timeout = 10)
+            '';
+
+          };
+        };
     };
 
   flake = {
