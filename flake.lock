@@ -151,17 +151,12 @@
       }
     },
     "crane": {
-      "inputs": {
-        "nixpkgs": [
-          "craneNixpkgs"
-        ]
-      },
       "locked": {
-        "lastModified": 1710003968,
-        "narHash": "sha256-g8+K+mLiNG5uch35Oy9oDQBAmGSkCcqrd0Jjme7xiG0=",
+        "lastModified": 1729273024,
+        "narHash": "sha256-Mb5SemVsootkn4Q2IiY0rr9vrXdCCpQ9HnZeD/J3uXs=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "10484f86201bb94bd61ecc5335b1496794fedb78",
+        "rev": "fa8b7445ddadc37850ed222718ca86622be01967",
         "type": "github"
       },
       "original": {
@@ -172,11 +167,11 @@
     },
     "craneNixpkgs": {
       "locked": {
-        "lastModified": 1715787315,
-        "narHash": "sha256-cYApT0NXJfqBkKcci7D9Kr4CBYZKOQKDYA23q8XNuWg=",
+        "lastModified": 1729256560,
+        "narHash": "sha256-/uilDXvCIEs3C9l73JTACm4quuHUsIHcns1c+cHUJwA=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "33d1e753c82ffc557b4a585c77de43d4c922ebb5",
+        "rev": "4c2fcb090b1f3e5b47eaa7bd33913b574a11e0a0",
         "type": "github"
       },
       "original": {
@@ -1001,6 +996,21 @@
         "type": "github"
       }
     },
+    "nix-filter_3": {
+      "locked": {
+        "lastModified": 1710156097,
+        "narHash": "sha256-1Wvk8UP7PXdf8bCCaEoMnOT1qe5/Duqgj+rL8sRQsSM=",
+        "owner": "numtide",
+        "repo": "nix-filter",
+        "rev": "3342559a24e85fc164b295c3444e8a139924675b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "nix-filter",
+        "type": "github"
+      }
+    },
     "nix_2": {
       "inputs": {
         "lowdown-src": "lowdown-src_2",
@@ -1411,6 +1421,7 @@
         "keys_steveej": "keys_steveej",
         "keys_thetasinner": "keys_thetasinner",
         "microvm": "microvm",
+        "nix-filter": "nix-filter_3",
         "nixos-anywhere": "nixos-anywhere",
         "nixos-generators": "nixos-generators",
         "nixos-vscode-server": "nixos-vscode-server",
@@ -1636,16 +1647,16 @@
     "tx5": {
       "flake": false,
       "locked": {
-        "lastModified": 1710791497,
-        "narHash": "sha256-DfuppR6geBawupO8WnssXMZEOQxP0/FPPlfSmr93vlo=",
+        "lastModified": 1728658226,
+        "narHash": "sha256-d+11SBg+WXvpUOosZSA5bP1m7W0Zioyf7GPOKkISG6Q=",
         "owner": "holochain",
         "repo": "tx5",
-        "rev": "af0ecea9bee17f4e6230b15dd4af89bb0fc98bd9",
+        "rev": "4e293404db2d48fcf674f6c6d7c19d7d5d8c65bf",
         "type": "github"
       },
       "original": {
         "owner": "holochain",
-        "ref": "tx5-signal-srv-v0.0.8-alpha",
+        "ref": "tx5-signal-srv-v0.0.15-alpha",
         "repo": "tx5",
         "type": "github"
       }
