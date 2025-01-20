@@ -154,7 +154,7 @@
 
   sops.secrets.github-runners-token = {
     key = "gh_hra2_pat5";
-    sopsFile = ../../../secrets/${config.networking.hostName}/secrets.yaml;
+    sopsFile = ../../../secrets/linux-builder-shared/secrets.yaml;
   };
 
   system.stateVersion = "24.05";
