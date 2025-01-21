@@ -366,6 +366,7 @@
                 "scale-testing"
                 "visvere"
                 "holo-host-canary"
+                "*"
               ];
             };
           command = [ (lib.getExe' self.packages.${pkgs.system}.postbuildstepper "postbuildstepper") ];

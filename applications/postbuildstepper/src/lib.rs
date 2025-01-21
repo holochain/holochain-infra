@@ -520,7 +520,9 @@ pub mod business {
 
                     debug!("configured PR source branches for channel creation: {source_branch_channels:#?}");
 
-                    if source_branch_channels.contains(source_branch.as_str()) {
+                    if source_branch_channels.contains(source_branch.as_str())
+                        || source_branch_channels.contains("*")
+                    {
                         // also include the PR number as a channel name
                         Some(vec![number, source_branch])
                     } else {
