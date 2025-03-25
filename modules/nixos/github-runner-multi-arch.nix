@@ -57,6 +57,12 @@ in
       tokenFile = config.sops.secrets.github-runners-token.path;
       url = cfg.url;
       extraPackages = config.environment.systemPackages;
+      serviceOverrides = {
+        Restart = lib.mkOverride 900 "always";
+        RestartSec = "30";
+        RestartSteps = "30s";
+        RestartMaxDelay = "15m";
+      };
     });
 
     nixpkgs.config.permittedInsecurePackages = [ "nodejs-16.20.2" ];
