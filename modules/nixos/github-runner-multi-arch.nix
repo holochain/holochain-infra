@@ -58,7 +58,7 @@ in
       url = cfg.url;
       extraPackages = config.environment.systemPackages;
       serviceOverrides = {
-        Restart = lib.mkOverride 900 "always";
+        Restart = lib.mkForce "always";
         RestartSec = "30";
         RestartSteps = "30s";
         RestartMaxDelay = "15m";
