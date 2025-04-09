@@ -878,7 +878,7 @@
     "keys_steveej": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-oWou51Fqm2fNARZ2iEyKwmnDXB85fnw8vgVxZfBZuqI=",
+        "narHash": "sha256-cM9Mdd+J5TPuv7eHqQqm0Im13FwC16WAhF5mZkpqagc=",
         "type": "file",
         "url": "https://github.com/steveej.keys"
       },
