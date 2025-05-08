@@ -24,6 +24,7 @@ keys:
   - &sbd-0_main_infra_holo_host age1lxmwwjmvfzl6uvfe2xs9m8ppdf604acph0u88pqwhuy7wvuep4sq3cjgw0
   - &stun-0_main_infra_holo_host age162clfdx3zc7qr5au7gyxmhs44lfezt8qzpf3a2ppqh5r628enf0q70prc0
   - &mamading_age age1qr2rhvj7qdfxf7cpja52ssxp93gvmhecdkxpm6q2h93xf3y73urs6ssnmk
+  - &age_jetttech age1a4zj9yq55aav2xtxmxrx3aaz9d0a3a7gq4d92zfxlrvzuccycp9q3crf9v
 
 creation_rules:
   - path_regex: ^(.+/|)secrets/[^/]+$
@@ -108,6 +109,7 @@ creation_rules:
         age:
           - *buildbot-nix-0
           - *aarch64-linux-builder-0
+          - *age_jetttech
           # - *age_r-vdp
           - *mamading_age
   - path_regex: ^secrets/buildbot-nix-0/[^/]+$
@@ -117,6 +119,7 @@ creation_rules:
         age:
           - *buildbot-nix-0
           # - *age_r-vdp
+          - *age_jetttech
           - *mamading_age
   - path_regex: ^secrets/nomad/.+$
     key_groups:
