@@ -23,6 +23,8 @@ keys:
   - &turn-2 age1zxmut50nxveptmfyjw5rd9jfdva54p92fj02zekjneq57k626unqysq707
   - &sbd-0_main_infra_holo_host age1lxmwwjmvfzl6uvfe2xs9m8ppdf604acph0u88pqwhuy7wvuep4sq3cjgw0
   - &stun-0_main_infra_holo_host age162clfdx3zc7qr5au7gyxmhs44lfezt8qzpf3a2ppqh5r628enf0q70prc0
+  - &mamading_age age1qr2rhvj7qdfxf7cpja52ssxp93gvmhecdkxpm6q2h93xf3y73urs6ssnmk
+  - &age_jetttech age1a4zj9yq55aav2xtxmxrx3aaz9d0a3a7gq4d92zfxlrvzuccycp9q3crf9v
 
 creation_rules:
   - path_regex: ^(.+/|)secrets/[^/]+$
@@ -30,27 +32,31 @@ creation_rules:
       - pgp:
           - *steveej
         age:
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
   - path_regex: ^secrets/dweb-reverse-tls-proxy/.+$
     key_groups:
       - pgp:
           - *steveej
         age:
           - *dweb-reverse-proxy
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
   - path_regex: ^secrets/monitoring/.+$
     key_groups:
       - pgp:
           - *steveej
         age:
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
           - *monitoring-0
   - path_regex: ^secrets/monitoring-clients/.+$
     key_groups:
       - pgp:
           - *steveej
         age:
-          - *age_r-vdp
+          #  - *age_r-vdp
+          - *mamading_age
           - *monitoring-0
           - *buildbot-nix-0
           - *x64-linux-dev-01
@@ -68,7 +74,8 @@ creation_rules:
       - age:
           - *linux-builder-01
           - *age_steveej
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
         pgp:
           - *steveej
   - path_regex: ^secrets/linux-builder-shared/[^/]+$
@@ -76,6 +83,7 @@ creation_rules:
       - age:
           - *linux-builder-01
           - *linux-builder-2
+          - *mamading_age
         pgp:
           - *steveej
   - path_regex: ^secrets/linux-builder-2/[^/]+$
@@ -83,6 +91,7 @@ creation_rules:
       - age:
           - *linux-builder-2
           - *age_steveej
+          - *mamading_age
         pgp:
           - *steveej
   - path_regex: ^secrets/x64-linux-dev-01/[^/]+$
@@ -91,7 +100,8 @@ creation_rules:
           - *steveej
         age:
           - *x64-linux-dev-01
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
   - path_regex: ^secrets/buildbot-nix-0/github-secrets.yaml$
     key_groups:
       - pgp:
@@ -99,14 +109,18 @@ creation_rules:
         age:
           - *buildbot-nix-0
           - *aarch64-linux-builder-0
-          - *age_r-vdp
+          - *age_jetttech
+          # - *age_r-vdp
+          - *mamading_age
   - path_regex: ^secrets/buildbot-nix-0/[^/]+$
     key_groups:
       - pgp:
           - *steveej
         age:
           - *buildbot-nix-0
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *age_jetttech
+          - *mamading_age
   - path_regex: ^secrets/nomad/.+$
     key_groups:
       - pgp:
@@ -115,13 +129,15 @@ creation_rules:
         age:
           - *dweb-reverse-proxy
           - *tfgrid-shared
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
   - path_regex: ^secrets/nomad/admin/.+$
     key_groups:
       - pgp:
           - *steveej
         age:
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
   - path_regex: ^secrets/events-nix-cache/.+$
     key_groups:
       - pgp:
@@ -133,7 +149,8 @@ creation_rules:
         age:
           - *dev
           - *x64-linux-dev-01
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age
   - path_regex: ^secrets/minio/.+$
     key_groups:
       - pgp:
@@ -141,4 +158,5 @@ creation_rules:
         age:
           - *dev
           - *x64-linux-dev-01
-          - *age_r-vdp
+          # - *age_r-vdp
+          - *mamading_age

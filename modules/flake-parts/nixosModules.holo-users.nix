@@ -11,6 +11,8 @@ let
       keyFiles = lib.attrValues (lib.filterAttrs (name: _: lib.hasPrefix "keys_" name) inputs);
       keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICHujII5RAwfEXNBYxKhWv2Wx/oHeHUTc8CACZ3M5W3p neonphog@gmail.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlqSlzwBTiY07cQIi1Z9bE881t2SmVS9+o7KKAOen6/ techservices@holo.host"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJzXKsjgrvJHOgw5JOf0rnrmZ8E1D1aVPw+/nHo6+x9v mamading.ceesay@holo.host"
       ];
     };
 in
