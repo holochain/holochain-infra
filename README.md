@@ -123,23 +123,11 @@ If a runner appears offline in the [runners settings page](https://github.com/ho
 
 Update the `flake.lock` based on your changes
 ```shell
-nix flake lock --update-input nixpkgsGithubActionRunners
+nix flake update --refresh nixpkgsGithubActionRunners
 ```
 
-If that works, check that everything builds successfully on the builder
-```shell
-nix run .#deploy-linux-builder-01 build
-```
-
-If that also works then ask nixos to apply these changes without updating the default profile
-```shell
-nix run .#deploy-linux-builder-01 test
-```
-
-If the runners are back online then update the default profile
-```shell
-nix run .#deploy-linux-builder-01 switch
-```
+Now make a pull request with these changes, towards the `develop` branch of this repository. Once that is merged,
+cherry-pick the changes into the `deploy/linux-builder-01`.
 
 ## TURN stack
 
