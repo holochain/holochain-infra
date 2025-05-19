@@ -83,6 +83,11 @@
       flake = false;
     };
 
+    keys_JettTech = {
+      url = "https://github.com/JettTech.keys";
+      flake = false;
+    };
+
     keys_thetasinner = {
       url = "https://github.com/ThetaSinner.keys";
       flake = false;

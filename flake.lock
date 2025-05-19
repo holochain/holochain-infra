@@ -827,6 +827,18 @@
         "type": "github"
       }
     },
+    "keys_JettTech": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-7/i6EIAbOJy/WQaqYo3DcnxMinuR1YO9NW0da/kKwq0=",
+        "type": "file",
+        "url": "https://github.com/JettTech.keys"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JettTech.keys"
+      }
+    },
     "keys_artbrock": {
       "flake": false,
       "locked": {
@@ -1490,6 +1502,7 @@
         "holochain": "holochain_3",
         "holochain-versions": "holochain-versions",
         "home-manager": "home-manager",
+        "keys_JettTech": "keys_JettTech",
         "keys_artbrock": "keys_artbrock",
         "keys_cdunster": "keys_cdunster",
         "keys_evangineer": "keys_evangineer",
