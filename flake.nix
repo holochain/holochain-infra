@@ -78,23 +78,10 @@
       flake = false;
     };
 
-    # hash mismatch 2024/02/29
-    # keys_maackle = {
-    #   url = "https://github.com/maackle.keys";
-    #   flake = false;
-    # };
-
-    # hash mismatch 20230821
-    # keys_neonphog = {
-    #   url = "https://github.com/neonphog.keys";
-    #   flake = false;
-    # };
-
-    # TODO: re-enable once the change is verified
-    # keys_thedavidmeister = {
-    #   url = "https://github.com/thedavidmeister.keys";
-    #   flake = false;
-    # };
+    keys_evangineer = {
+      url = "https://github.com/evangineer.keys";
+      flake = false;
+    };
 
     keys_thetasinner = {
       url = "https://github.com/ThetaSinner.keys";
