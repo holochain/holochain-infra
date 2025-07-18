@@ -297,20 +297,14 @@ pub mod business {
             "github-actions",
         ];
 
-        const STEVEEJ: &[&str] = &[
-            "steveej",
-            "Stefan Junker <mail@stefanjunker.de>",
-            "Stefan Junker <1181362+steveej@users.noreply.github.com>",
-        ];
-
         let trusted_owners_per_org: &[(&str, &[&str])] = &[
             (
                 "holochain",
                 &[
-                    STEVEEJ,
-                    &[
+                    [
                         // admins
                         "evangineer",
+                        "Mamading Ceesay <53523+evangineer@users.noreply.github.com>",
                         // devs
                         "ThetaSinner",
                         "cdunster",
@@ -322,9 +316,9 @@ pub mod business {
             (
                 "holo-host",
                 &[
-                    STEVEEJ,
-                    &[
+                    [
                         "evangineer",
+                        "Mamading Ceesay <53523+evangineer@users.noreply.github.com>",
                         "JettTech",
                         "Lisa Jetton <30459942+JettTech@users.noreply.github.com>",
                         "amit_pandey",
