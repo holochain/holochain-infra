@@ -326,6 +326,8 @@ pub mod business {
                     &[
                         "evangineer",
                         "JettTech",
+                        "Lisa Jetton <30459942+JettTech@users.noreply.github.com>",
+                        "amit_pandey",
                         "mattgeddes",
                         "zeeshan595",
                         "Zeeshan Abid <6005448+zeeshan595@users.noreply.github.com>",
