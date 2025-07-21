@@ -279,7 +279,7 @@
               machine.wait_for_unit("minio.service")
               machine.wait_for_unit("caddy.service")
 
-              # NOTE(steveej)
+              # NOTE(evangineer)
               # minio startup seems to go beyond it's service being active.
               # hence, ensure that minio is actively the combination of caddy+minio are actively servicing requests.
               machine.wait_until_succeeds("${pkgs.writeShellScript "wait-for-minio" ''
