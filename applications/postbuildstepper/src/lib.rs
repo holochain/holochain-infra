@@ -295,6 +295,7 @@ pub mod business {
         const TRUSTED_OWNERS: &[&str] = &[
             // bots
             "github-actions",
+            "steveeJ",
         ];
 
         let trusted_owners_per_org: &[(&str, &[&str])] = &[
@@ -326,6 +327,7 @@ pub mod business {
                         "zeeshan595",
                         "Zeeshan Abid <6005448+zeeshan595@users.noreply.github.com>",
                         "alastairong1",
+                        "steveeJ",
                     ],
                 ]
                 .concat(),
