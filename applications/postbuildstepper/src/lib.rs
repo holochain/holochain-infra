@@ -295,22 +295,17 @@ pub mod business {
         const TRUSTED_OWNERS: &[&str] = &[
             // bots
             "github-actions",
-        ];
-
-        const STEVEEJ: &[&str] = &[
-            "steveej",
-            "Stefan Junker <mail@stefanjunker.de>",
-            "Stefan Junker <1181362+steveej@users.noreply.github.com>",
+            "steveeJ",
         ];
 
         let trusted_owners_per_org: &[(&str, &[&str])] = &[
             (
                 "holochain",
                 &[
-                    STEVEEJ,
-                    &[
+                    [
                         // admins
                         "evangineer",
+                        "Mamading Ceesay <53523+evangineer@users.noreply.github.com>",
                         // devs
                         "ThetaSinner",
                         "cdunster",
@@ -322,9 +317,9 @@ pub mod business {
             (
                 "holo-host",
                 &[
-                    STEVEEJ,
-                    &[
+                    [
                         "evangineer",
+                        "Mamading Ceesay <53523+evangineer@users.noreply.github.com>",
                         "JettTech",
                         "Lisa Jetton <30459942+JettTech@users.noreply.github.com>",
                         "amit_pandey",
@@ -332,6 +327,7 @@ pub mod business {
                         "zeeshan595",
                         "Zeeshan Abid <6005448+zeeshan595@users.noreply.github.com>",
                         "alastairong1",
+                        "steveeJ",
                     ],
                 ]
                 .concat(),
