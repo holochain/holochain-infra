@@ -153,7 +153,7 @@
     };
 
   sops.secrets.github-runners-token = {
-    key = "gh_hra2_pat5";
+    key = "gh_hra2_pat6";
     sopsFile = ../../../secrets/linux-builder-shared/secrets.yaml;
   };
 
