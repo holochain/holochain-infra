@@ -5,7 +5,7 @@
 
     nix-filter.url = "github:numtide/nix-filter";
 
-    nixpkgs.follows = "nixpkgs-24-11";
+    nixpkgs.follows = "nixpkgs-25-11";
     nixpkgs-23-11 = {
       url = "github:nixos/nixpkgs/nixos-23.11";
     };
@@ -15,7 +15,10 @@
     nixpkgs-24-11 = {
       url = "github:nixos/nixpkgs/nixos-24.11";
     };
-    nixpkgsNix.follows = "nixpkgs-24-11";
+    nixpkgs-25-11 = {
+      url = "github:nixos/nixpkgs/nixos-25.11";
+    };
+    nixpkgsNix.follows = "nixpkgs-25-11";
     nixpkgsGithubActionRunners = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
@@ -47,7 +50,7 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
-    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # secret management
@@ -212,7 +215,7 @@
 
     # do not forward 'nixpkgs' there as buildbot-nix uses custom buildbot patches
     buildbot-nix.url = "github:nix-community/buildbot-nix";
-    buildbot-nix.inputs.nixpkgs.follows = "nixpkgs-24-11";
+    buildbot-nix.inputs.nixpkgs.follows = "nixpkgs-25-11";
   };
 
   outputs =
