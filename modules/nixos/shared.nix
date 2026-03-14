@@ -1,23 +1,22 @@
-{
-  inputs,
-  config,
-  pkgs,
-  lib,
-  ...
+{ inputs
+, config
+, pkgs
+, lib
+, ...
 }:
 {
   # Nix configuration shared between all hosts
 
   imports = [ ./holo-deploy.nix ]
-  # TODO: figure out why this results in infinite recursion
-  # ++ pkgs.stdenv.isLinux [
-  #   ./shared-linux.nix
-  # ]
+    # TODO: figure out why this results in infinite recursion
+    # ++ pkgs.stdenv.isLinux [
+    #   ./shared-linux.nix
+    # ]
   ;
 
   nix.package =
     lib.mkDefault
-      inputs.nixpkgsNix.legacyPackages.${pkgs.stdenv.system}.nixVersions.nix_2_21;
+      inputs.nixpkgsNix.legacyPackages.${pkgs.stdenv.system}.nixVersions.stable;
 
   nix.settings.extra-platforms = lib.mkIf pkgs.stdenv.isDarwin [
     "x86_64-darwin"
