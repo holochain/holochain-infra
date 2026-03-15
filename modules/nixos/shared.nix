@@ -16,7 +16,7 @@
 
   nix.package =
     lib.mkDefault
-      inputs.nixpkgsNix.legacyPackages.${pkgs.stdenv.system}.nixVersions.stable;
+      inputs.nixpkgsNix.legacyPackages.${pkgs.stdenv.system}.nixVersions.nix_2_21;
 
   nix.settings.extra-platforms = lib.mkIf pkgs.stdenv.isDarwin [
     "x86_64-darwin"
