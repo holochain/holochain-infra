@@ -5,7 +5,7 @@
 
     nix-filter.url = "github:numtide/nix-filter";
 
-    nixpkgs.follows = "nixpkgs-25-11";
+    nixpkgs.follows = "nixpkgs-24-11";
     nixpkgs-23-11 = {
       url = "github:nixos/nixpkgs/nixos-23.11";
     };
@@ -15,10 +15,7 @@
     nixpkgs-24-11 = {
       url = "github:nixos/nixpkgs/nixos-24.11";
     };
-    nixpkgs-25-11 = {
-      url = "github:nixos/nixpkgs/nixos-25.11";
-    };
-    nixpkgsNix.follows = "nixpkgs-25-11";
+    nixpkgsNix.follows = "nixpkgs-24-11";
     nixpkgsGithubActionRunners = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
@@ -50,7 +47,7 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # home manager
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # secret management
@@ -215,26 +212,28 @@
 
     # do not forward 'nixpkgs' there as buildbot-nix uses custom buildbot patches
     buildbot-nix.url = "github:nix-community/buildbot-nix";
-    buildbot-nix.inputs.nixpkgs.follows = "nixpkgs-25-11";
+    buildbot-nix.inputs.nixpkgs.follows = "nixpkgs-24-11";
   };
 
   outputs =
     inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       # auto import all nix code from `./modules`
-      imports = map (
-        name:
-        let
-          lib = inputs.nixpkgs.lib;
-          partFile = "${./.}/modules/flake-parts/${name}";
-          part = import partFile;
-          # some of the parts are just a set, and in order to inject a new function argument we construct a function from them.
-          partFn = if (!builtins.isFunction part) then _: part else part;
-          # make the part name available to each part via the specialArgs mechanism.
-          partFn' = args: (partFn (lib.recursiveUpdate args { self.specialArgs.partName = name; }));
-        in
-        partFn'
-      ) (builtins.attrNames (builtins.readDir ./modules/flake-parts));
+      imports = map
+        (
+          name:
+          let
+            lib = inputs.nixpkgs.lib;
+            partFile = "${./.}/modules/flake-parts/${name}";
+            part = import partFile;
+            # some of the parts are just a set, and in order to inject a new function argument we construct a function from them.
+            partFn = if (!builtins.isFunction part) then _: part else part;
+            # make the part name available to each part via the specialArgs mechanism.
+            partFn' = args: (partFn (lib.recursiveUpdate args { self.specialArgs.partName = name; }));
+          in
+          partFn'
+        )
+        (builtins.attrNames (builtins.readDir ./modules/flake-parts));
 
       systems = [
         "aarch64-darwin"
@@ -244,14 +243,13 @@
       ];
 
       perSystem =
-        {
-          config,
-          self',
-          inputs',
-          pkgs,
-          lib,
-          system,
-          ...
+        { config
+        , self'
+        , inputs'
+        , pkgs
+        , lib
+        , system
+        , ...
         }:
         let
           # TODO(backlog): enable rust formatting
@@ -456,10 +454,12 @@
                   osConfigs:
                   let
                     filteredBySystem = lib.filterAttrs (_: osConfig: (osConfig.pkgs.system == system)) osConfigs;
-                    asStrings = lib.mapAttrsToList (
-                      key: value:
-                      builtins.trace "evaluating ${key} (${value.pkgs.system})..." "ln -s ${value.config.system.build.toplevel} $out/${key}"
-                    ) filteredBySystem;
+                    asStrings = lib.mapAttrsToList
+                      (
+                        key: value:
+                          builtins.trace "evaluating ${key} (${value.pkgs.system})..." "ln -s ${value.config.system.build.toplevel} $out/${key}"
+                      )
+                      filteredBySystem;
                   in
                   pkgs.stdenv.mkDerivation {
                     name = "check-osconfigurations";
@@ -470,16 +470,17 @@
               {
                 build-os-configurations =
                   if pkgs.stdenv.isLinux then
-                    mkOsConfigCheck (
-                      builtins.removeAttrs self.nixosConfigurations [
-                        # too big for current CI structure and rarely used
-                        "vm-nixcache"
+                    mkOsConfigCheck
+                      (
+                        builtins.removeAttrs self.nixosConfigurations [
+                          # too big for current CI structure and rarely used
+                          "vm-nixcache"
 
-                        # needs private repos
-                        "tfgrid-hpos"
-                        "tfgrid-hpos-base"
-                      ]
-                    )
+                          # needs private repos
+                          "tfgrid-hpos"
+                          "tfgrid-hpos-base"
+                        ]
+                      )
                   else if pkgs.stdenv.isDarwin then
                     mkOsConfigCheck self.darwinConfigurations
                   else
@@ -517,18 +518,20 @@
         lib = {
           # see https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L16C1-L66C6
           makeCert =
-            {
-              pkgs,
-              caName,
-              domain ? builtins.elemAt domains 0,
-              domains ? [ domain ],
+            { pkgs
+            , caName
+            , domain ? builtins.elemAt domains 0
+            , domains ? [ domain ]
+            ,
             }:
             let
               # long validity duration as the certs get cached for a while
               validity = builtins.toString (365 * 10);
-              dns_names' = builtins.map (domain: ''
-                dns_name = "${domain}"
-              '') domains;
+              dns_names' = builtins.map
+                (domain: ''
+                  dns_name = "${domain}"
+                '')
+                domains;
               dns_names = builtins.concatStringsSep "\n" dns_names';
             in
             pkgs.runCommand "example-cert" { buildInputs = [ pkgs.gnutls ]; } ''
